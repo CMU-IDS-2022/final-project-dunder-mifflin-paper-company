@@ -5,7 +5,7 @@
   * Contact person: buk@andrew.cmu.edu
   * rmampill@andrew.cmu.edu
   * heweil@andrew.cmu.edu
-  * TODO@andrew.cmu.edu
+  * kushagr2@andrew.cmu.edu
 
 ## Work distribution
 
