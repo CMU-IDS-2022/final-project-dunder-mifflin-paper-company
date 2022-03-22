@@ -9,24 +9,14 @@ Ruben Mampilli - rmampill@andrew.cmu.edu<br>
  - 
 
 <h3> Introduction </h3>
-The COVID-19 pandemic has impacted society in various ways, 
-affecting almost every single aspect of our daily lives. 
-Surpassing the death toll of the devastating 1918 flu pandemic, 
-COVID-19 is now the deadliest disease in American history, 
-infecting over 79.7M people and causing over 972K deaths. 
-Though COVID-19 is a crisis worldwide, there have been stark 
-differences in how various regions have approached curbing the 
-spread of the infection.<br>
-Every government has uniquely responded 
-to this pandemic in terms of their masking policies, 
-early vaccinations, shutting down schools and workplaces, restricting public transport,
-etc. Variations in these responses are dependent on the distinctive 
-institutional arrangements, political and geographical factors, 
-and cultural orientation of each state, and thus, there is no 
-One-Size-Fits-All strategy. However it can also be argued that such 
-distinct policies are a result of the fact that we as a society were 
-grossly underprepared to handle a pandemic of this scale. 
-It is vital that we now analyze the different policies taken to be 
+The COVID-19 pandemic has impacted society in various ways, affecting almost every single aspect of our daily lives. 
+Though COVID-19 is a crisis worldwide, there have been stark differences in how various regions have approached 
+curbing the spread of the infection. Every government has uniquely responded to this pandemic in terms of their masking 
+policies, early vaccinations, shutting down schools and workplaces, restricting public transport, etc. 
+Variations in these responses are dependent on the distinctive institutional arrangements, political and geographical 
+factors, and cultural orientation of each state, and thus, there is no One-Size-Fits-All strategy. 
+However, it can also be argued that such distinct policies are a result of the fact that we as a society were grossly 
+under-prepared to handle a pandemic of this scale. It is vital that we now analyze the different policies taken to be 
 better prepared in the event of a future pandemic.
 
 <h3> Goal </h3>
@@ -35,7 +25,7 @@ We plan to do this from two different directions. The first would be to analyze 
 and the containment measures adopted to prevent the spread of COVID. The second will be to look at it form the 
 perspective of the citizens and how their behavior in terms of their search trends, mobility levels change through time.
 This will enable the viewer to answer questions such as:
-
+<br>
 <ul>
 <li> Has COVID-19 infected citizens throughout the country uniformly? 
 Have certain states been more affected? </li>
@@ -60,7 +50,7 @@ related information and spread of COVID cases? </li>
 
 Our efforts in building this interactive dashboard will consist of three major phases. The first phase will involve building an interactive visualization that will allow the user to visualize epidemiology data such as cases, deaths, hospitalizations, vaccinations etc. over time. We would also look at visualizing this data across the country by making use of map plots. The second phase will involve detailed analyses and visualization of the responses of the governments and how they dealt with the rise in infection in terms of regulations and status of the healthcare infrastructure. We also plan to explore the behavior of the public in terms of their search trends and level of mobility to understand how they reacted to the ongoing situation. 
 
-We also plan to conduct a correlation analysis of COVID morbidities with other features like mobility, medical infrastructure capacity etc. This will enable us to identify possible strategies that are effective in controlling the spread of covid-19. On the other hand, we will also explore how user behavior is linked to the spread of covid cases. One way we plan to do this is by analyzing the correlation between user internet searches about vaccination related information and the spread of COVID in that region. 
+We also plan to conduct a correlation analysis of COVID morbidities with other features like mobility, medical infrastructure capacity etc. This will enable us to identify possible strategies that are effective in controlling the spread of COVID-19. On the other hand, we will also explore how user behavior is linked to the spread of COVID cases. One way we plan to do this is by analyzing the correlation between user internet searches about vaccination related information and the spread of COVID in that region. 
 
 The last phase of the project deals with a forecasting model that can predict the number of COVID cases. This can benefit the health sector to timely scale up their infrastructure to deal with increase in cases. Taking this one step further, we can also try to predict the action that must be taken by the government in order to reduce/control the spread of COVID, given the information available.
 
