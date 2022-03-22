@@ -6,6 +6,10 @@
 Bharani Ujjaini Kempaiah - buk@andrew.cmu.edu<br>
  - <br>
 Ruben Mampilli - rmampill@andrew.cmu.edu<br>
+ - <br>
+He-Wei Lee - heweil@andrew.cmu.edu<br>
+ - <br>
+Kushagra Singh - kushagr2@andrew.cmu.edu<br>
  - 
 
 <h3> Introduction </h3>
