@@ -3,14 +3,17 @@
 **GitHub Repo URL**: https://github.com/CMU-IDS-2022/final-project-dunder-mifflin-paper-company
 
 <h3> Team Members </h3>
-Bharani Ujjaini Kempaiah - buk@andrew.cmu.edu<br>
- - <br>
-Ruben Mampilli - rmampill@andrew.cmu.edu<br>
- - <br>
-He-Wei Lee - heweil@andrew.cmu.edu<br>
- - <br>
-Kushagra Singh - kushagr2@andrew.cmu.edu<br>
- - 
+<ul> 
+<li> Bharani Ujjaini Kempaiah - buk@andrew.cmu.edu </li>
+<li> Ruben Mampilli - rmampill@andrew.cmu.edu </li>
+<li> He-Wei Lee - heweil@andrew.cmu.edu </li>
+<li> Kushagra Singh - kushagr2@andrew.cmu.edu </li>
+</ul>
+
+
+
+
+
 
 <h3> Introduction </h3>
 The COVID-19 pandemic has impacted society in various ways, affecting almost every single aspect of our daily lives. 
