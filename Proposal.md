@@ -25,7 +25,7 @@ We plan to do this from two different directions. The first would be to analyze 
 and the containment measures adopted to prevent the spread of COVID. The second will be to look at it form the 
 perspective of the citizens and how their behavior in terms of their search trends, mobility levels change through time.
 This will enable the viewer to answer questions such as:
-<br>
+<br><br>
 <ul>
 <li> Has COVID-19 infected citizens throughout the country uniformly? 
 Have certain states been more affected? </li>
