@@ -72,3 +72,13 @@ The data encompasses multiple important dimensions which can play a key role in 
 such as emergency declarations and official orders from governments, human mobility data, online search trends, etc. 
 The data is presented at a fine spatial resolution, using a consistent set of region keys which helps us to conduct 
 analyses across geographical regions. 
+
+<h3> Sketches and Data Analysis </h3>
+
+<h4>Data Processing</h4>
+
+Do you have to do substantial data cleanup? What quantities do you plan to derive from your data? How will data processing be implemented?  Show some screenshots of your data to demonstrate you have explored it.
+
+<h4>System Design</h4>
+
+How will you display your data? What types of interactions will you support? Provide some sketches that you have for the system design.
