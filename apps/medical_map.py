@@ -4,6 +4,7 @@ import altair as alt
 from vega_datasets import data
 from datetime import datetime, timedelta
 import pydeck as pdk
+import time
 
 @st.cache
 def read_files():
@@ -38,13 +39,9 @@ def read_files():
 def medical_state_vis(location_df, states):
 
     # Slider for date
-    date_slider = st.slider('Silde the Date to see how the Hospitilization vary with time', min(location_df['date']), max(location_df['date']), min(location_df['date']),
+    date_slider = st.slider('Silde the Date to see how the Hospitilization vary with time',
+                            min(location_df['date']), max(location_df['date']), min(location_df['date']),
                             step=timedelta(days=1), help="Slide over to see different dates")
-
-    # Get subset of dataframe based on selection
-    # This requires location_df to be grouped by year and month already
-    # temp_df = location_df[location_df['year'] == date_slider.year]
-    # temp_df = temp_df[temp_df['month'] == date_slider.month]
 
     temp_df = location_df[location_df['date'] == date_slider]
 
@@ -75,6 +72,11 @@ def medical_state_vis(location_df, states):
     # Plot both
     glob_plot = background + points
     st.altair_chart(glob_plot, use_container_width=True)
+
+    if st.button('Play DONT CLICK  (WIP)'):
+        while date_slider <= max(location_df['date']):
+            date_slider += timedelta(days=10)
+            time.sleep(10)
 
     return
 
