@@ -3,13 +3,37 @@ import pandas as pd
 import altair as alt
 from vega_datasets import data
 from datetime import datetime, timedelta
+import pydeck as pdk
 
 @st.cache
 def read_files():
-    df = pd.read_csv("data/cases_hospital_bed_usa_statewise.csv")
+    df_hospital = pd.read_csv("data/cases_hospital_bed_usa_statewise.csv")
     states = alt.topo_feature(data.us_10m.url, 'states')
-    df['date'] = df['date'].map(lambda row: datetime.strptime(row, '%Y-%m-%d').date())
-    return df, states
+    df_medical_fac = pd.read_csv("data/medical_facilities.csv")
+    df_vac_fac = pd.read_csv("data/vaccination_sites.csv")
+
+    df_hospital['date'] = df_hospital['date'].map(lambda row: datetime.strptime(row, '%Y-%m-%d').date())
+
+    df_medical_fac = df_medical_fac[df_medical_fac['State Code'].isin(['OH', 'NY', 'CA', 'UT'])]
+    df_vac_fac = df_vac_fac[df_vac_fac['state'].isin(['OH', 'NY', 'CA', 'UT'])]
+    df_medical_fac['lat'] = df_medical_fac['latitude']
+    df_medical_fac['lon'] = df_medical_fac['longitude']
+    df_vac_fac['lat'] = df_vac_fac['facility_latitude']
+    df_vac_fac['lon'] = df_vac_fac['facility_longitude']
+
+    df_medicals = []
+    df_vacs = []
+    df_medicals.append(df_medical_fac[df_medical_fac['State Code'] == 'NY'][['lat', 'lon']])
+    df_medicals.append(df_medical_fac[df_medical_fac['State Code'] == 'CA'][['lat', 'lon']])
+    df_medicals.append(df_medical_fac[df_medical_fac['State Code'] == 'OH'][['lat', 'lon']])
+    df_medicals.append(df_medical_fac[df_medical_fac['State Code'] == 'UT'][['lat', 'lon']])
+
+    df_vacs.append(df_vac_fac[df_vac_fac['state'] == 'NY'][['lat', 'lon']])
+    df_vacs.append(df_vac_fac[df_vac_fac['state'] == 'CA'][['lat', 'lon']])
+    df_vacs.append(df_vac_fac[df_vac_fac['state'] == 'OH'][['lat', 'lon']])
+    df_vacs.append(df_vac_fac[df_vac_fac['state'] == 'UT'][['lat', 'lon']])
+
+    return df_hospital, states, df_medicals, df_vacs
 
 def medical_state_vis(location_df, states):
 
@@ -54,6 +78,149 @@ def medical_state_vis(location_df, states):
 
     return
 
+def four_state_map_vis(df_medical, df_vac):
+    ny_map_vis(df_medical[0], df_vac[0])
+    ca_map_vis(df_medical[1], df_vac[1])
+    oh_map_vis(df_medical[2], df_vac[2])
+    ut_map_vis(df_medical[3], df_vac[3])
+
+def ny_map_vis(df_medical, df_vac):
+
+    st.pydeck_chart(pdk.Deck(
+        map_style='mapbox://styles/mapbox/light-v9',
+        initial_view_state=pdk.ViewState(
+            latitude=42.76,
+            longitude=-75.4,
+            zoom=5.5,
+            pitch=0,
+        ),
+        layers=[
+            pdk.Layer(
+                'ScatterplotLayer',
+                data=df_medical,
+                get_position='[lon, lat]',
+                auto_highlight=True,
+                get_radius=5000,
+                get_fill_color=[180, 0, 200, 90],
+                pickable=True,
+            ),
+            pdk.Layer(
+                'ScatterplotLayer',
+                data=df_vac,
+                get_position='[lon, lat]',
+                auto_highlight=True,
+                get_radius=5000,
+                get_fill_color=[34, 200, 48, 2],
+                pickable=True,
+            )
+        ],
+    ))
+
+    return
+
+def ca_map_vis(df_medical, df_vac):
+
+    st.pydeck_chart(pdk.Deck(
+        map_style='mapbox://styles/mapbox/light-v9',
+        initial_view_state=pdk.ViewState(
+            latitude=37.76,
+            longitude=-119.4,
+            zoom=4.8,
+            pitch=0,
+        ),
+        layers=[
+            pdk.Layer(
+                'ScatterplotLayer',
+                data=df_medical,
+                get_position='[lon, lat]',
+                auto_highlight=True,
+                get_radius=5000,
+                get_fill_color=[180, 0, 200, 90],
+                pickable=True,
+            ),
+            pdk.Layer(
+                'ScatterplotLayer',
+                data=df_vac,
+                get_position='[lon, lat]',
+                auto_highlight=True,
+                get_radius=5000,
+                get_fill_color=[34, 200, 48, 2],
+                pickable=True,
+            )
+        ],
+    ))
+
+    return
+
+def oh_map_vis(df_medical, df_vac):
+
+    st.pydeck_chart(pdk.Deck(
+        map_style='mapbox://styles/mapbox/light-v9',
+        initial_view_state=pdk.ViewState(
+            latitude=40.76,
+            longitude=-82.4,
+            zoom=5.5,
+            pitch=0,
+        ),
+        layers=[
+            pdk.Layer(
+                'ScatterplotLayer',
+                data=df_medical,
+                get_position='[lon, lat]',
+                auto_highlight=True,
+                get_radius=5000,
+                get_fill_color=[180, 0, 200, 90],
+                pickable=True,
+            ),
+            pdk.Layer(
+                'ScatterplotLayer',
+                data=df_vac,
+                get_position='[lon, lat]',
+                auto_highlight=True,
+                get_radius=5000,
+                get_fill_color=[34, 200, 48, 2],
+                pickable=True,
+            )
+        ],
+    ))
+    return
+
+def ut_map_vis(df_medical, df_vac):
+    st.pydeck_chart(pdk.Deck(
+        map_style='mapbox://styles/mapbox/light-v9',
+        initial_view_state=pdk.ViewState(
+            latitude=39.76,
+            longitude=-111.4,
+            zoom=5,
+            pitch=0,
+        ),
+        layers=[
+            pdk.Layer(
+                'ScatterplotLayer',
+                data=df_medical,
+                get_position='[lon, lat]',
+                auto_highlight=True,
+                get_radius=5000,
+                get_fill_color=[180, 0, 200, 90],
+                pickable=True,
+            ),
+            pdk.Layer(
+                'ScatterplotLayer',
+                data=df_vac,
+                get_position='[lon, lat]',
+                auto_highlight=True,
+                get_radius=5000,
+                get_fill_color=[34, 200, 48, 2],
+                pickable=True,
+            )
+        ],
+    ))
+
+    return
+
 if __name__ =="__main__":
-    df, states = read_files()
-    medical_state_vis(df, states)
+    df_hospital, states, df_medical_fac, df_vac_fac = read_files()
+    medical_state_vis(df_hospital, states)
+
+    # TO DO - ADD TOOLTIP
+    four_state_map_vis(df_medical_fac, df_vac_fac)

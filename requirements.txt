@@ -1,4 +1,5 @@
-streamlit
-pandas
-altair
+streamlit~=1.8.1
+pandas~=1.4.2
+altair~=4.2.0
 vega_datasets
+pydeck~=0.7.1
