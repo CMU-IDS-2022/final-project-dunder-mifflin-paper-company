@@ -24,15 +24,15 @@ def read_files():
 
     df_medicals = []
     df_vacs = []
-    df_medicals.append(df_medical_fac[df_medical_fac['State Code'] == 'NY'][['lat', 'lon']])
-    df_medicals.append(df_medical_fac[df_medical_fac['State Code'] == 'CA'][['lat', 'lon']])
-    df_medicals.append(df_medical_fac[df_medical_fac['State Code'] == 'OH'][['lat', 'lon']])
-    df_medicals.append(df_medical_fac[df_medical_fac['State Code'] == 'UT'][['lat', 'lon']])
+    df_medicals.append(df_medical_fac[df_medical_fac['State Code'] == 'NY'][['lat', 'lon', 'State Code']])
+    df_medicals.append(df_medical_fac[df_medical_fac['State Code'] == 'CA'][['lat', 'lon', 'State Code']])
+    df_medicals.append(df_medical_fac[df_medical_fac['State Code'] == 'OH'][['lat', 'lon', 'State Code']])
+    df_medicals.append(df_medical_fac[df_medical_fac['State Code'] == 'UT'][['lat', 'lon', 'State Code']])
 
-    df_vacs.append(df_vac_fac[df_vac_fac['state'] == 'NY'][['lat', 'lon']])
-    df_vacs.append(df_vac_fac[df_vac_fac['state'] == 'CA'][['lat', 'lon']])
-    df_vacs.append(df_vac_fac[df_vac_fac['state'] == 'OH'][['lat', 'lon']])
-    df_vacs.append(df_vac_fac[df_vac_fac['state'] == 'UT'][['lat', 'lon']])
+    df_vacs.append(df_vac_fac[df_vac_fac['state'] == 'NY'][['lat', 'lon', 'state']])
+    df_vacs.append(df_vac_fac[df_vac_fac['state'] == 'CA'][['lat', 'lon', 'state']])
+    df_vacs.append(df_vac_fac[df_vac_fac['state'] == 'OH'][['lat', 'lon', 'state']])
+    df_vacs.append(df_vac_fac[df_vac_fac['state'] == 'UT'][['lat', 'lon', 'state']])
 
     return df_hospital, states, df_medicals, df_vacs
 
@@ -195,6 +195,7 @@ def ut_map_vis(df_medical, df_vac):
             longitude=-111.4,
             zoom=5,
             pitch=0,
+            tooltip={"text": "{state}"},
         ),
         layers=[
             pdk.Layer(
