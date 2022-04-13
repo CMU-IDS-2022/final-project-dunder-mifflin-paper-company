@@ -79,6 +79,23 @@ analyses across geographical regions.
 
 Do you have to do substantial data cleanup? What quantities do you plan to derive from your data? How will data processing be implemented?  Show some screenshots of your data to demonstrate you have explored it.
 
+As we explored the domain, we decide to use more than just one dataset to increase the amount of information we can present.
+As a result of this, data processing is required to combine the datasets into a usable format.
+Since our main aim is to show the variation of COVID-19 across different states in the Unites States, the main feature by which we join the datasets is the State Name/ID.
+There are also numerous instances in which data is missing (NaN). We address this issue by simply omitting those data points.
+This is feasible as there are only a very few data points that had missing values. There are also instances in the dataset that include wrong latitude and longitude values for one or two US states which is visible in our EDA process.
+We address this issue by removing these abnormal values and replacing it with the mean of the latitude and longitude of the other data points belonging to that US state.
+No other data <b>cleaning</b> is required. However, we do perform extensive data transformation steps in order to get the data into a suitable format.
+
+We plan to derive numerous quantities from the data. While there are existing features related to COVID Cases, Deaths, Vaccinations, Hospitilizations and Testing, we also perform feature engineering methods to derive numerous new features from the existing features.
+For example, we plan to divide the <i>number_test_results_completed</i> feature by the <i>number_test</i> feature on a day-to-day basis, as a metric to indicate how delayed are the COVID test results for a particular US state.
+
+We decided to perform all our data preprocessing in a separate script which is executed before the streamlit app is run. 
+This script performs all the data preprocessing and writes it to separate .csv files that can be read from the streamlit app.
+This decision was made to reduce the latency of the streamlit app as it can now avoid repetition of unnecessary data processing steps.
+
+
+
 <h4>System Design</h4>
 
 How will you display your data? What types of interactions will you support? Provide some sketches that you have for the system design.
