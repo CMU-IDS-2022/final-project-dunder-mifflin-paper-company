@@ -100,3 +100,13 @@ Since the dataset is very large with a large number of columns, we are unable to
 <h4>System Design</h4>
 
 How will you display your data? What types of interactions will you support? Provide some sketches that you have for the system design.
+
+Below we have a few sketches that give an idea of how we would like our COVID-19 dashboard to look. 
+### Medical infrastructure and COVID-19 forecast
+![Hospital Infrstructure Dashboard](sketches/medical_infrastructure_effect.jpg)
+
+### Correlation of cases and stringency
+![Cases and stringency](sketches/case_stringency_correlation.jpg)
+
+### Correlation of cases and search trends
+![Cases and search trends](sketches/case_search_correlation.png)
