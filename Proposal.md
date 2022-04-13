@@ -94,6 +94,9 @@ We decided to perform all our data preprocessing in a separate script which is e
 This script performs all the data preprocessing and writes it to separate .csv files that can be read from the streamlit app.
 This decision was made to reduce the latency of the streamlit app as it can now avoid repetition of unnecessary data processing steps.
 
+The current data processing scripts can be found <a href = ""> here </a> and <a href = ""> here </a>.
+Since the dataset is very large with a large number of columns, we are unable to provide screenshots for all the data processing. However, for reference two screenshots are attached below:
+
 
 
 <h4>System Design</h4>
