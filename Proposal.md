@@ -79,7 +79,7 @@ analyses across geographical regions.
 
 Do you have to do substantial data cleanup? What quantities do you plan to derive from your data? How will data processing be implemented?  Show some screenshots of your data to demonstrate you have explored it.
 
-As we explored the domain, we decide to use more than just one dataset to increase the amount of information we can present.
+As we explored the domain, we decide to use more than just one dataset (<a href='https://healthdata.gov/Hospital/COVID-19-Reported-Patient-Impact-and-Hospital-Capa/g62h-syeh'> Hospital Capacity Data</a>, <a href= "https://healthdata.gov/dataset/COVID-19-Diagnostic-Laboratory-Testing-PCR-Testing/j8mb-icvb"> COVID Testing Data </a> and <a href= "https://healthdata.gov/Health/COVID-19-Public-Therapeutic-Locator/rxn6-qnx8"> COVID Medicine Locator Data</a>) to increase the amount of information we can present.
 As a result of this, data processing is required to combine the datasets into a usable format.
 Since our main aim is to show the variation of COVID-19 across different states in the Unites States, the main feature by which we join the datasets is the State Name/ID.
 There are also numerous instances in which data is missing (NaN). We address this issue by simply omitting those data points.
@@ -95,7 +95,7 @@ This script performs all the data preprocessing and writes it to separate .csv f
 This decision was made to reduce the latency of the streamlit app as it can now avoid repetition of unnecessary data processing steps.
 
 The current data processing scripts can be found <a href = "https://github.com/CMU-IDS-2022/final-project-dunder-mifflin-paper-company/blob/main/notebooks/data-wrangling-Medical.ipynb"> here </a> and <a href = "https://github.com/CMU-IDS-2022/final-project-dunder-mifflin-paper-company/blob/main/notebooks/data-wrangling.ipynb"> here </a>.
-Since the dataset is very large with a large number of columns, we are unable to provide screenshots for all the data processing. However, for reference some screenshots are attached <a href = "https://github.com/CMU-IDS-2022/final-project-dunder-mifflin-paper-company/tree/main/sketches/data-processing"> here </a>.
+Since the dataset is very large with a large number of columns, we are unable to provide screenshots for all the data processing. However, for reference some screenshots are attached <a href = "https://github.com/CMU-IDS-2022/final-project-dunder-mifflin-paper-company/tree/main/sketches/data-processing"> here</a>.
 
 <h4>System Design</h4>
 
