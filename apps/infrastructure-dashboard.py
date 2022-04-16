@@ -216,7 +216,7 @@ new_york_test_results = new_york_test_results[new_york_test_results["state"] == 
 new_york_test_results = new_york_test_results[["date", "new_tested", "new_results_reported"]]
 new_york_test_results.rename(columns={"date": "Date", "new_tested": "Tests",
                                       "new_results_reported": "Results"},
-                             inplace=True)git
+                             inplace=True)
 new_york_test_results = new_york_test_results.melt("Date", var_name='Parameter', value_name='Value')
 st.write(new_york_test_results)
 new_york_test_results_chart = alt.Chart(new_york_test_results).mark_line().encode(
