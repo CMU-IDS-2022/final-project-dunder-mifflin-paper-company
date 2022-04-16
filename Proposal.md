@@ -109,6 +109,10 @@ Since the dataset is very large with a large number of columns, we are unable to
 <h4>System Design</h4>
 
 Below we have a few sketches that give an idea of how we would like our COVID-19 dashboard to look. 
+
+### Map Visualizations 
+![Map visualizations](sketches/map-sketches.jpg)
+
 ### Medical infrastructure and COVID-19 forecast
 ![Hospital Infrstructure Dashboard](sketches/medical_infrastructure_effect.jpg)
 
