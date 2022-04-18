@@ -24,6 +24,7 @@ def read_files():
             if len(vals) == 3:
                 if vals[2].split('.')[0] == 'values':
                     df = df[['date', 'y', 'pred']]
+                    df = df.rename(columns={"date": "Date", "y": "Actual", "pred": "Predicted"})
                     df_values[vals[1]] = df
                 else:
                     df = df[['feature', 'importance']]
@@ -32,24 +33,47 @@ def read_files():
             else:
                 if vals[2] == 'values':
                     df = df[['date', 'y', 'pred']]
+                    df = df.rename(columns={"date": "Date", "y": "Actual", "pred": "Predicted"})
                     df_values_thirty[vals[1]] = df
 
     return df_values, df_features, df_values_thirty
 
-def model_plot(df_values):
-    states = list(df_values.keys())
+def model_plot_7(df_values):
+    states = list(sorted(df_values.keys()))
     # Edit below to select dynamically
 
-    selected_state = 'NY'
+    selected_state = st.selectbox('Select a State', states)
     df = df_values[selected_state]
-    # Plot date on x axis and y and pred on y axis
-    data = df.melt("date", var_name='Type', value_name='Value')
-    chart = alt.Chart(data).mark_line().encode(
-      x='date:T',
-      y='Value:Q',
+
+    data = df.melt("Date", var_name='Type', value_name='Cases')
+    chart = alt.Chart(data, title="Actual vs Predicted cases for a 7 day step size for " + selected_state + " state")\
+        .mark_line().encode(
+      x='Date:T',
+      y='Cases:Q',
       color='Type:N'
     ).interactive().properties(
-        width=1000,
+        width=800,
+        height=400
+    )
+    st.write(chart)
+    return
+
+
+def model_plot_30(df_values):
+    states = sorted(list(df_values.keys()))
+    # Edit below to select dynamically
+
+    selected_state = st.selectbox('Select a State', states)
+    df = df_values[selected_state]
+
+    data = df.melt("Date", var_name='Type', value_name='Cases')
+    chart = alt.Chart(data, title="Actual vs Predicted cases for a 30 day step size for " + selected_state + " state") \
+        .mark_line().encode(
+        x='Date:T',
+        y='Cases:Q',
+        color='Type:N'
+    ).interactive().properties(
+        width=800,
         height=400
     )
     st.write(chart)
@@ -58,4 +82,7 @@ def model_plot(df_values):
 
 if __name__ =="__main__":
    df_values, df_features, df_values_thirty = read_files()
-   model_plot(df_values)
+   model_plot_7(df_values)
+   model_plot_30(df_values_thirty)
+
+   # How to show df_features?
