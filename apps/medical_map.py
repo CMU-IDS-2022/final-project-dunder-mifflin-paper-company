@@ -8,10 +8,10 @@ import time
 
 @st.cache
 def read_files():
-    df_hospital = pd.read_csv("data/cases_hospital_bed_usa_statewise.csv")
+    df_hospital = pd.read_csv("../data/cases_hospital_bed_usa_statewise.csv")
     states = alt.topo_feature(data.us_10m.url, 'states')
-    df_medical_fac = pd.read_csv("data/medical_facilities.csv")
-    df_vac_fac = pd.read_csv("data/vaccination_sites.csv")
+    df_medical_fac = pd.read_csv("../data/medical_facilities.csv")
+    df_vac_fac = pd.read_csv("../data/vaccination_sites.csv")
 
     df_hospital['date'] = df_hospital['date'].map(lambda row: datetime.strptime(row, '%Y-%m-%d').date())
 
