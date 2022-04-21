@@ -16,19 +16,14 @@ def load_data(url):
     return data
 
 @st.cache
-def read_files():
+def read_files_medical_state_vis():
     df_hospital = pd.read_csv("data/cases_hospital_bed_usa_statewise.csv")
     states = alt.topo_feature(data.us_10m.url, 'states')
-    df_medical_vaccination_facility = pd.read_csv("data/vaccination_medical_facility.csv")
-
     df_hospital['date'] = df_hospital['date'].map(lambda row: datetime.strptime(row, '%Y-%m-%d').date())
 
-    return df_hospital, states, df_medical_vaccination_facility
+    return df_hospital, states
 
 def medical_state_vis(location_df, states, date_slider, column):
-
-
-
 
     temp_df = location_df[location_df['date'] == date_slider]
 
@@ -69,17 +64,10 @@ def medical_state_vis(location_df, states, date_slider, column):
         column.header("Hospital bed utilization over time in the US")
         column.write(glob_plot, use_container_width=True)
 
-
-
-
-    if st.button('Play DONT CLICK  (WIP)'):
-        while date_slider <= max(location_df['date']):
-            date_slider += timedelta(days=10)
-            time.sleep(10)
-
     return
 
 def four_state_map_vis(df_medical, state):
+
     if state == "NY":
         df_ny = df_medical[df_medical["State Code"] == state]
         df_medical_ny = df_ny[df_ny["type"] == "Medicine Facility"]
@@ -289,16 +277,15 @@ def build_metric(state, date_slider, baseline_daashboard_data, columnleft, colum
             st.metric("Total beds", total_beds, str(int(change_total_beds)), delta_color="inverse")
 
 
-
-
-def bed_utilization_chart(state, column):
-    # in-patient beds utilization vs icu-beds utilization
+@st.cache
+def get_df_bed_util(state, covid_data):
 
     df = covid_data[covid_data["state"] == state]
     df = df[["date", "inpatient_beds_utilization", "adult_icu_bed_utilization"]]
     df.rename(columns={"date": "Date", "inpatient_beds_utilization": "In-patient beds utilization",
-                                "adult_icu_bed_utilization": "ICU beds utilization"},
-                       inplace=True)
+                       "adult_icu_bed_utilization": "ICU beds utilization"},
+              inplace=True)
+
     df = df.melt("Date", var_name='Parameter', value_name='Value')
 
     # New York stacked chart
@@ -308,22 +295,22 @@ def bed_utilization_chart(state, column):
     df_stacked_normal = df_stacked[
         ["date", "inpatient_beds_used", "inpatient_beds_used_covid", "inpatient_beds"]]
     df_stacked_normal["Available"] = df_stacked_normal["inpatient_beds"] - \
-                                           df_stacked["inpatient_beds_used"] - \
-                                           df_stacked["inpatient_beds_used_covid"]
+                                     df_stacked["inpatient_beds_used"] - \
+                                     df_stacked["inpatient_beds_used_covid"]
 
     df_stacked_normal["inpatient_beds_used"] = df_stacked_normal["inpatient_beds_used"] / \
-                                                     df_stacked_normal["inpatient_beds"]
+                                               df_stacked_normal["inpatient_beds"]
     df_stacked_normal["inpatient_beds_used_covid"] = df_stacked_normal["inpatient_beds_used_covid"] / \
-                                                           df_stacked_normal["inpatient_beds"]
+                                                     df_stacked_normal["inpatient_beds"]
     df_stacked_normal["Available"] = df_stacked_normal["Available"] / \
-                                           df_stacked_normal["inpatient_beds"]
+                                     df_stacked_normal["inpatient_beds"]
 
     df_stacked_normal.drop(['inpatient_beds'], axis=1, inplace=True)
 
     df_stacked_normal.rename(columns={"date": "Date", "inpatient_beds_used": "Others",
-                                            "inpatient_beds_used_covid": "Covid",
-                                            "Available": "Available"},
-                                   inplace=True)
+                                      "inpatient_beds_used_covid": "Covid",
+                                      "Available": "Available"},
+                             inplace=True)
     df_stacked_normal = df_stacked_normal.melt("Date", var_name='Parameter', value_name='Value')
 
     df_stacked_normal["Type"] = "Normal"
@@ -331,33 +318,37 @@ def bed_utilization_chart(state, column):
     # st.write(new_york_stacked_normal)
 
     df_stacked_icu = df_stacked[["date", "staffed_adult_icu_bed_occupancy",
-                                             "staffed_icu_adult_patients_confirmed_and_suspected_covid",
-                                             "total_staffed_adult_icu_beds"]]
+                                 "staffed_icu_adult_patients_confirmed_and_suspected_covid",
+                                 "total_staffed_adult_icu_beds"]]
     df_stacked_icu["Available"] = df_stacked_icu["total_staffed_adult_icu_beds"] - \
-                                        df_stacked_icu["staffed_adult_icu_bed_occupancy"] - \
-                                        df_stacked_icu["staffed_icu_adult_patients_confirmed_and_suspected_covid"]
+                                  df_stacked_icu["staffed_adult_icu_bed_occupancy"] - \
+                                  df_stacked_icu["staffed_icu_adult_patients_confirmed_and_suspected_covid"]
 
     df_stacked_icu["staffed_adult_icu_bed_occupancy"] = df_stacked_icu["staffed_adult_icu_bed_occupancy"] / \
-                                                              df_stacked_icu["total_staffed_adult_icu_beds"]
+                                                        df_stacked_icu["total_staffed_adult_icu_beds"]
     df_stacked_icu["staffed_icu_adult_patients_confirmed_and_suspected_covid"] = df_stacked_icu[
-                                                                                           "staffed_icu_adult_patients_confirmed_and_suspected_covid"] / \
-                                                                                       df_stacked_icu[
-                                                                                           "total_staffed_adult_icu_beds"]
+                                                                                     "staffed_icu_adult_patients_confirmed_and_suspected_covid"] / \
+                                                                                 df_stacked_icu[
+                                                                                     "total_staffed_adult_icu_beds"]
     df_stacked_icu["Available"] = df_stacked_icu["Available"] / \
-                                        df_stacked_icu["total_staffed_adult_icu_beds"]
+                                  df_stacked_icu["total_staffed_adult_icu_beds"]
 
     df_stacked_icu.drop(['total_staffed_adult_icu_beds'], axis=1, inplace=True)
 
     df_stacked_icu.rename(columns={"date": "Date", "staffed_adult_icu_bed_occupancy": "Others",
-                                         "staffed_icu_adult_patients_confirmed_and_suspected_covid": "Covid"},
-                                inplace=True)
+                                   "staffed_icu_adult_patients_confirmed_and_suspected_covid": "Covid"},
+                          inplace=True)
     df_stacked_icu = df_stacked_icu.melt("Date", var_name='Parameter', value_name='Value')
 
     df_stacked_icu["Type"] = "ICU"
     df_stacked_icu = df_stacked_icu.fillna(0)
-    # st.write(new_york_stacked_icu)
 
     df_stacked_data = df_stacked_normal.append(df_stacked_icu, ignore_index=True)
+
+    return df
+
+
+def bed_utilization_chart(df, state, column):
 
     df_brush = alt.selection(type='interval', encodings=["x"])
     df_bed_utilization_chart = alt.Chart(df,
@@ -393,14 +384,8 @@ def daily_deaths_chart(state, column):
     ).configure_title(fontSize=16)
     column.write(df_deaths_chart)
 
-def testing_and_results_chart(state):
-    df_test_results = pd.read_csv("data/testing_results.csv")
-    df_test_results = df_test_results[df_test_results["state"] == state]
-    df_test_results = df_test_results[["date", "new_tested", "new_results_reported"]]
-    df_test_results.rename(columns={"date": "Date", "new_tested": "# Tests conducted",
-                                          "new_results_reported": "# Results reported"},
-                                 inplace=True)
-    df_test_results = df_test_results.melt("Date", var_name='Parameter', value_name='Count')
+def testing_and_results_chart(df_test_results, state):
+
     df_test_results_chart = alt.Chart(df_test_results,
                                             title="Graph of Testing Vs Result reports for "+ state).mark_line().encode(
         x='Date:T',
@@ -414,19 +399,8 @@ def testing_and_results_chart(state):
 
     st.write(df_test_results_chart)
 
-def staff_shortage_and_deaths_chart(state, column):
-    # Shortage Vs Deaths
+def staff_shortage_and_deaths_chart(df_shortage_vs_deaths, state, column):
 
-    # Decide whether to connect it
-    # For all visualization, cut off everything until may 2020
-    # Fix color scheme
-
-    df_shortage_vs_deaths = covid_data[covid_data["state"] == state]
-    df_shortage_vs_deaths = df_shortage_vs_deaths[
-        ["date", "new_deceased", "critical_staffing_shortage_today_yes"]]
-    df_shortage_vs_deaths.rename(columns={"date": "Date", "new_deceased": "Deaths",
-                                                "critical_staffing_shortage_today_yes": "# Hospitals with shortage"},
-                                       inplace=True)
     df_shortage_vs_deaths_chart = alt.Chart(df_shortage_vs_deaths,
                                                   title="Graph of Daily deaths and hospitals with staff shortage in " + state).mark_point().encode(
         x='Date:T',
@@ -1104,8 +1078,7 @@ def conclusion_utilization_shortage():
            "to have adequate number of ICU beds. "
     st.markdown(text)
 
-if __name__ =="__main__":
-
+def medical_infra_intro():
     st.header("Effect of COVID-19 on the Medical Infrastructure of the US")
     text = "Through our experiences with the COVID-19 pandemic, we should pay attention to the " \
            "overall capacity of the nation’s public health system as it protects and promotes the health " \
@@ -1120,61 +1093,187 @@ if __name__ =="__main__":
            "and we attempt to gain insights regarding possible strategies that can be adopted in the event of a future pandemic. "
     st.markdown(text, unsafe_allow_html=True)
 
+@st.cache
+def read_dashboard_files():
 
     covid_data = load_data(DATA_URL)
     baseline_dashboard_data = load_data(BASELINE_URL)
     covid_data["date"] = covid_data["date"].map(
         lambda row: datetime.strptime(row, "%Y-%m-%d").date())
 
+    return covid_data, baseline_dashboard_data
+
+
+def medical_map_dashboard_vis(covid_data, df_hospital, states, baseline_dashboard_data):
+
     describe_hospital_utilization()
-
     state = st.selectbox('Select a State', set(covid_data['state']))
-
-    df_hospital, states, df_medicine_vaccination_facility = read_files()
-    # Slider for date
     date_slider = st.slider('Silde the Date to see how the Hospitilization and realated parameters vary with time',
                             min(df_hospital['date']), max(df_hospital['date']), min(df_hospital['date']),
                             step=timedelta(days=1), help="Slide over to see different dates")
+
     col1, col2, col3 = st.columns([3, 1, 1])
     medical_state_vis(df_hospital, states, date_slider, col1)
-
-
-    # Building the dashboard
     build_metric(state, date_slider, baseline_dashboard_data, col2, col3)
 
     conclusion_hospital_utilization()
 
+    return
+
+@st.cache
+def read_medicine_facility_files():
+    df_medical_vaccination_facility = pd.read_csv("data/vaccination_medical_facility.csv")
+
+    return df_medical_vaccination_facility
+
+
+def staff_shortage_and_bed_util_vis(df_staff, df_bed):
+
     st.title("How does hospital utilization and staff shortage vary with time?")
     # Utilization Vs Shortage & Deaths
     utilization_ny, deaths_ny = st.columns([0.85, 1])
-    bed_utilization_chart("NY", utilization_ny)
-    staff_shortage_and_deaths_chart("NY", deaths_ny)
+
+    df_staff_ny, df_staff_oh, df_staff_ut, df_staff_ca = df_staff
+    df_bed_ny, df_bed_oh, df_bed_ut, df_bed_ca = df_bed
+
+    bed_utilization_chart(df_bed_ny, "NY", utilization_ny)
+    staff_shortage_and_deaths_chart(df_staff_ny, "NY", deaths_ny)
 
     conclusion_utilization_shortage()
 
     with st.expander("Utah"):
         utilization_ut, deaths_ut = st.columns([0.85, 1])
-        bed_utilization_chart("UT", utilization_ut)
-        staff_shortage_and_deaths_chart("UT", deaths_ut)
+        bed_utilization_chart(df_bed_ut, "UT", utilization_ut)
+        staff_shortage_and_deaths_chart(df_staff_ut, "UT", deaths_ut)
 
     with st.expander("Ohio"):
         utilization_oh, deaths_oh = st.columns([0.85, 1])
-        bed_utilization_chart("OH", utilization_oh)
-        staff_shortage_and_deaths_chart("OH", deaths_oh)
+        bed_utilization_chart(df_bed_oh, "OH", utilization_oh)
+        staff_shortage_and_deaths_chart(df_staff_oh, "OH", deaths_oh)
 
     with st.expander("California"):
         utilization_ca, deaths_ca = st.columns([0.85, 1])
-        bed_utilization_chart("CA", utilization_ca)
-        staff_shortage_and_deaths_chart("CA", deaths_ca)
+        bed_utilization_chart(df_bed_ca, "CA", utilization_ca)
+        staff_shortage_and_deaths_chart(df_staff_ca, "CA", deaths_ca)
+
+    return
+
+@st.cache
+def get_state_staff_shortage_files(covid_data):
+
+    state = 'NY'
+    df_shortage_vs_deaths = covid_data[covid_data["state"] == state]
+    df_shortage_vs_deaths = df_shortage_vs_deaths[
+        ["date", "new_deceased", "critical_staffing_shortage_today_yes"]]
+    df_shortage_vs_deaths = df_shortage_vs_deaths.rename(columns={"date": "Date", "new_deceased": "Deaths",
+                                          "critical_staffing_shortage_today_yes": "# Hospitals with shortage"},)
+
+    df_ny = df_shortage_vs_deaths
+
+    state = 'OH'
+    df_shortage_vs_deaths = covid_data[covid_data["state"] == state]
+    df_shortage_vs_deaths = df_shortage_vs_deaths[
+        ["date", "new_deceased", "critical_staffing_shortage_today_yes"]]
+    df_shortage_vs_deaths = df_shortage_vs_deaths.rename(columns={"date": "Date", "new_deceased": "Deaths",
+                                                                  "critical_staffing_shortage_today_yes": "# Hospitals with shortage"}, )
+
+    df_oh = df_shortage_vs_deaths
+
+    state = 'UT'
+    df_shortage_vs_deaths = covid_data[covid_data["state"] == state]
+    df_shortage_vs_deaths = df_shortage_vs_deaths[
+        ["date", "new_deceased", "critical_staffing_shortage_today_yes"]]
+    df_shortage_vs_deaths = df_shortage_vs_deaths.rename(columns={"date": "Date", "new_deceased": "Deaths",
+                                                                  "critical_staffing_shortage_today_yes": "# Hospitals with shortage"}, )
+
+    df_ut = df_shortage_vs_deaths
+
+    state = 'CA'
+    df_shortage_vs_deaths = covid_data[covid_data["state"] == state]
+    df_shortage_vs_deaths = df_shortage_vs_deaths[
+        ["date", "new_deceased", "critical_staffing_shortage_today_yes"]]
+    df_shortage_vs_deaths = df_shortage_vs_deaths.rename(columns={"date": "Date", "new_deceased": "Deaths",
+                                                                  "critical_staffing_shortage_today_yes": "# Hospitals with shortage"}, )
+
+    df_ca = df_shortage_vs_deaths
+
+
+    return df_ny, df_oh, df_ut, df_ca
+
+@st.cache
+def get_state_bed_files(covid_data):
+
+    df_bed_ny = get_df_bed_util('NY', covid_data)
+    df_bed_oh = get_df_bed_util('OH', covid_data)
+    df_bed_ut = get_df_bed_util('UT', covid_data)
+    df_bed_ca = get_df_bed_util('CA', covid_data)
+
+    return df_bed_ny, df_bed_oh, df_bed_ut, df_bed_ca
+
+def covid_test_vis(df_test):
 
     st.title("Are all covid test sample results reported?")
-    testing_and_results_chart("NY")
+
+    df_ny, df_oh, df_ut, df_ca = df_test
+
+    testing_and_results_chart(df_ny, "NY")
     with st.expander("Utah"):
-        testing_and_results_chart("UT")
+        testing_and_results_chart(df_ut, "UT")
     with st.expander("Ohio"):
-        testing_and_results_chart("OH")
+        testing_and_results_chart(df_oh, "OH")
     with st.expander("California"):
-        testing_and_results_chart("CA")
+        testing_and_results_chart(df_ca, "CA")
+    return
+
+
+@st.cache
+def read_testing_files():
+
+    df_test = pd.read_csv("data/testing_results.csv")
+
+    state = 'NY'
+    df_test_results = df_test[df_test["state"] == state]
+    df_test_results = df_test_results[["date", "new_tested", "new_results_reported"]]
+    df_test_results.rename(columns={"date": "Date", "new_tested": "# Tests conducted",
+                                    "new_results_reported": "# Results reported"},
+                           inplace=True)
+    df_test_results = df_test_results.melt("Date", var_name='Parameter', value_name='Count')
+
+    df_ny = df_test_results
+
+    state = 'OH'
+    df_test_results = df_test[df_test["state"] == state]
+    df_test_results = df_test_results[["date", "new_tested", "new_results_reported"]]
+    df_test_results.rename(columns={"date": "Date", "new_tested": "# Tests conducted",
+                                    "new_results_reported": "# Results reported"},
+                           inplace=True)
+    df_test_results = df_test_results.melt("Date", var_name='Parameter', value_name='Count')
+
+    df_oh = df_test_results
+
+    state = 'CA'
+    df_test_results = df_test[df_test["state"] == state]
+    df_test_results = df_test_results[["date", "new_tested", "new_results_reported"]]
+    df_test_results.rename(columns={"date": "Date", "new_tested": "# Tests conducted",
+                                    "new_results_reported": "# Results reported"},
+                           inplace=True)
+    df_test_results = df_test_results.melt("Date", var_name='Parameter', value_name='Count')
+
+    df_ca = df_test_results
+
+    state = 'UT'
+    df_test_results = df_test[df_test["state"] == state]
+    df_test_results = df_test_results[["date", "new_tested", "new_results_reported"]]
+    df_test_results.rename(columns={"date": "Date", "new_tested": "# Tests conducted",
+                                    "new_results_reported": "# Results reported"},
+                           inplace=True)
+    df_test_results = df_test_results.melt("Date", var_name='Parameter', value_name='Count')
+
+    df_ut = df_test_results
+
+    return df_ny, df_oh, df_ut, df_ca
+
+def vac_and_med_loc_vis():
 
     st.title("How are the vaccination and Medicine facilities spread across the country?")
 
@@ -1186,7 +1285,6 @@ if __name__ =="__main__":
     text = "<p style='font-size: 30px;'>New York</p>"
     st.markdown(text, unsafe_allow_html=True)
     four_state_map_vis(df_medicine_vaccination_facility, "NY")
-
 
     with st.expander("Utah"):
         text = "<p style='font-size: 30px;'>Utah</p>"
@@ -1203,6 +1301,22 @@ if __name__ =="__main__":
         st.markdown(text, unsafe_allow_html=True)
         four_state_map_vis(df_medicine_vaccination_facility, "CA")
 
+    return
 
-    # Acces to vaccination
+if __name__ =="__main__":
+
+    covid_data, baseline_dashboard_data = read_dashboard_files()
+    df_hospital, states = read_files_medical_state_vis()
+    df_medicine_vaccination_facility = read_medicine_facility_files()
+    df_staff = get_state_staff_shortage_files(covid_data)
+    df_bed = get_state_bed_files(covid_data)
+    df_test = read_testing_files()
+
+    medical_infra_intro()
+    medical_map_dashboard_vis(covid_data, df_hospital, states, baseline_dashboard_data)
+    staff_shortage_and_bed_util_vis(df_staff, df_bed)
+    covid_test_vis(df_test)
+    vac_and_med_loc_vis()
+
+
     describe_access_to_vaccination_sites()
