@@ -901,7 +901,6 @@ def ohio_infrastructure_chart():
 
     st.write(ohio_test_results_chart)
 
-
 def california_infrastructure_chart():
     california_df = covid_data[covid_data["state"] == "CA"]
     california_df = california_df[["date", "inpatient_beds_utilization", "adult_icu_bed_utilization"]]
