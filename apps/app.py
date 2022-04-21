@@ -242,7 +242,7 @@ def build_metric(state, date_slider, baseline_daashboard_data, columnleft, colum
     baseline_value = baseline_daashboard_data[baseline_daashboard_data["state"] == state]
     prev_beds = 0
     if state_info_date.empty or state_info.empty:
-        st.header("No data available :'(")
+        columnright.header("No data available :'(")
 
     else:
         cases = state_info_date["new_confirmed"]
@@ -1077,7 +1077,7 @@ def conclusion_hospital_utilization():
            "necessary for us to identify strategies that enable quick expansion of space, staff and supplies in the event of a" \
            "future pandemic. <br>" \
            "We will now study this is more detail for the states of New York(NY), Utah(UT), Ohio(OH) and California(CA) for" \
-           "ease of interpretation and to contrast how these effects have spread across the country."
+           " ease of interpretation and to contrast how these effects have spread across the country."
     st.markdown(text, unsafe_allow_html=True)
 
 def describe_access_to_vaccination_sites():
@@ -1095,6 +1095,14 @@ def describe_access_to_vaccination_sites():
         coltransit.header("Public Transit :bus:")
         text = "<b style='font-size: 30px;font-family:Monaco, monospace; color:red;'>45 mins</b>"
         coltransit.markdown(text, unsafe_allow_html=True)
+
+def conclusion_utilization_shortage():
+    text = "From the graph on the left we see that during the pandemic there is more variation in the ICU beds, " \
+           "whereas the im-patient beds seem to relatively be at the same level. A majority of COVID-19 affected patients" \
+           "do not need to be admitted. Only cases where the individual is suffer from other co-morbidities required to be admitted" \
+           "and these patients usually required sofisticated care that can be provided only in the ICU. Thus, it is important" \
+           "to have adequate number of ICU beds. "
+    st.markdown(text)
 
 if __name__ =="__main__":
 
@@ -1141,6 +1149,8 @@ if __name__ =="__main__":
     utilization_ny, deaths_ny = st.columns([0.85, 1])
     bed_utilization_chart("NY", utilization_ny)
     staff_shortage_and_deaths_chart("NY", deaths_ny)
+
+    conclusion_utilization_shortage()
 
     with st.expander("Utah"):
         utilization_ut, deaths_ut = st.columns([0.85, 1])
