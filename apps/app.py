@@ -415,6 +415,7 @@ def ut_map_vis(df_medical, df_medical_and_vac):
 
 def build_metric(state, date_slider, baseline_daashboard_data, columnleft, columnright):
 
+    st.write("<p align='right'>**Figures are with respect to previous day</p>", unsafe_allow_html=True)
     state_info = covid_data[covid_data["state"] == state]
     state_info_date = state_info[state_info["date"] == date_slider]
     if date_slider == min(state_info["date"]):
