@@ -415,6 +415,7 @@ def ut_map_vis(df_medical, df_medical_and_vac):
 
 def build_metric(state, date_slider, baseline_daashboard_data, columnleft, columnright):
 
+    st.write("<p align='right'>**Figures are with respect to previous day</p>", unsafe_allow_html=True)
     state_info = covid_data[covid_data["state"] == state]
     state_info_date = state_info[state_info["date"] == date_slider]
     if date_slider == min(state_info["date"]):
@@ -479,6 +480,9 @@ def build_metric(state, date_slider, baseline_daashboard_data, columnleft, colum
             st.metric("ICU bed utilization COVID patients", round(icu_covid_utilization, 2), str(round(percentage_change_icu_covid, 2)) + " %",
                       delta_color="inverse")
             st.metric("Total beds", total_beds, str(int(change_total_beds)))
+
+        with columnleft:
+            st.write("Figures represent change with respect to previous day ")
 
 
 def bed_utilization_chart(df, state, column):
