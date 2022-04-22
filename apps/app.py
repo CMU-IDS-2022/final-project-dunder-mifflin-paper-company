@@ -633,13 +633,15 @@ def medical_infra_intro():
 def medical_map_dashboard_vis(covid_data, df_hospital, states, baseline_dashboard_data):
 
     describe_hospital_utilization()
-    state = st.selectbox('Select a State', set(covid_data['state']))
+
     date_slider = st.slider('Silde the Date to see how the Hospitilization and realated parameters vary with time',
                             min(df_hospital['date']), max(df_hospital['date']), min(df_hospital['date']),
                             step=timedelta(days=1), help="Slide over to see different dates")
 
     col1, col2, col3 = st.columns([3, 1, 1])
     medical_state_vis(df_hospital, states, date_slider, col1)
+    with col2:
+        state = st.selectbox('Select a State', set(covid_data['state']))
     build_metric(state, date_slider, baseline_dashboard_data, col2, col3)
 
     conclusion_hospital_utilization()
