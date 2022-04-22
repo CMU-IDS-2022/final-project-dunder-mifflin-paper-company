@@ -481,8 +481,7 @@ def build_metric(state, date_slider, baseline_daashboard_data, columnleft, colum
                       delta_color="inverse")
             st.metric("Total beds", total_beds, str(int(change_total_beds)))
 
-        with columnleft:
-            st.write("Figures represent change with respect to previous day ")
+    return
 
 
 def bed_utilization_chart(df, state, column):
@@ -641,7 +640,9 @@ def medical_map_dashboard_vis(covid_data, df_hospital, states, baseline_dashboar
     col1, col2, col3 = st.columns([3, 1, 1])
     medical_state_vis(df_hospital, states, date_slider, col1)
     with col2:
-        state = st.selectbox('Select a State', set(covid_data['state']))
+        list_states = sorted(list(set(covid_data['state'])))
+        ny_ind = list_states.index("NY")
+        state = st.selectbox('Select a State', list_states, index=ny_ind)
     build_metric(state, date_slider, baseline_dashboard_data, col2, col3)
 
     conclusion_hospital_utilization()
@@ -684,8 +685,9 @@ def staff_shortage_and_bed_util_vis(df_staff, df_bed):
 def covid_test_vis(df_test):
 
     st.title("Are all covid test sample results reported?")
-
-    state = st.selectbox('Select a State', set(df_test['state']))
+    list_states = sorted(list(set(df_test['state'])))
+    ny_ind = list_states.index("NY")
+    state = st.selectbox('Select a State', list_states , index=ny_ind)
     testing_and_results_chart(df_test, state)
     return
 
