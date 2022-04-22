@@ -265,9 +265,9 @@ def medical_state_vis(location_df, states, date_slider, column):
 
     temp_df = location_df[location_df['date'] == date_slider]
 
-    cols = ["date", "state", "inpatient_beds_utilization", "new_confirmed", "latitude", "longitude"]
+    cols = ["date", "state", "inpatient_beds_utilization", "new_confirmed", "latitude", "longitude", "cases_per_population"]
     temp_df = temp_df[cols]
-    temp_df.rename(columns={"inpatient_beds_utilization": "Utilization", "new_confirmed": "Cases"},
+    temp_df.rename(columns={"inpatient_beds_utilization": "Utilization", "new_confirmed": "Cases", "cases_per_population": "Case Density"},
               inplace=True)
     # Background chart
     background = alt.Chart(states, title="").mark_geoshape(
@@ -287,13 +287,13 @@ def medical_state_vis(location_df, states, date_slider, column):
         color=alt.Color("Utilization:Q", scale=alt.Scale(domain=[0.4, 0.6, 0.8, 1.0],
                                                                         range=['green', 'yellow', 'red', 'purple']),
                         legend=alt.Legend(orient="left", titleFontSize=15, labelFontSize=15)),
-        size=alt.Size('Cases:Q', scale=alt.Scale(range=[10, 1000], domain=[0, 10000]),
-                      legend=alt.Legend(values=[0, 5000, 10000, 50000], fillColor="powderblue",
+        size=alt.Size('Case Density:Q', scale=alt.Scale(range=[0, 100], domain=[0, 100]),
+                      legend=alt.Legend(values=[5, 100, 500], fillColor="powderblue",
                                         labelColor="black", direction="vertical",
                                         labelFontSize=16, titleColor="black",
                                         titleFontSize=16, titleAlign="right")),
         tooltip=[alt.Tooltip("state", title="State"), alt.Tooltip('Utilization:Q', title= "Utlization"),
-                 alt.Tooltip('Cases:Q', title="Cases")]
+                 alt.Tooltip('Cases:Q', title="Cases"), alt.Tooltip('Case Density:Q', title="Cases per 100,000 people")]
     )
 
     # Plot both
@@ -747,7 +747,6 @@ def model_vis(df_values, df_features, df_values_thirty):
     model_plot_7(df_values)
     model_plot_30(df_values_thirty)
     features_plot(df_features)
-
     return
 
 
