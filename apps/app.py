@@ -31,27 +31,11 @@ def read_files_medical_state_vis():
 @st.cache
 def get_four_state_map_files(df_medical):
 
-    df_ny = df_medical[df_medical["State Code"] == 'NY']
-    df_medical_ny = df_ny[df_ny["type"] == "Medicine Facility"]
-    df_medicine_vaccination_ny = df_ny[df_ny["type"] == "Med&Vac"]
-    df_ny = df_medical_ny, df_medicine_vaccination_ny
+    df_med = df_medical[df_medical["type"] == "Medicine Facility"]
+    df_medicine_vaccination = df_medical[df_medical["type"] == "Med&Vac"]
 
-    df_oh = df_medical[df_medical["State Code"] == 'OH']
-    df_medical_oh = df_oh[df_oh["type"] == "Medicine Facility"]
-    df_medicine_vaccination_oh = df_oh[df_oh["type"] == "Med&Vac"]
-    df_oh = df_medical_oh, df_medicine_vaccination_oh
-
-    df_ut = df_medical[df_medical["State Code"] == 'UT']
-    df_medical_ut = df_ut[df_ut["type"] == "Medicine Facility"]
-    df_medicine_vaccination_ut = df_ut[df_ut["type"] == "Med&Vac"]
-    df_ut = df_medical_ut, df_medicine_vaccination_ut
-
-    df_ca = df_medical[df_medical["State Code"] == 'CA']
-    df_medical_ca = df_ca[df_ca["type"] == "Medicine Facility"]
-    df_medicine_vaccination_ca = df_ca[df_ca["type"] == "Med&Vac"]
-    df_ca = df_medical_ca, df_medicine_vaccination_ca
-
-    return df_ny, df_oh, df_ut, df_ca
+    # return df_ny, df_oh, df_ut, df_ca
+    return df_med, df_medicine_vaccination
 
 
 @st.cache
@@ -737,23 +721,23 @@ def vac_and_med_loc_vis(df_medicine_vaccination_facility):
     text = "<p style='font-size: 30px;'>New York</p>"
     st.markdown(text, unsafe_allow_html=True)
 
-    df_ny, df_oh, df_ut, df_ca = df_medicine_vaccination_facility
-    four_state_map_vis(df_ny[0], df_ny[1], "NY")
+    df_med, df_vac = df_medicine_vaccination_facility
+    four_state_map_vis(df_med, df_vac, "NY")
 
     with st.expander("Utah"):
         text = "<p style='font-size: 30px;'>Utah</p>"
         st.markdown(text, unsafe_allow_html=True)
-        four_state_map_vis(df_ut[0], df_ut[1], "UT")
+        four_state_map_vis(df_med, df_vac, "UT")
 
     with st.expander("Ohio"):
         text = "<p style='font-size: 30px;'>Ohio</p>"
         st.markdown(text, unsafe_allow_html=True)
-        four_state_map_vis(df_oh[0], df_oh[1], "OH")
+        four_state_map_vis(df_med, df_vac, "OH")
 
     with st.expander("California"):
         text = "<p style='font-size: 30px;'>California</p>"
         st.markdown(text, unsafe_allow_html=True)
-        four_state_map_vis(df_ca[0], df_ca[1], "CA")
+        four_state_map_vis(df_med, df_vac, "CA")
 
     return
 
