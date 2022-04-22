@@ -174,47 +174,7 @@ def read_testing_files():
 
     df_test = pd.read_csv("data/testing_results.csv")
 
-    state = 'NY'
-    df_test_results = df_test[df_test["state"] == state]
-    df_test_results = df_test_results[["date", "new_tested", "new_results_reported"]]
-    df_test_results.rename(columns={"date": "Date", "new_tested": "# Tests conducted",
-                                    "new_results_reported": "# Results reported"},
-                           inplace=True)
-    df_test_results = df_test_results.melt("Date", var_name='Parameter', value_name='Count')
-
-    df_ny = df_test_results
-
-    state = 'OH'
-    df_test_results = df_test[df_test["state"] == state]
-    df_test_results = df_test_results[["date", "new_tested", "new_results_reported"]]
-    df_test_results.rename(columns={"date": "Date", "new_tested": "# Tests conducted",
-                                    "new_results_reported": "# Results reported"},
-                           inplace=True)
-    df_test_results = df_test_results.melt("Date", var_name='Parameter', value_name='Count')
-
-    df_oh = df_test_results
-
-    state = 'CA'
-    df_test_results = df_test[df_test["state"] == state]
-    df_test_results = df_test_results[["date", "new_tested", "new_results_reported"]]
-    df_test_results.rename(columns={"date": "Date", "new_tested": "# Tests conducted",
-                                    "new_results_reported": "# Results reported"},
-                           inplace=True)
-    df_test_results = df_test_results.melt("Date", var_name='Parameter', value_name='Count')
-
-    df_ca = df_test_results
-
-    state = 'UT'
-    df_test_results = df_test[df_test["state"] == state]
-    df_test_results = df_test_results[["date", "new_tested", "new_results_reported"]]
-    df_test_results.rename(columns={"date": "Date", "new_tested": "# Tests conducted",
-                                    "new_results_reported": "# Results reported"},
-                           inplace=True)
-    df_test_results = df_test_results.melt("Date", var_name='Parameter', value_name='Count')
-
-    df_ut = df_test_results
-
-    return df_ny, df_oh, df_ut, df_ca
+    return df_test
 
 
 @st.cache
@@ -267,7 +227,7 @@ def medical_state_vis(location_df, states, date_slider, column):
 
     cols = ["date", "state", "inpatient_beds_utilization", "new_confirmed", "latitude", "longitude", "cases_per_population"]
     temp_df = temp_df[cols]
-    temp_df.rename(columns={"inpatient_beds_utilization": "Utilization", "new_confirmed": "Cases", "cases_per_population": "Case Density"},
+    temp_df.rename(columns={"inpatient_beds_utilization": "Bed Utilization", "new_confirmed": "Cases", "cases_per_population": "Case Density"},
               inplace=True)
     # Background chart
     background = alt.Chart(states, title="").mark_geoshape(
@@ -284,16 +244,16 @@ def medical_state_vis(location_df, states, date_slider, column):
     points = alt.Chart(temp_df).mark_circle().encode(
         latitude='latitude:Q',
         longitude='longitude:Q', # points with utilization 0.1 have some blue color. its a bit misleasding
-        color=alt.Color("Utilization:Q", scale=alt.Scale(domain=[0.4, 0.6, 0.8, 1.0],
+        color=alt.Color("Bed Utilization:Q", scale=alt.Scale(domain=[0.4, 0.6, 0.8, 1.0],
                                                                         range=['green', 'yellow', 'red', 'purple']),
                         legend=alt.Legend(orient="left", titleFontSize=15, labelFontSize=15)),
-        size=alt.Size('Case Density:Q', scale=alt.Scale(range=[0, 100], domain=[0, 100]),
-                      legend=alt.Legend(values=[5, 100, 500], fillColor="powderblue",
-                                        labelColor="black", direction="vertical",
-                                        labelFontSize=16, titleColor="black",
+        size=alt.Size('Cases:Q', scale=alt.Scale(range=[10, 1000], domain=[0, 10000]),
+                      legend=alt.Legend(values=[0, 5000, 10000, 50000], symbolFillColor="white",
+                                        labelColor="white", direction="vertical",
+                                        labelFontSize=16, titleColor="white",
                                         titleFontSize=16, titleAlign="right")),
-        tooltip=[alt.Tooltip("state", title="State"), alt.Tooltip('Utilization:Q', title= "Utlization"),
-                 alt.Tooltip('Cases:Q', title="Cases"), alt.Tooltip('Case Density:Q', title="Cases per 100,000 people")]
+        tooltip=[alt.Tooltip("state", title="State"), alt.Tooltip('Bed Utilization:Q', title= "Bed Utilization"),
+                 alt.Tooltip('Cases:Q', title="Cases"), alt.Tooltip('Case Density:Q', title="Cases per state population")]
     )
 
     # Plot both
@@ -457,18 +417,26 @@ def build_metric(state, date_slider, baseline_daashboard_data, columnleft, colum
 
     state_info = covid_data[covid_data["state"] == state]
     state_info_date = state_info[state_info["date"] == date_slider]
-    baseline_value = baseline_daashboard_data[baseline_daashboard_data["state"] == state]
-    prev_beds = 0
+    if date_slider == min(state_info["date"]):
+        baseline_value = state_info_date
+    else:
+        baseline_value = state_info[state_info["date"] == date_slider - timedelta(days=1)]
+
     if state_info_date.empty or state_info.empty:
         columnright.header("No data available :'(")
 
     else:
-        cases = state_info_date["new_confirmed"]
-        deceased = state_info_date["new_deceased"]
+        cases = state_info_date["new_confirmed"].values[0]
+        baseline_cases = baseline_value["new_confirmed"].values[0]
+        change_total_cases = int(cases - baseline_cases)
+
+        deceased = state_info_date["new_deceased"].values[0]
+        baseline_deceased = baseline_value["new_deceased"].values[0]
+        change_total_deceased = int(deceased - baseline_deceased)
 
         total_beds = state_info_date["inpatient_beds"].values[0]
         baseline_total_beds = baseline_value["inpatient_beds"].values[0]
-        change_total_beds = total_beds - prev_beds
+        change_total_beds = total_beds - baseline_total_beds
 
         beds_utilization = state_info_date["inpatient_beds_utilization"].values[0]
         baseline_beds_utilization = baseline_value["inpatient_beds_utilization"].values[0]
@@ -476,6 +444,9 @@ def build_metric(state, date_slider, baseline_daashboard_data, columnleft, colum
                 baseline_beds_utilization + 1)
 
         beds_covid = state_info_date["percent_of_inpatients_with_covid"].values[0]
+        baseline_beds_covid = baseline_value["percent_of_inpatients_with_covid"].values[0]
+        percentage_change_beds_covid = ((beds_covid + 1) - (baseline_beds_covid + 1)) * 100 / (
+                baseline_beds_covid + 1)
 
         icu_utilization = state_info_date["adult_icu_bed_utilization"].values[0]
         baseline_icu_utilization = baseline_value["adult_icu_bed_utilization"].values[0]
@@ -483,6 +454,9 @@ def build_metric(state, date_slider, baseline_daashboard_data, columnleft, colum
                 baseline_icu_utilization + 1)
 
         icu_covid_utilization = state_info_date["adult_icu_bed_covid_utilization"].values[0]
+        baseline_icu_covid = baseline_value["adult_icu_bed_covid_utilization"].values[0]
+        percentage_change_icu_covid = ((icu_covid_utilization + 1) - (baseline_icu_covid + 1)) * 100 / (
+                baseline_icu_covid + 1)
 
         staff_shortage = state_info_date["critical_staffing_shortage_today_yes"].values[0]
         baseline_staff_shortage = baseline_value["critical_staffing_shortage_today_yes"].values[0]
@@ -491,20 +465,20 @@ def build_metric(state, date_slider, baseline_daashboard_data, columnleft, colum
 
         with columnleft:
             st.header("")
-            st.metric("Cases today", round(cases, 2), None)
-            st.metric("Hospital beds utilization", round(beds_utilization, 2),
+            st.metric("Cases today", round(cases, 2), change_total_cases)
+            st.metric("Hospital bed utilization", round(beds_utilization, 2),
                       str(round(percentage_change_beds_utilization, 2)) + " %", delta_color="inverse")
-            st.metric("ICU bed utilization", round(icu_utilization, 2), percentage_change_icu_utilization,
+            st.metric("ICU bed utilization", round(icu_utilization, 2), str(round(percentage_change_icu_utilization, 2)) + " %",
                       delta_color="inverse")
             st.metric("Number of hospitals with staff shortage", staff_shortage, percentage_change_staff_shortage,
                       delta_color="inverse")
         with columnright:
             st.header(" ")
-            st.metric("Deaths today", deceased, None)
-            st.metric("Hospital beds utilization COVID patients", round(beds_covid, 2), None, delta_color="inverse")
-            st.metric("ICU bed utilization COVID patients", round(icu_covid_utilization, 2), None,
+            st.metric("Deaths today", deceased, change_total_deceased)
+            st.metric("Hospital bed utilization COVID patients", round(beds_covid, 2), str(round(percentage_change_beds_covid, 2)) + " %", delta_color="inverse")
+            st.metric("ICU bed utilization COVID patients", round(icu_covid_utilization, 2), str(round(percentage_change_icu_covid, 2)) + " %",
                       delta_color="inverse")
-            st.metric("Total beds", total_beds, str(int(change_total_beds)), delta_color="inverse")
+            st.metric("Total beds", total_beds, str(int(change_total_beds)))
 
 
 def bed_utilization_chart(df, state, column):
@@ -544,7 +518,14 @@ def daily_deaths_chart(state, column):
     column.write(df_deaths_chart)
 
 
-def testing_and_results_chart(df_test_results, state):
+def testing_and_results_chart(df_test, state):
+
+    df_test_results = df_test[df_test["state"] == state]
+    df_test_results = df_test_results[["date", "new_tested", "new_results_reported"]]
+    df_test_results.rename(columns={"date": "Date", "new_tested": "# Tests conducted",
+                                    "new_results_reported": "# Results reported"},
+                           inplace=True)
+    df_test_results = df_test_results.melt("Date", var_name='Parameter', value_name='Count')
 
     df_test_results_chart = alt.Chart(df_test_results,
                                             title="Graph of Testing Vs Result reports for "+ state).mark_line().encode(
@@ -698,15 +679,8 @@ def covid_test_vis(df_test):
 
     st.title("Are all covid test sample results reported?")
 
-    df_ny, df_oh, df_ut, df_ca = df_test
-
-    testing_and_results_chart(df_ny, "NY")
-    with st.expander("Utah"):
-        testing_and_results_chart(df_ut, "UT")
-    with st.expander("Ohio"):
-        testing_and_results_chart(df_oh, "OH")
-    with st.expander("California"):
-        testing_and_results_chart(df_ca, "CA")
+    state = st.selectbox('Select a State', set(df_test['state']))
+    testing_and_results_chart(df_test, state)
     return
 
 
