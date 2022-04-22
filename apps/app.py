@@ -480,6 +480,9 @@ def build_metric(state, date_slider, baseline_daashboard_data, columnleft, colum
                       delta_color="inverse")
             st.metric("Total beds", total_beds, str(int(change_total_beds)))
 
+        with columnleft:
+            st.write("Figures represent change with respect to previous day ")
+
 
 def bed_utilization_chart(df, state, column):
 
