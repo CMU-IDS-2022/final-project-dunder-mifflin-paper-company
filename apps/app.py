@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import altair as alt
 from vega_datasets import data
 from datetime import datetime, timedelta
@@ -125,7 +126,7 @@ def medical_state_vis(location_df, states, date_slider, column):
     # Background chart
     background = alt.Chart(states, title="").mark_geoshape(
         fill='white ',
-        stroke='black',
+        stroke='black'
     ).project('albersUsa').properties(
         width=650,
         height=400
@@ -396,20 +397,30 @@ def build_metric(state, date_slider, baseline_daashboard_data, columnleft, colum
 
         with columnleft:
             st.header("")
-            st.metric("Cases today", round(cases, 2), change_total_cases)
-            st.metric("Hospital bed utilization", round(beds_utilization, 2),
+            st.metric("Cases today", int(cases), change_total_cases, delta_color="inverse")
+            st.metric("Hospital bed utilization", str(round(beds_utilization, 2)),
                       str(round(percentage_change_beds_utilization, 2)) + " %", delta_color="inverse")
-            st.metric("ICU bed utilization", round(icu_utilization, 2), str(round(percentage_change_icu_utilization, 2)) + " %",
+
+            if np.isnan(icu_utilization):
+                st.metric("ICU bed utilization", "---")
+            else:
+                st.metric("ICU bed utilization", round(icu_utilization, 2), str(round(percentage_change_icu_utilization, 2)) + " %",
                       delta_color="inverse")
+
             st.metric("Number of hospitals with staff shortage", staff_shortage, percentage_change_staff_shortage,
                       delta_color="inverse")
         with columnright:
             st.header(" ")
-            st.metric("Deaths today", deceased, change_total_deceased)
+            st.metric("Deaths today", int(deceased), change_total_deceased, delta_color="inverse")
             st.metric("Hospital bed utilization COVID patients", round(beds_covid, 2), str(round(percentage_change_beds_covid, 2)) + " %", delta_color="inverse")
-            st.metric("ICU bed utilization COVID patients", round(icu_covid_utilization, 2), str(round(percentage_change_icu_covid, 2)) + " %",
-                      delta_color="inverse")
-            st.metric("Total beds", total_beds, str(int(change_total_beds)))
+
+            if np.isnan(icu_covid_utilization):
+                st.metric("ICU bed utilization COVID patients", "---")
+            else:
+               st.metric("ICU bed utilization COVID patients", round(icu_covid_utilization, 2),
+                         str(round(percentage_change_icu_covid, 2)) + " %", delta_color="inverse")
+
+            st.metric("Total beds", int(total_beds), str(int(change_total_beds)))
 
     return
 
@@ -654,8 +665,8 @@ def model_plot_7(df_values):
     col1, col2, col3 = st.columns(3)
 
     with col3:
-        st.write("MSE: ", f"{mse:,}")
         st.write("MAE: ", f"{mae:,}")
+        st.write("MSE: ", f"{mse:,}")
 
     with col1:
         df = df[['Date', 'Actual', 'Predicted']]
@@ -687,8 +698,8 @@ def model_plot_30(df_values):
     col1, col2, col3 = st.columns(3)
 
     with col3:
-        st.write("MSE: ", f"{mse:,}")
         st.write("MAE: ", f"{mae:,}")
+        st.write("MSE: ", f"{mse:,}")
 
     with col1:
         df = df[['Date', 'Actual', 'Predicted']]
