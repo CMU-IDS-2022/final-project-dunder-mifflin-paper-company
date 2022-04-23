@@ -300,7 +300,7 @@ def plot_dashboard(government_response_df, cases_df, polygons):
         factor_strings = st.multiselect(
             "Government Response Factors:",
             FACTORS_MAP.keys(),
-            default=["Stay At Home Requirements"],
+            default=["Stringency Index"],
         )
 
     with col2:
@@ -403,12 +403,12 @@ def plot_dashboard(government_response_df, cases_df, polygons):
         .encode(
             alt.X(
                 "x",
-                title="Days",
+                title="Date (2021)",
             ),
             alt.Y(
                 "shifted_case_values",
-                title="Cases",
-                axis=alt.Axis(title="Cases", titleColor="#57A44C"),
+                title="Number of new cases",
+                axis=alt.Axis(title="Number of new cases", titleColor="#57A44C"),
             ),
         )
         .interactive()
@@ -420,7 +420,7 @@ def plot_dashboard(government_response_df, cases_df, polygons):
         .encode(
             alt.X(
                 "x",
-                title="Days",
+                title="Date (2021)",
                 # scale=alt.Scale(domain=['2021-01-01','2021-12-31'])
             ),
             alt.Y(

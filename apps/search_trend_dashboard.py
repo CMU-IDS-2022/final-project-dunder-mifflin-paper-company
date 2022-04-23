@@ -16,8 +16,15 @@ from streamlit.scriptrunner.script_runner import RerunException
 
 
 if "selected_region" not in st.session_state:
-    print("Changing region to US")
     st.session_state["selected_region"] = "US"
+
+if "history" not in st.session_state:
+    st.session_state["history"] = {
+        "region": [],
+        "searches": [],
+        "shift": [],
+        "correlation": [],
+    }
 
 
 ROLLING_WINDOW = 7
@@ -302,15 +309,15 @@ def plot_dashboard(search_trend_df, cases_df, polygons):
 
     col1, col2 = st.columns([2, 1])
     with col1:
-        search_strings = st.multiselect(
+        searches = st.multiselect(
             "Search terms: (default: all)", SEARCH_STRINGS, default=["fever"]
         )
     with col2:
-        st.markdown("<br /><br /><br />", unsafe_allow_html=True)
+        # st.markdown("<br /><br /><br />", unsafe_allow_html=True)
         shift = st.slider("Shift", 0, 30)
 
     search_strings = list(
-        map(lambda search_string: "search_trends_" + search_string, search_strings)
+        map(lambda search_string: "search_trends_" + search_string, searches)
     )
 
     for ind, ele in enumerate(polygons["features"]):
@@ -323,34 +330,6 @@ def plot_dashboard(search_trend_df, cases_df, polygons):
         )
 
         ele["properties"]["Correlation"] = correlation
-
-    usa_map = plot_map(polygons)
-
-    with col1:
-        usa_map_folium = usa_map.to_streamlit(
-            height=500, width=900, add_layer_control=True, bidirectional=True
-        )
-
-    try:
-        click = usa_map.st_last_click(usa_map_folium)
-    except:
-        click = None
-
-    if click is not None:
-        region = get_geocoder().geocode(click[0], click[1])
-
-        if region is None:
-            region = "US"
-        else:
-            region = region["NAME"]
-
-        if region != st.session_state["selected_region"]:
-            st.session_state["selected_region"] = region
-            print("updated", region)
-            st.experimental_rerun()
-
-    # with col1:
-    #     location = LOCATION_ABBREVIATION_MAP[st.selectbox('State', LOCATION_ABBREVIATION_MAP.keys())]
 
     location = LOCATION_ABBREVIATION_MAP[st.session_state["selected_region"].upper()]
     location_cases = cases_df[cases_df["location_key"] == location][
@@ -385,14 +364,46 @@ def plot_dashboard(search_trend_df, cases_df, polygons):
     shifted_search_trend_values /= max(shifted_search_trend_values)
     # shifted_case_values /= max(shifted_case_values)
 
-    corref = np.corrcoef(
-        x=shifted_search_trend_values / max(shifted_search_trend_values),
-        y=shifted_case_values / max(shifted_case_values),
+    corref = round(
+        np.corrcoef(
+            x=shifted_search_trend_values / max(shifted_search_trend_values),
+            y=shifted_case_values / max(shifted_case_values),
+        )[0][1],
+        3,
     )
 
+    col1, col2, col3 = st.columns([4, 1, 1])
+
     with col2:
-        st.write("Region: %s" % (st.session_state["selected_region"]))
-        st.metric(label="Correlation", value=round(corref[0][1], 3))
+        st.metric(label="Region", value=st.session_state["selected_region"])
+    with col3:
+        st.metric(label="Correlation", value=corref)
+
+    col1, col2 = st.columns([2, 1])
+
+    usa_map = plot_map(polygons)
+    with col1:
+        st.markdown("<br />", unsafe_allow_html=True)
+        usa_map_folium = usa_map.to_streamlit(
+            height=500, width=900, add_layer_control=True, bidirectional=True
+        )
+
+    try:
+        click = usa_map.st_last_click(usa_map_folium)
+    except:
+        click = None
+
+    if click is not None:
+        region = get_geocoder().geocode(click[0], click[1])
+
+        if region is None:
+            region = "US"
+        else:
+            region = region["NAME"]
+
+        if region != st.session_state["selected_region"]:
+            st.session_state["selected_region"] = region
+            st.experimental_rerun()
 
     data = pd.DataFrame()
     data["shifted_case_values"] = shifted_case_values.tolist()
@@ -437,6 +448,58 @@ def plot_dashboard(search_trend_df, cases_df, polygons):
     chart = alt.layer(cases_chart, trends_chart).resolve_scale(y="independent")
     with col2:
         st.altair_chart(chart, use_container_width=True)
+
+    ############### HISTORICAL CHART ###############
+
+    searches_tooltip_value = ", ".join(sorted(list(set(searches))))
+
+    if (
+        not len(st.session_state["history"]["region"])
+        or st.session_state["history"]["region"][-1]
+        != st.session_state["selected_region"]
+        or st.session_state["history"]["searches"][-1] != searches_tooltip_value
+        or st.session_state["history"]["shift"][-1] != shift
+        or st.session_state["history"]["correlation"][-1] != corref
+    ):
+
+        st.session_state["history"]["region"].append(
+            st.session_state["selected_region"]
+        )
+        st.session_state["history"]["searches"].append(searches_tooltip_value)
+        st.session_state["history"]["shift"].append(shift)
+        st.session_state["history"]["correlation"].append(corref)
+
+    historical_data = pd.DataFrame(st.session_state["history"])
+    historical_chart = (
+        alt.Chart(historical_data.reset_index(), title="Search history")
+        .mark_line(point=True, color="#FFFFFF")
+        .encode(
+            alt.Y(
+                "correlation",
+                title="Correlation",
+                scale=alt.Scale(domain=[-1, 1]),
+                axis=alt.Axis(tickSize=0),
+            ),
+            alt.X(
+                "index",
+                title="History",
+                scale=alt.Scale(
+                    domain=[-1, len(st.session_state["history"]["correlation"])]
+                ),
+                axis=None,
+            ),
+            tooltip=[
+                alt.Tooltip("region", title="Region"),
+                alt.Tooltip("shift", title="Shift"),
+                alt.Tooltip("searches", title="Searches"),
+                alt.Tooltip("correlation", title="Correlation"),
+            ],
+        )
+        .interactive()
+    )
+
+    with col2:
+        st.altair_chart(historical_chart, use_container_width=True)
 
 
 if __name__ == "__main__":
