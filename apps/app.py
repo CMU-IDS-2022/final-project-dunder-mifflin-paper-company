@@ -194,7 +194,7 @@ def us_map_vis(df_medical, df_medical_and_vac):
 
 def build_metric(state, date_slider, baseline_daashboard_data, columnleft, columnright):
 
-    st.write("<p align='right'>**Figures are with respect to previous day</p>", unsafe_allow_html=True)
+    st.write("<p align='right' style='font-family:Courier New, monospace; font-size:12px'>**Figures (Increase and Decrease) represent <br> change with respect to the previous day</p><br><br>", unsafe_allow_html=True)
     state_info = covid_data[covid_data["state"] == state]
     state_info_date = state_info[state_info["date"] == date_slider]
     if date_slider == min(state_info["date"]):
@@ -319,30 +319,27 @@ def describe_hospital_utilization():
    st.header("Hospital bed utilization")
    # Added Content HERE
    st.markdown("Hospital Bed utilization is a key component of throughput for all in-patient care hospitals."
-               "The goal is to have enough hospital beds available to meet the needs of newly admitted patients, "
-               "without compromising the quality of service to already admitted patients "
+               " The goal is to have enough hospital beds available to meet the needs of newly admitted patients, "
+               "without compromising the quality of service to already admitted patients. "
                "In our analysis, we measure Hospital Bed utilization as the average of the percentage of beds that are being utilized in hospitals in a given state.")
    r'''
          $$\hspace{60mm} Utilization = \frac{\#Occupied\ beds}{\#Available\ beds}$$
     '''
-   st.markdown("Let us now have an overview of how the Hospital bed utilization varied across states for the duration of the pandemic.")
+   st.markdown("Let us now get an overview of how the Hospital bed utilization varied across states for the duration of the pandemic.")
 
 
 def conclusion_hospital_utilization():
-    text = "From the graph we see that over time the bed utlization in hospitals has increased as indicated by the change in " \
+    text = "We see that over time the bed utlization in hospitals has increased as indicated by the change in " \
            "color gradient from <span style='font-family:sans-serif; color:yellowgreen;'>yellowish-green</span> to " \
            "<span style='font-family:sans-serif; color:#953553;'>reddish-purple</span>"
     st.markdown(text, unsafe_allow_html=True)
-    text = "We also see that as the number of cases (indicated by the size of the circles) increases, the utilization" \
+    text = "It is also seen that as the number of cases (indicated by the size of the circles) increases, the utilization" \
            " moves towards the upper end. This tells us that there were some degree of patients infected with Covid, " \
-           "that were seeking care at hospitals. We can also see this displayed in the dashboard above from the 'Hospital bed utilization COVID patients' metric. " \
+           "that were seeking care at hospitals. We can also see this displayed in the dashboard above from the <b>Hospital bed utilization COVID patients</b> metric. " \
            "<br> It is imperative that hospitals be able to provide care to infected individuals during a future pandemic. " \
            "<br> We also see that the number of available Hospital beds increased by significant numbers as the pandemic progressed and the number of cases increased." \
-           "This indicates a high degree of pressure on the medical sector to procure large number of beds quickly due to large increase in the number of COVID cases. " \
-           "But, were we able to procure beds quickly enough? Let us now take a deeper dive to find out more about this. <br> " \
-           "Simply 'trying' to increase bed capacity is not sustainable in terms of both economic and workforce requirement. It is " \
-            "necessary for us to set in place pre-defined strategies that enable quick expansion of space, staff and supplies in the event of a" \
-            "future pandemic. <br>"
+           " This indicates a high degree of pressure on the medical sector to procure large number of beds quickly due to large increase in the number of COVID cases. " \
+           "<br><br>But, were we able to procure beds <i>quickly</i> enough? Let us now take a deeper dive to find out more about this. <br> "
     st.markdown(text, unsafe_allow_html=True)
 
 
@@ -383,15 +380,15 @@ def describe_access_to_vaccination_sites():
 
 
 def conclusion_utilization_shortage():
-    st.markdown("Feel free to select an interval on the graph on the left and slide across to get a more focused view of the graph on the right! <br><br>", unsafe_allow_html=True)
+    st.markdown("<p style='font-family:Courier New, monospace; font-size:14px'>Feel free to select an interval on the graph on the left <br> and slide across to get a more focused view of the graph on the right! </p> <br><br>", unsafe_allow_html=True)
     text = "From the graph on the left we see that during the pandemic there is more variation in the utilization of ICU beds, " \
            "whereas the in-patient beds seem to be relatively around the same level as it was  before. One can argue that it looks like a majority of COVID-19 affected patients" \
            " did not require to be admitted. Only cases where the individual suffers from other co-morbidities were more likely" \
-           "required to be admitted, but they required ICU beds. This can lead us to the conclusion that for a similar future pandemic, one must place emphasis on procuring ICU beds and not general beds. " \
+           " required to be admitted, but they required ICU beds. This can lead us to the conclusion that for a similar future pandemic, one must place emphasis on procuring ICU beds and not general beds. " \
            "However, if we take a look at the dashboard above again, we see that the number of available beds has increased significantly as the pandemic progressed! " \
-           "Therefore the relative stable level of In-patient bed utilization is due the fact that hospitals were  able to quickly procure a large number of 'in-patient' beds to meet their demand. " \
+           "Therefore the relative stable level of In-patient bed utilization is due the fact that hospitals were  able to quickly procure a large number of <i>in-patient</i> beds to meet their demand. " \
            "The same however cannot be said for the ICU beds. ICU beds are very complex mechanisms that cannot be quickly procured with the current state of the medical infrastructure." \
-            " But if we look closely, we can see that across a majority of the states, as soon as the ICU bed utilization crosses the ~75% barrier, the number of deaths see a sharp incline. " \
+            " But if we look closely, we can see that across a majority of the states, as soon as the ICU bed utilization crosses the <b>~75%</b> barrier, the number of deaths see a sharp incline. " \
            "Therefore it is of utmost importance to have pre-defined strategies in place that allow hospitilizations to quickly increase the ICU bed availability, before it crosses the 75% barrier, in the event of a  future pandemic. <br><br>" \
            "Another interesting observation is the relation between staff shortages and deaths. As we see more number of hospitals reporting" \
            " shortage of staff (the points becoming more reddish), we shortly see a sharp incline in the deaths. This shows that is of equal importance to also have sufficient availability of medical staff" \
@@ -403,7 +400,7 @@ def medical_infra_intro():
     st.header("How did the Medical Infrastructure of the US cope with the COVID-19 pandemic?")
     text = "Through our experiences with the COVID-19 pandemic, we should pay attention to the " \
            "overall capacity of the nation’s public health system as it protects and promotes the health " \
-           "of all people in all our communities." \
+           "of all people in all our communities. " \
            "Public health infrastructure enables every level of government to prevent disease, promote health, prepare " \
            "for and respond to both emergency situations and ongoing challenges. Health departments also play a vital role in " \
            "educating the public about unexpected infectious disease threats as well as evidence-based interventions for " \
@@ -411,7 +408,7 @@ def medical_infra_intro():
            "We should not wait for the next pandemic to make us realize the strategic importance of public health agencies and the " \
            "critical role they play in protecting us. " \
            "Through a set of interesting visualizations and statistics, we explore how the medical infrastructure coped with the COVID-19 pandemic" \
-           "and we attempt to gain insights regarding possible strategies that can be adopted in the event of a future pandemic. "
+           " and we attempt to gain insights regarding possible strategies that can be adopted in the event of a future pandemic. "
     st.markdown(text, unsafe_allow_html=True)
 
 
@@ -512,7 +509,7 @@ def conclusion_testing_results():
 
 def covid_test_vis(df_test):
 
-    st.title("Are all covid test sample results reported?")
+    st.title("Are all covid test sample results returned in a reasonable amount of time?")
     list_states = sorted(list(set(df_test['state'])))
     ny_ind = list_states.index("NY")
     state = st.selectbox('Select a State', list_states , index=ny_ind)
