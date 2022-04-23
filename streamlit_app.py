@@ -15,14 +15,17 @@ def display_graph(selection="Take me Home!"):
     elif selection == "Government Response":
         MedicalVis()
 
+    elif selection == "Introduction" or selection == "Select One":
+        st.write("Introduction")
+
 
 if __name__=="__main__":
     st.sidebar.image("images/panel_black.png", use_column_width=True, output_format="PNG")
 
     selector = st.sidebar.selectbox(
             "What Would You Like to Look at?",
-            ("Exploratory Data Analysis", "Medical Infrastructure", "Government Response"),
+            ("Introduction", "Exploratory Data Analysis", "Medical Infrastructure", "Government Response"),
             on_change=display_graph(),
-            # Initially load the EDA page
+            # Initially load a page
             key="menu",
         )
