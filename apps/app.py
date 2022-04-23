@@ -306,7 +306,9 @@ def testing_and_results_chart(df_test, state):
         x=alt.X('Date:T', axis=alt.Axis(labelAngle=0, ticks=True, titleFontSize=16, titlePadding=15)),
         y=alt.Y('Count:Q', axis=alt.Axis(labelAngle=0, ticks=True, titleFontSize=16, titlePadding=15)),
         color=alt.Color("Parameter", scale=alt.Scale(scheme='set2'),
-                        legend=alt.Legend(orient="right", titleFontSize=15, labelFontSize=15))
+                        legend=alt.Legend(orient="right", titleFontSize=15, labelFontSize=15)),
+        tooltip=[alt.Tooltip("Date:T", title="Date"), alt.Tooltip('Parameter:N', title="Parameter"),
+                 alt.Tooltip('Count:Q', title="Count")]
     ).interactive().properties(
         width=1000,
         height=400
@@ -572,14 +574,15 @@ def model_plot_7(df_values):
 
     with col1:
         df = df[['Date', 'Actual', 'Predicted']]
-
         data = df.melt("Date", var_name='Type', value_name='Cases')
         chart = alt.Chart(data, title="Actual vs Predicted cases for a 7 day step size for " + selected_state + " state") \
             .mark_line().encode(
             x=alt.X('Date:T', axis=alt.Axis(labelAngle=0, ticks=True, titleFontSize=16, titlePadding=15)),
             y=alt.Y('Cases:Q', axis=alt.Axis(labelAngle=0, ticks=True, titleFontSize=16, titlePadding=15)),
             color=alt.Color('Type:N', scale=alt.Scale(scheme='set2'),
-                            legend=alt.Legend(orient="right", titleFontSize=15, labelFontSize=15))
+                            legend=alt.Legend(orient="right", titleFontSize=15, labelFontSize=15)),
+            tooltip=[alt.Tooltip("Date:T", title="Date"), alt.Tooltip('Type:N', title="Type"),
+                     alt.Tooltip('Cases:Q', title="Cases")]
         ).interactive().properties(
             width=800,
             height=400
@@ -624,7 +627,9 @@ def model_plot_30(df_values):
             x=alt.X('Date:T', axis=alt.Axis(labelAngle=0, ticks=True, titleFontSize=16, titlePadding=15)),
             y=alt.Y('Cases:Q', axis=alt.Axis(labelAngle=0, ticks=True, titleFontSize=16, titlePadding=15)),
             color=alt.Color('Type:N', scale=alt.Scale(scheme='set2'),
-                            legend=alt.Legend(orient="right", titleFontSize=15, labelFontSize=15))
+                            legend=alt.Legend(orient="right", titleFontSize=15, labelFontSize=15)),
+            tooltip=[alt.Tooltip("Date:T", title="Date"), alt.Tooltip('Type:N', title="Type"),
+                     alt.Tooltip('Cases:Q', title="Cases")]
         ).interactive().properties(
             width=800,
             height=400
