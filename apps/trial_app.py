@@ -6,7 +6,8 @@ from vega_datasets import data
 from datetime import datetime, timedelta
 import pydeck as pdk
 import os
-
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
 
 st.set_page_config(layout="wide")
 
@@ -191,7 +192,7 @@ def us_map_vis(df_medical, df_medical_and_vac):
     return
 
 
-def build_metric(covid_data, state, date_slider, columnleft, columnright):
+def build_metric(state, date_slider, baseline_daashboard_data, columnleft, columnright):
 
     st.write("<p align='right' style='font-family:Courier New, monospace; font-size:12px'>**Figures (Increase and Decrease) represent <br> change with respect to the previous day</p><br><br>", unsafe_allow_html=True)
     state_info = covid_data[covid_data["state"] == state]
@@ -271,6 +272,26 @@ def build_metric(covid_data, state, date_slider, columnleft, columnright):
 
     return
 
+
+
+def daily_deaths_chart(state, column):
+    col_utilization, deaths = st.columns(2)
+    # New York deaths chart
+    df_deaths = covid_data[covid_data["state"] == state]
+    df_deaths = df_deaths[["date", "new_deceased"]]
+    df_deaths.rename(columns={"date": "Date", "new_deceased": "Deaths"},
+                           inplace=True)
+    df_deaths_chart = alt.Chart(df_deaths, title="Daily Deaths in " + state + " over time").mark_line(
+        color="#d147ed").encode(
+        alt.X('Date:T', axis=alt.Axis(title='Date')),
+        alt.Y('Deaths:Q')
+    ).interactive().properties(
+        width=500,
+        height=400
+    ).configure_title(fontSize=16)
+    column.write(df_deaths_chart)
+
+
 def testing_and_results_chart(df_test, state):
 
     df_test_results = df_test[df_test["state"] == state]
@@ -325,13 +346,15 @@ def conclusion_hospital_utilization():
 
 
 def conclusion_access_to_vaccination_medication():
-    text = "The medicine facilities are locations of publicly available COVID-19 Therapeutics that require prescription. " \
-           "From the map, we see that the Eastern states contain more number of medical facilities than the Western states, while the Central states have a much lesser density of these facilities. However, " \
-           "the population of the east is almost double that of the west [ADD REFERENCE], explaining the higher number of facilities, but it does not proportionally account for the lesser number of facilities in Central states. " \
-           "Across all states, we can also see that there are more Medicine/Therapeutic facilities than Vaccination centers. The " \
-           "vaccination centers seem to be concentrated in major cities. One can argue that this non-uniform spread of facilities, " \
-           "leading to difficulties for some citizens to reach these facilities, can be a part of the reason that " \
-           "the rate of vaccination in the US was comparatively lower [ADD REFERENCE] than other countries. <br><br>"
+    text = "The medicine facilities are locations of publicly available COVID-19 Therapeutics that require prescription" \
+           "From the map, we see that easter states contain more facilities than the western states. However, " \
+           "the population of the east is almost double that of the west. This explains the higher number of facilities." \
+           "We can also see that there are more Medicine/Therapeutic facilities than Vaccination centers. " \
+           "Though there is availability of vaccination facilities, the rate of vaccination in teh US was comparitively lower." \
+           "A few reasons that citizens state was inconvenience to reach the facility/ lack of transport etc. In order to overcome" \
+           "this, the state governments can roll out policies  to help encourage vaccination, including ridesharing services " \
+           "offering free transport to vaccine clinic sites, and promotional incentives and discounts being offered to those " \
+           "who present proof of a recent vaccination."
 
     st.markdown(text, unsafe_allow_html=True)
 
@@ -353,8 +376,8 @@ def describe_access_to_vaccination_sites():
 
     text = "Vaccination sites need to be acccessible to the public for a successful rollout. On analyzing the maximum average travel" \
            "time to the nearest vacciation sites around the country, it is seen that driving to the vaccination site is the quickest way, " \
-           "followed by walking and then public transit (Odd!). These numbers reflect the average maximum time across the US that one would have to " \
-           "travel to reach a vaccination site."
+           "followed by walking and public transit. These numbers reflect the average maximum time across the US that one would have to " \
+           "travel to reach a vaccination site. The numbers appear to be reasonable!"
     st.markdown(text, unsafe_allow_html=True)
 
 
@@ -391,7 +414,7 @@ def medical_infra_intro():
     st.markdown(text, unsafe_allow_html=True)
 
 
-def medical_map_dashboard_vis(covid_data, df_hospital, states):
+def medical_map_dashboard_vis(covid_data, df_hospital, states, baseline_dashboard_data):
 
     describe_hospital_utilization()
 
@@ -405,7 +428,7 @@ def medical_map_dashboard_vis(covid_data, df_hospital, states):
         list_states = sorted(list(set(covid_data['state'])))
         ny_ind = list_states.index("NY")
         state = st.selectbox('Select a State to see metrics for the chosen date', list_states, index=ny_ind)
-    build_metric(covid_data, state, date_slider, col2, col3)
+    build_metric(state, date_slider, baseline_dashboard_data, col2, col3)
 
     conclusion_hospital_utilization()
 
@@ -467,15 +490,23 @@ def staff_shortage_and_bed_util_vis(covid_data):
     return
 
 def conclusion_testing_results():
+    text = "It is clear that the number of test results obtained is significantly lower than the number of samples taken. This is" \
+           "another crucial dimension where the medical infrastructure should be sclaed up. It is equally important to have enough" \
+           "labs that can process all the test samples and return their results within a finite amount of time. Timely results will" \
+           "help curb the spread of infection as infected individuals can be alerted to stay quarantined and prevent the spread further." \
 
-    text = "It is clear that during the peaks of COVID, the number of test results returned is significantly lower than the number of samples taken, indicating" \
-           " that the testing facilities were put under immense pressure by the pandemic. While most of the states were initially able to keep up with the testing demands," \
-           " almost all the states could not handle the testing demands during the the last peak (Jan - Apr 2022).  This is" \
-           " another crucial dimension where the medical infrastructure should be scaled up. It is equally important to have enough" \
-           " labs that can process all the test samples and return their results within a finite amount of time. Timely results will" \
-           " help curb the spread of infection as infected individuals can be alerted to stay quarantined and prevent the spread further. <br><br> " \
-
-    st.markdown(text, unsafe_allow_html=True)
+    text = "It is important to track the testing that states are doing to diagnose people with COVID-19 infection in order to gauge" \
+           " the spread of COVID-19 in the U.S. and to know whether enough testing is occurring. When states report the number of " \
+           "COVID-19 tests performed, this should include the number of viral tests performed and the number of patients for which" \
+           " these tests were performed. Currently, states may not be distinguishing overall tests administered from the number of" \
+           " individuals who have been tested. This is an important limitation to the data that is available to track testing in " \
+           "the U.S., and states should work to address it. When states report testing numbers for COVID-19 infection, they " \
+           "should not include serology or antibody tests. Antibody tests are not used to diagnose active COVID-19 infection and " \
+           "they do not provide insights into the number of cases of COVID-19 diagnosed or whether viral testing is sufficient to find infections " \
+           "that are occurring within each state. States that include serology tests within their overall COVID-19 testing numbers are misrepresenting " \
+           "their testing capacity and the extent to which they are working to identify COVID-19 infections within their communities. States that wish " \
+           "to track the number of serology tests being performed should report those numbers separately from viral tests performed to diagnose COVID-19."
+    st.markdown(text)
 
 
 def covid_test_vis(df_test):
@@ -496,6 +527,8 @@ def vac_and_med_loc_vis(df_medicine_vaccination_facility):
     text = "<p style='font-size: 30px;'><span style='font-family:sans-serif; color:rgba(34, 200, 48, 2);'>Vaccination </span> &" \
            "<span style='font-family:sans-serif; color:rgba(180, 0, 200, 90);'> Medicine </span>facilities</p>"
 
+    st.markdown(text, unsafe_allow_html=True)
+    text = "<p style='font-size: 30px;'>New York</p>"
     st.markdown(text, unsafe_allow_html=True)
 
     df_med, df_vac = df_medicine_vaccination_facility
@@ -566,7 +599,6 @@ def conclusion_model_feature_importance():
            "cases. The values of the previous day will also influence the overall direction of the change in trend."
 
     st.markdown(text, unsafe_allow_html=True)
-
 
 def model_vis(df_values, df_features, df_values_thirty):
 
@@ -706,7 +738,7 @@ def features_plot(df_features):
     # Lag_7 means that last week same day. So day of the week matters?
     return
 
-def MedicalVis():
+if __name__ =="__main__":
 
     covid_data, baseline_dashboard_data = read_dashboard_files()
     df_hospital, states = read_files_medical_state_vis()
@@ -716,7 +748,7 @@ def MedicalVis():
     df_values, df_features, df_values_thirty = read_files_model()
 
     medical_infra_intro()
-    medical_map_dashboard_vis(covid_data, df_hospital, states)
+    medical_map_dashboard_vis(covid_data, df_hospital, states, baseline_dashboard_data)
     staff_shortage_and_bed_util_vis(covid_data)
     covid_test_vis(df_test)
     vac_and_med_loc_vis(df_medical_fac_loc)
