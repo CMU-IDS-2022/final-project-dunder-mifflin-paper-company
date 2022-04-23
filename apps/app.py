@@ -303,8 +303,8 @@ def testing_and_results_chart(df_test, state):
 
     df_test_results_chart = alt.Chart(df_test_results,
                                             title="Graph of Testing Vs Result reports for "+ state).mark_line().encode(
-        x='Date:T',
-        y='Count:Q',
+        x=alt.X('Date:T', axis=alt.Axis(labelAngle=0, ticks=True, titleFontSize=16, titlePadding=15)),
+        y=alt.Y('Count:Q', axis=alt.Axis(labelAngle=0, ticks=True, titleFontSize=16, titlePadding=15)),
         color=alt.Color("Parameter", scale=alt.Scale(scheme='set2'),
                         legend=alt.Legend(orient="right", titleFontSize=15, labelFontSize=15))
     ).interactive().properties(
@@ -409,7 +409,7 @@ def staff_shortage_and_bed_util_vis(covid_data):
 
     st.title("How does hospital utilization and staff shortage vary with time?")
 
-    list_states_cov = sorted(list(set(covid_data['state'])))
+    list_states_cov = sorted(list(set(covid_data['state']).difference(set(['AS']))))
     ny_ind = list_states_cov.index("NY")
     state = st.selectbox('Select a State!', list_states_cov, index=ny_ind)
 
@@ -425,8 +425,8 @@ def staff_shortage_and_bed_util_vis(covid_data):
 
     df_bed_utilization_chart = alt.Chart(df_bed,
                                          title="Trend in Hospital bed utilization in " + state).mark_point(tooltip=True).encode(
-        x='Date:T',
-        y='Value:Q',
+        x=alt.X('Date:T', axis=alt.Axis(labelAngle=0, ticks=True, titleFontSize=16, titlePadding=15)),
+        y=alt.Y('Value:Q', axis=alt.Axis(labelAngle=0, ticks=True, titleFontSize=16, titlePadding=15)),
         color=alt.condition(selection, 'Parameter:N', alt.value('lightgray'),
                             legend=alt.Legend(orient="top", titleFontSize=15, labelFontSize=15, direction="horizontal",
                                           padding=15))
@@ -437,8 +437,8 @@ def staff_shortage_and_bed_util_vis(covid_data):
 
     df_shortage_vs_deaths_chart = alt.Chart(df_staff,
                                             title="Graph of Daily deaths and hospitals with staff shortage in " + "NY").mark_point().encode(
-        x='Date:T',
-        y='Deaths:Q',
+        x=alt.X('Date:T', axis=alt.Axis(labelAngle=0, ticks=True, titleFontSize=16, titlePadding=15)),
+        y=alt.Y('Deaths:Q', axis=alt.Axis(labelAngle=0, ticks=True, titleFontSize=16, titlePadding=15)),
         color=alt.Color("# Hospitals with shortage:Q",
                         scale=alt.Scale(scheme='goldred'),
                         legend=alt.Legend(orient="top", titleFontSize=15, labelFontSize=15, direction="horizontal",
@@ -528,8 +528,8 @@ def model_plot_7(df_values):
         data = df.melt("Date", var_name='Type', value_name='Cases')
         chart = alt.Chart(data, title="Actual vs Predicted cases for a 7 day step size for " + selected_state + " state") \
             .mark_line().encode(
-            x='Date:T',
-            y='Cases:Q',
+            x=alt.X('Date:T', axis=alt.Axis(labelAngle=0, ticks=True, titleFontSize=16, titlePadding=15)),
+            y=alt.Y('Cases:Q', axis=alt.Axis(labelAngle=0, ticks=True, titleFontSize=16, titlePadding=15)),
             color=alt.Color('Type:N', scale=alt.Scale(scheme='set2'),
                             legend=alt.Legend(orient="right", titleFontSize=15, labelFontSize=15))
         ).interactive().properties(
@@ -573,8 +573,8 @@ def model_plot_30(df_values):
         data = df.melt("Date", var_name='Type', value_name='Cases')
         chart = alt.Chart(data, title="Actual vs Predicted cases for a 30 day step size for " + selected_state + " state") \
             .mark_line().encode(
-            x='Date:T',
-            y='Cases:Q',
+            x=alt.X('Date:T', axis=alt.Axis(labelAngle=0, ticks=True, titleFontSize=16, titlePadding=15)),
+            y=alt.Y('Cases:Q', axis=alt.Axis(labelAngle=0, ticks=True, titleFontSize=16, titlePadding=15)),
             color=alt.Color('Type:N', scale=alt.Scale(scheme='set2'),
                             legend=alt.Legend(orient="right", titleFontSize=15, labelFontSize=15))
         ).interactive().properties(
@@ -601,13 +601,15 @@ def features_plot(df_features):
         'Importance': top10_val
     })
 
-    feat_imp_chart = alt.Chart(source).mark_bar().encode(
-        x=alt.X('Lag:N', sort='-y'),
-        y='Importance:Q'
+    feat_imp_chart = alt.Chart(source, title="Feature importance for prediction").mark_bar().encode(
+        x=alt.X('Lag:N', sort='-y', axis=alt.Axis(labelAngle=0, labelFontSize=16, ticks=True, titleFontSize=16, titlePadding=15)),
+        y=alt.Y('Importance:Q', axis=alt.Axis(labelAngle=0, labelFontSize=16, ticks=True, titleFontSize=16, titlePadding=15)),
     ).interactive().properties(
             width=800,
             height=400
-    )
+    ).configure_title(fontSize=16).configure_mark(
+    opacity=0.8,
+    color='#ebb434')
 
     st.write(feat_imp_chart)
     # https://www.cienciadedatos.net/documentos/py27-time-series-forecasting-python-scikitlearn.html
