@@ -30,7 +30,6 @@ if __name__=="__main__":
             "What would you like to look at?",
             ("Introduction", "Exploratory Data Analysis", "Government Response", "Medical Infrastructure"),
             on_change=display_graph(),
-            # Initially load a page
             key="menu",
         )
 
