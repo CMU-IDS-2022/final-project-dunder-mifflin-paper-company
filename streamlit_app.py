@@ -1,5 +1,7 @@
 import streamlit as st
 from apps.medical_infrastructure_app import MedicalVis
+from apps.introduction import Introduction
+from apps.eda import EDA
 # Import here and call accordingly down below
 
 def display_graph(selection="Introduction"):
@@ -7,7 +9,7 @@ def display_graph(selection="Introduction"):
     if "menu" in st.session_state:
         selection = st.session_state.menu
     if selection == "Exploratory Data Analysis":
-        MedicalVis()
+        EDA()
 
     elif selection == "Medical Infrastructure":
         MedicalVis()
@@ -18,6 +20,7 @@ def display_graph(selection="Introduction"):
     elif selection == "Introduction" or selection == "Select One":
         text = "<h1 style='text-align: center; color: #7f32a8;'>COVID-19 Dashboard<h1>"
         st.write(text, unsafe_allow_html=True)
+        Introduction()
 
 
 if __name__=="__main__":
