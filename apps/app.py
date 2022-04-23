@@ -318,12 +318,14 @@ def testing_and_results_chart(df_test, state):
 def describe_hospital_utilization():
    st.header("Hospital bed utilization")
    # Added Content HERE
-   st.markdown("Bed utilization is a key component of throughput for all in-patient care hospitals."
-               "The goal is to have enough hospital beds available to meet the needs of newly admitted patients. "
-               "It is measured as the percentage of beds that are being utilized. ")
+   st.markdown("Hospital Bed utilization is a key component of throughput for all in-patient care hospitals."
+               "The goal is to have enough hospital beds available to meet the needs of newly admitted patients, "
+               "without compromising the quality of service to already admitted patients "
+               "In our analysis, we measure Hospital Bed utilization as the average of the percentage of beds that are being utilized in hospitals in a given state.")
    r'''
          $$\hspace{60mm} Utilization = \frac{\#Occupied\ beds}{\#Available\ beds}$$
     '''
+   st.markdown("Let us now have an overview of how the Hospital bed utilization varied across states for the duration of the pandemic.")
 
 
 def conclusion_hospital_utilization():
@@ -397,14 +399,14 @@ def medical_infra_intro():
     st.header("How did the Medical Infrastructure of the US cope with the COVID-19 pandemic?")
     text = "Through our experiences with the COVID-19 pandemic, we should pay attention to the " \
            "overall capacity of the nation’s public health system as it protects and promotes the health " \
-           "of all people in all communities." \
-           "Public health infrastructure enables every level of government to prevent disease, promote health, and prepare " \
+           "of all people in all our communities." \
+           "Public health infrastructure enables every level of government to prevent disease, promote health, prepare " \
            "for and respond to both emergency situations and ongoing challenges. Health departments also play a vital role in " \
            "educating the public about unexpected infectious disease threats as well as evidence-based interventions for " \
            "mitigation. <br>" \
-           "We should wait for the next pandemic  to make us realize the strategic importance of public health agencies and the " \
+           "We should not wait for the next pandemic to make us realize the strategic importance of public health agencies and the " \
            "critical role they play in protecting us. " \
-           "Through a set of interesting visualizations and statistics, we explore the effect of COVID-19 on the medical infrastructure" \
+           "Through a set of interesting visualizations and statistics, we explore how the medical infrastructure coped with the COVID-19 pandemic" \
            "and we attempt to gain insights regarding possible strategies that can be adopted in the event of a future pandemic. "
     st.markdown(text, unsafe_allow_html=True)
 
