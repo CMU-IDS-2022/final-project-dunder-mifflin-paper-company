@@ -371,7 +371,7 @@ def conclusion_utilization_shortage():
 
 
 def medical_infra_intro():
-    st.header("Effect of COVID-19 on the Medical Infrastructure of the US")
+    st.header("How did the Medical Infrastructure of the US cope with the COVID-19 pandemic?")
     text = "Through our experiences with the COVID-19 pandemic, we should pay attention to the " \
            "overall capacity of the nation’s public health system as it protects and promotes the health " \
            "of all people in all communities." \
@@ -500,17 +500,29 @@ def model_vis(df_values, df_features, df_values_thirty):
 def model_plot_7(df_values):
     states = list(sorted(df_values.keys()))
 
-    selected_state = st.selectbox('Select a State', states)
+    list_states = states
+    ny_ind = list_states.index("NY")
+    selected_state = st.selectbox('Select a State: ', list_states, index=ny_ind)
     df = df_values[selected_state]
 
     mae = int(sum(df['diff'])/len(df))
+    val_mae = f"{mae:,}"
     mse = int(sum(df['diff_sq'])/len(df))
-
+    val_mse = f"{mse:,}"
     col1, col2, col3 = st.columns(3)
 
     with col3:
-        st.write("MAE: ", f"{mae:,}")
-        st.write("MSE: ", f"{mse:,}")
+
+        mae_text = f"""
+        <span style='font-size: 30px;font-family:Monaco, monospace;'>MAE:</span><b style='font-size: 30px;font-family:Monaco, monospace; color:#41c0d1;'>{val_mae}</b>
+        """
+        st.write(mae_text, unsafe_allow_html=True)
+
+        mse_text = f"""
+                <span style='font-size: 30px;font-family:Monaco, monospace;'>MSE:</span><b style='font-size: 30px;font-family:Monaco, monospace; color:#ebb75e;'>{val_mse}</b>
+                """
+        st.write(mse_text, unsafe_allow_html=True)
+
 
     with col1:
         df = df[['Date', 'Actual', 'Predicted']]
@@ -519,11 +531,12 @@ def model_plot_7(df_values):
             .mark_line().encode(
             x='Date:T',
             y='Cases:Q',
-            color='Type:N'
+            color=alt.Color('Type:N', scale=alt.Scale(scheme='set2'),
+                            legend=alt.Legend(orient="right", titleFontSize=15, labelFontSize=15))
         ).interactive().properties(
             width=800,
             height=400
-        )
+        ).configure_title(fontSize=16)
         st.write(chart)
     return
 
@@ -533,17 +546,28 @@ def model_plot_30(df_values):
     states = sorted(list(df_values.keys()))
     # Edit below to select dynamically
 
-    selected_state = st.selectbox('Select a State', states)
+    list_states = states
+    ny_ind = list_states.index("NY")
+    selected_state = st.selectbox('Select a State: ', list_states, index=ny_ind)
     df = df_values[selected_state]
 
     mae = int(sum(df['diff']) / len(df))
+    val_mae = f"{mae:,}"
     mse = int(sum(df['diff_sq']) / len(df))
+    val_mse = f"{mse:,}"
 
     col1, col2, col3 = st.columns(3)
 
     with col3:
-        st.write("MAE: ", f"{mae:,}")
-        st.write("MSE: ", f"{mse:,}")
+        mae_text = f"""
+                <span style='font-size: 30px;font-family:Monaco, monospace;'>MAE:</span><b style='font-size: 30px;font-family:Monaco, monospace; color:#41c0d1;'>{val_mae}</b>
+                """
+        st.write(mae_text, unsafe_allow_html=True)
+
+        mse_text = f"""
+                        <span style='font-size: 30px;font-family:Monaco, monospace;'>MSE:</span><b style='font-size: 30px;font-family:Monaco, monospace; color:#ebb75e;'>{val_mse}</b>
+                        """
+        st.write(mse_text, unsafe_allow_html=True)
 
     with col1:
         df = df[['Date', 'Actual', 'Predicted']]
@@ -552,11 +576,12 @@ def model_plot_30(df_values):
             .mark_line().encode(
             x='Date:T',
             y='Cases:Q',
-            color='Type:N'
+            color=alt.Color('Type:N', scale=alt.Scale(scheme='set2'),
+                            legend=alt.Legend(orient="right", titleFontSize=15, labelFontSize=15))
         ).interactive().properties(
             width=800,
             height=400
-        )
+        ).configure_title(fontSize=16)
         st.write(chart)
     return
 
