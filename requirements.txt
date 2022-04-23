@@ -8,3 +8,4 @@ pyshp
 folium
 leafmap
 streamlit_folium
+branca

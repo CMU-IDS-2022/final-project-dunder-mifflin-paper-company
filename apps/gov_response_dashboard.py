@@ -1,4 +1,4 @@
-from geocode import geocoder
+from apps.geocode import geocoder
 import folium
 import copy
 import branca.colormap as cm
@@ -14,17 +14,6 @@ import time
 
 from streamlit.scriptrunner.script_runner import RerunException
 
-
-if "selected_region" not in st.session_state:
-    st.session_state["selected_region"] = "US"
-
-if "history" not in st.session_state:
-    st.session_state["history"] = {
-        "region": [],
-        "indicators": [],
-        "shift": [],
-        "correlation": [],
-    }
 
 ROLLING_WINDOW = 7
 
@@ -170,25 +159,22 @@ INDICATORS_MAP = {
     "Stringency Index": "stringency_index",
 }
 
-st.set_page_config(layout="wide")
-
-
 @st.cache
 def get_geocoder():
-    return geocoder("../data/usa_shape/usa-states-census-2014.shp")
+    return geocoder("data/usa_shape/usa-states-census-2014.shp")
 
 
 @st.cache
 def read_files():
     government_response_df = pd.read_csv(
-        "../data/oxford-government-response_filtered.csv"
+        "data/oxford-government-response_filtered.csv"
     )
     government_response_df["date"] = pd.to_datetime(government_response_df["date"])
 
-    cases_df = pd.read_csv("../data/epidemiology_filtered.csv")
+    cases_df = pd.read_csv("data/epidemiology_filtered.csv")
     cases_df["date"] = pd.to_datetime(cases_df["date"])
 
-    with open("../data/us_states.json", "r") as fp:
+    with open("data/us_states.json", "r") as fp:
         polygons = json.load(fp)
 
     return government_response_df, cases_df, polygons
@@ -240,7 +226,7 @@ def compute_correlation(
 
 def plot_map(polygons):
 
-    usa_map = leafmap.Map(center=[37, -95], zoom=4)
+    usa_map = leafmap.Map(center=[37, -90], zoom=4)
     colormap = cm.LinearColormap(
         ["DarkBlue", "LightBlue", "yellow", "red"],
         vmin=-1,
@@ -295,7 +281,10 @@ def plot_map(polygons):
     return usa_map
 
 
-def plot_dashboard(government_response_df, cases_df, polygons):
+def plot_government_response_dashboard():
+
+    government_response_df, cases_df, polygons = read_files()
+    polygons = copy.deepcopy(polygons)
 
     col1, col2 = st.columns([2, 1])
     with col1:
@@ -358,9 +347,7 @@ def plot_dashboard(government_response_df, cases_df, polygons):
         st.markdown(
             "Government policy decisions, even the most extensive ones, often take time in achieving their desired results. We introduce a variable `lag`, which enables a comparision between policy indicators and number of cases `lag` days in the future."
         )
-        # st.markdown("<br />", unsafe_allow_html=True)
         shift = st.slider("Number of days in the future (Lag)", 0, 90)
-        # st.markdown("<br />", unsafe_allow_html=True)
 
     indicators = list(
         map(lambda indicator: INDICATORS_MAP[indicator], indicator_strings)
@@ -516,7 +503,7 @@ def plot_dashboard(government_response_df, cases_df, polygons):
                 "shifted_indicator_values",
                 title="trend",
                 axis=alt.Axis(
-                    title="Government Response Indicator", titleColor="#5276A7"
+                    title="Government Response Indicator (normalised)", titleColor="#5276A7"
                 ),
             ),
         )
@@ -533,30 +520,27 @@ def plot_dashboard(government_response_df, cases_df, polygons):
             % (shift)
         )
         st.markdown("<p align=center> %s </p>" % (text), unsafe_allow_html=True)
-        # st.markdown(")
-        # st.markdown("</p>", unsafe_allow_html = True)
-
         st.altair_chart(chart, use_container_width=True)
 
     ############### HISTORICAL CHART ###############
 
     if (
-        not len(st.session_state["history"]["region"])
-        or st.session_state["history"]["region"][-1]
+        not len(st.session_state["indicator_history"]["region"])
+        or st.session_state["indicator_history"]["region"][-1]
         != st.session_state["selected_region"]
-        or st.session_state["history"]["indicators"][-1] != set(indicator_strings)
-        or st.session_state["history"]["shift"][-1] != shift
-        or st.session_state["history"]["correlation"][-1] != corref
+        or st.session_state["indicator_history"]["indicators"][-1] != set(indicator_strings)
+        or st.session_state["indicator_history"]["shift"][-1] != shift
+        or st.session_state["indicator_history"]["correlation"][-1] != corref
     ):
 
-        st.session_state["history"]["region"].append(
+        st.session_state["indicator_history"]["region"].append(
             st.session_state["selected_region"]
         )
-        st.session_state["history"]["indicators"].append(set(indicator_strings))
-        st.session_state["history"]["shift"].append(shift)
-        st.session_state["history"]["correlation"].append(corref)
+        st.session_state["indicator_history"]["indicators"].append(set(indicator_strings))
+        st.session_state["indicator_history"]["shift"].append(shift)
+        st.session_state["indicator_history"]["correlation"].append(corref)
 
-    historical_data = pd.DataFrame(st.session_state["history"])
+    historical_data = pd.DataFrame(st.session_state["indicator_history"])
     historical_chart = (
         alt.Chart(historical_data.reset_index(), title="Search history")
         .mark_line(point=True, color="#FFFFFF")
@@ -571,7 +555,7 @@ def plot_dashboard(government_response_df, cases_df, polygons):
                 "index",
                 title="History",
                 scale=alt.Scale(
-                    domain=[-1, len(st.session_state["history"]["correlation"])],
+                    domain=[-1, len(st.session_state["indicator_history"]["correlation"])],
                     type="point",
                 ),
                 axis=alt.Axis(tickMinStep=1),
@@ -601,10 +585,3 @@ def plot_dashboard(government_response_df, cases_df, polygons):
         )
 
         st.altair_chart(historical_chart, use_container_width=True)
-
-
-if __name__ == "__main__":
-    government_response_df, cases_df, polygons = read_files()
-    polygons = copy.deepcopy(polygons)
-
-    plot_dashboard(government_response_df, cases_df, polygons)

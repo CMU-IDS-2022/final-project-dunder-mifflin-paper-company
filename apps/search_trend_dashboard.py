@@ -1,4 +1,4 @@
-from geocode import geocoder
+from apps.geocode import geocoder
 import folium
 import copy
 import branca.colormap as cm
@@ -9,22 +9,9 @@ import pandas as pd
 import altair as alt
 from datetime import datetime, timedelta
 import leafmap.foliumap as leafmap
-from vega_datasets import data
 import time
 
 from streamlit.scriptrunner.script_runner import RerunException
-
-
-if "selected_region" not in st.session_state:
-    st.session_state["selected_region"] = "US"
-
-if "history" not in st.session_state:
-    st.session_state["history"] = {
-        "region": [],
-        "searches": [],
-        "shift": [],
-        "correlation": [],
-    }
 
 
 ROLLING_WINDOW = 7
@@ -184,23 +171,23 @@ SEARCH_STRINGS = [
     "back_pain",
 ]
 
-st.set_page_config(layout="wide")
+# st.set_page_config(layout="wide")
 
 
 @st.cache
 def get_geocoder():
-    return geocoder("../data/usa_shape/usa-states-census-2014.shp")
+    return geocoder("data/usa_shape/usa-states-census-2014.shp")
 
 
 @st.cache
 def read_files():
-    search_trend_df = pd.read_csv("../data/google-search-trends_filtered.csv")
+    search_trend_df = pd.read_csv("data/google-search-trends_filtered.csv")
     search_trend_df["date"] = pd.to_datetime(search_trend_df["date"])
 
-    cases_df = pd.read_csv("../data/epidemiology_filtered.csv")
+    cases_df = pd.read_csv("data/epidemiology_filtered.csv")
     cases_df["date"] = pd.to_datetime(cases_df["date"])
 
-    with open("../data/us_states.json", "r") as fp:
+    with open("data/us_states.json", "r") as fp:
         polygons = json.load(fp)
 
     return search_trend_df, cases_df, polygons
@@ -250,7 +237,7 @@ def compute_correlation(search_trend_df, cases_df, shift, location_key, search_s
 
 def plot_map(polygons):
 
-    usa_map = leafmap.Map(center=[37, -95], zoom=4)
+    usa_map = leafmap.Map(center=[37, -90], zoom=4)
     colormap = cm.LinearColormap(
         ["DarkBlue", "LightBlue", "yellow", "red"],
         vmin=-1,
@@ -305,7 +292,10 @@ def plot_map(polygons):
     return usa_map
 
 
-def plot_dashboard(search_trend_df, cases_df, polygons):
+def plot_search_dashboard():
+
+    search_trend_df, cases_df, polygons = read_files()
+    polygons = copy.deepcopy(polygons)
 
     col1, col2 = st.columns([2, 1])
 
@@ -546,22 +536,22 @@ def plot_dashboard(search_trend_df, cases_df, polygons):
     searches_tooltip_value = ", ".join(sorted(list(set(searches))))
 
     if (
-        not len(st.session_state["history"]["region"])
-        or st.session_state["history"]["region"][-1]
+        not len(st.session_state["search_history"]["region"])
+        or st.session_state["search_history"]["region"][-1]
         != st.session_state["selected_region"]
-        or st.session_state["history"]["searches"][-1] != searches_tooltip_value
-        or st.session_state["history"]["shift"][-1] != shift
-        or st.session_state["history"]["correlation"][-1] != corref
+        or st.session_state["search_history"]["searches"][-1] != searches_tooltip_value
+        or st.session_state["search_history"]["shift"][-1] != shift
+        or st.session_state["search_history"]["correlation"][-1] != corref
     ):
 
-        st.session_state["history"]["region"].append(
+        st.session_state["search_history"]["region"].append(
             st.session_state["selected_region"]
         )
-        st.session_state["history"]["searches"].append(searches_tooltip_value)
-        st.session_state["history"]["shift"].append(shift)
-        st.session_state["history"]["correlation"].append(corref)
+        st.session_state["search_history"]["searches"].append(searches_tooltip_value)
+        st.session_state["search_history"]["shift"].append(shift)
+        st.session_state["search_history"]["correlation"].append(corref)
 
-    historical_data = pd.DataFrame(st.session_state["history"])
+    historical_data = pd.DataFrame(st.session_state["search_history"])
     historical_chart = (
         alt.Chart(historical_data.reset_index(), title="Search history")
         .mark_line(point=True, color="#FFFFFF")
@@ -576,9 +566,10 @@ def plot_dashboard(search_trend_df, cases_df, polygons):
                 "index",
                 title="History",
                 scale=alt.Scale(
-                    domain=[-1, len(st.session_state["history"]["correlation"])]
+                    domain=[-1, len(st.session_state["search_history"]["correlation"])],
+                    type="point",
                 ),
-                axis=None,
+                axis=alt.Axis(tickMinStep=1),
             ),
             tooltip=[
                 alt.Tooltip("region", title="Region"),
@@ -592,10 +583,9 @@ def plot_dashboard(search_trend_df, cases_df, polygons):
 
     with col1:
         st.markdown("***")
-        st.markdown("")
         st.markdown(
             """
-        <div style="width: 100%; text-align: left;">
+        <span style="width: 100%; text-align: left;">
             This graph shows the correlation between COVID 19 cases and search trend values for previously explored parameters in this dashboard.
             <b>This can be used to track how changing certain parameters (for instance, lag) affects the correlation.</b>
             <br />
@@ -605,10 +595,3 @@ def plot_dashboard(search_trend_df, cases_df, polygons):
         )
 
         st.altair_chart(historical_chart, use_container_width=True)
-
-
-if __name__ == "__main__":
-    search_trend_df, cases_df, polygons = read_files()
-    polygons = copy.deepcopy(polygons)
-
-    plot_dashboard(search_trend_df, cases_df, polygons)
