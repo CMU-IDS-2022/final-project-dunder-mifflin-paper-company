@@ -125,8 +125,8 @@ def medical_state_vis(location_df, states, date_slider, column):
         fill='white ',
         stroke='black'
     ).project('albersUsa').properties(
-        width=650,
-        height=400
+        width=500,
+        height=600
     )
 
     # Points chart
@@ -137,13 +137,14 @@ def medical_state_vis(location_df, states, date_slider, column):
         longitude='longitude:Q', # points with utilization 0.1 have some blue color. its a bit misleasding
         color=alt.Color("Bed Utilization:Q", scale=alt.Scale(domain=[0.4, 0.6, 0.8, 1.0],
                                                                         range=['green', 'yellow', 'red', 'purple']),
-                        legend=alt.Legend(orient="left", titleFontSize=15, labelFontSize=15)),
+                        legend=alt.Legend(orient="bottom", direction="vertical", titleFontSize=15,
+                                          titleOrient="left", labelFontSize=15, padding=50)),
         size=alt.Size('Cases:Q', scale=alt.Scale(range=[10, 1000], domain=[0, 10000]),
                       legend=alt.Legend(values=[0, 5000, 10000, 50000], symbolFillColor="grey",
-                                        labelColor="white", direction="vertical",
-                                        labelFontSize=16, titleColor="white",
-                                        titleFontSize=16, titleAlign="right")),
-        tooltip=[alt.Tooltip("state", title="State"), alt.Tooltip('Bed Utilization:Q', title= "Bed Utilization"),
+                                        labelColor="black", direction="vertical",
+                                        labelFontSize=16, titleColor="black",
+                                        titleFontSize=16, orient="bottom", padding=50)),
+        tooltip=[alt.Tooltip("state", title="State"), alt.Tooltip('Bed Utilization:Q', title="Bed Utilization"),
                  alt.Tooltip('Cases:Q', title="Cases"), alt.Tooltip('Case Density:Q', title="Cases per state population")]
     )
 
@@ -193,7 +194,6 @@ def us_map_vis(df_medical, df_medical_and_vac):
 
 def build_metric(covid_data, state, date_slider, columnleft, columnright):
 
-    st.write("<p align='right' style='font-family:Courier New, monospace; font-size:12px'>**Figures (Increase and Decrease) represent <br> change with respect to the previous day</p><br><br>", unsafe_allow_html=True)
     state_info = covid_data[covid_data["state"] == state]
     state_info_date = state_info[state_info["date"] == date_slider]
     if date_slider == min(state_info["date"]):
@@ -268,6 +268,9 @@ def build_metric(covid_data, state, date_slider, columnleft, columnright):
                          str(round(percentage_change_icu_covid, 2)) + " %", delta_color="inverse")
 
             st.metric("Total beds", int(total_beds), str(int(change_total_beds)))
+            st.write(
+                "<br><br><br><p align='right' style='font-family:Times New, monospace; font-size:12px;'>**Figures (Increase and Decrease) represent change with respect to the previous day</p>",
+                unsafe_allow_html=True)
 
     return
 
@@ -336,18 +339,18 @@ def conclusion_access_to_vaccination_medication():
     st.markdown(text, unsafe_allow_html=True)
 
 def describe_access_to_vaccination_sites():
-    st.title("Average time to reach closest vaccination site in the US")
+    st.header("Average time to reach closest vaccination site in the US")
     colwalking, coldriving, coltransit = st.columns(3)
     with colwalking:
-        colwalking.header("Walking :runner:")
-        text = "<b style='font-size: 30px;font-family:Monaco, monospace; color:yellow;'>37.5 mins</b>"
+        st.subheader("Walking :runner:")
+        text = "<b style='font-size: 30px;font-family:Monaco, monospace; color:indigo;'>37.5 mins</b>"
         colwalking.markdown(text, unsafe_allow_html=True)
     with coldriving:
-        coldriving.header("Driving :car:")
+        coldriving.subheader("Driving :car:")
         text = "<b style='font-size: 30px;font-family:Monaco, monospace; color:green;'>30 mins</b>"
         coldriving.markdown(text, unsafe_allow_html=True)
     with coltransit:
-        coltransit.header("Public Transit :bus:")
+        coltransit.subheader("Public Transit :bus:")
         text = "<b style='font-size: 30px;font-family:Monaco, monospace; color:red;'>45 mins</b>"
         coltransit.markdown(text, unsafe_allow_html=True)
 
@@ -359,7 +362,7 @@ def describe_access_to_vaccination_sites():
 
 
 def conclusion_utilization_shortage():
-    st.markdown("<p style='font-family:Courier New, monospace; font-size:14px'>Feel free to select an interval on the graph on the left <br> and slide across to get a more focused view of the graph on the right! </p> <br><br>", unsafe_allow_html=True)
+    st.markdown("<p style='font-family:Times New, monospace; font-size:14px'>Feel free to select an interval on the graph on the left <br> and slide across to get a more focused view of the graph on the right! </p> <br><br>", unsafe_allow_html=True)
     text = "From the graph on the left we see that during the pandemic there is more variation in the utilization of ICU beds, " \
            "whereas the in-patient beds seem to be relatively around the same level as it was  before. One can argue that it looks like a majority of COVID-19 affected patients" \
            " did not require to be admitted. Only cases where the individual suffers from other co-morbidities were more likely" \
@@ -376,7 +379,7 @@ def conclusion_utilization_shortage():
 
 
 def medical_infra_intro():
-    st.header("How did the Medical Infrastructure of the US cope with the COVID-19 pandemic?")
+    st.title("How did the Medical Infrastructure of the US cope with the COVID-19 pandemic?")
     text = "Through our experiences with the COVID-19 pandemic, we should pay attention to the " \
            "overall capacity of the nation’s public health system as it protects and promotes the health " \
            "of all people in all our communities. " \
@@ -399,7 +402,7 @@ def medical_map_dashboard_vis(covid_data, df_hospital, states):
                             min(df_hospital['date']), max(df_hospital['date']), min(df_hospital['date']),
                             step=timedelta(days=1), help="Slide over to see different dates")
 
-    col1, col2, col3 = st.columns([3, 1, 1])
+    col1, col2, col3 = st.columns([2, 1, 1])
     medical_state_vis(df_hospital, states, date_slider, col1)
     with col2:
         list_states = sorted(list(set(covid_data['state'])))
@@ -414,7 +417,7 @@ def medical_map_dashboard_vis(covid_data, df_hospital, states):
 
 def staff_shortage_and_bed_util_vis(covid_data):
 
-    st.title("How did Hospital bed utilization and staff shortage vary with time?")
+    st.header("How did Hospital bed utilization and staff shortage vary with time?")
 
     list_states_cov = sorted(list(set(covid_data['state']).difference(set(['AS']))))
     ny_ind = list_states_cov.index("NY")
@@ -438,7 +441,7 @@ def staff_shortage_and_bed_util_vis(covid_data):
                             legend=alt.Legend(orient="top", titleFontSize=15, labelFontSize=15, direction="horizontal",
                                           padding=15))
     ).properties(
-        width=600,
+        width="container",
         height=400
     )
 
@@ -452,7 +455,7 @@ def staff_shortage_and_bed_util_vis(covid_data):
                                           padding=15)),
         tooltip=alt.Tooltip(["Deaths", "# Hospitals - staff shortage"])
     ).properties(
-        width=600,
+        width="container",
         height=400
     )
 
@@ -480,7 +483,7 @@ def conclusion_testing_results():
 
 def covid_test_vis(df_test):
 
-    st.title("Are all covid test sample results returned in a reasonable amount of time?")
+    st.header("Are all covid test sample results returned in a reasonable amount of time?")
     list_states = sorted(list(set(df_test['state'])))
     ny_ind = list_states.index("NY")
     state = st.selectbox('Select a State', list_states , index=ny_ind)
@@ -491,7 +494,7 @@ def covid_test_vis(df_test):
 
 def vac_and_med_loc_vis(df_medicine_vaccination_facility):
 
-    st.title("How are the vaccination and Medicine facilities spread across the country?")
+    st.header("How are the vaccination and Medicine facilities spread across the country?")
 
     text = "<p style='font-size: 30px;'><span style='font-family:sans-serif; color:rgba(34, 200, 48, 2);'>Vaccination </span> &" \
            "<span style='font-family:sans-serif; color:rgba(180, 0, 200, 90);'> Medicine </span>facilities</p>"
@@ -504,66 +507,66 @@ def vac_and_med_loc_vis(df_medicine_vaccination_facility):
     return
 
 def intro_model_plot():
-    st.markdown(" Now that we have explored the data, let us see if we can build a Machine Learning model that can help us to predict the COVID cases in the future! ")
-    st.title("COVID-19 Forecasting")
+    st.header("COVID-19 Forecasting")
     text = "Forecasts of COVID-19 cases will help inform public health decision making by projecting " \
            "the likely impact of the pandemic in the coming weeks. Employing forecasting models gives us" \
-           " an intuition on what to expect in the near future." \
+           " intuition into how much uncertainty there is about what may happen in the near future" \
            " We have explored forecasting the number of cases based on historical information using a back-testing forecasting" \
-           " model [ADD REFERENCE]. We make use of the following metrics to evaluate the forecasts made by the model: " \
+           "model {REFER}. We make use of the following metrics to evaluate the forecasts made by the model: " \
            "<ul>" \
            "<li>Mean Absolute Error (MAE):  Measures the average of all absolute errors. " \
            "The absolute average distance between the real data and the forecasted data, " \
            "but it fails to punish large errors in prediction.</li>" \
            "<li>Mean Square Error (MSE): Measures the average of the squares of the errors. " \
            "The average squared difference between the forecasted values and the actual value. " \
-           "Since the error is being squared, even a single occurnec of a large prediction error will be heavily penalized." \
+           "Since the error is being squared, any prediction error is will be heavily penalized" \
            "</li>" \
            "</ul>"
     st.write(text, unsafe_allow_html=True)
 
 
 def conclusion_model_plot_7():
-    text = "This model uses the covid cases of the past 90 days to forecast the number of cases 7 days from now." \
-           " From the graph above we see that even a simple model that only considers historical case data (and no other feature) " \
+    text = "This model uses the covid cases of the past 90 days to forecast the number of cases for 7 days from now." \
+           " From the graph above we see that even a simple model that only considers historical cases data " \
            "is able to perform " \
-           "decently in forecasting the cases for a week from the current day as noted by the close proximity of the" \
-           " actual and predicted curves except for the last peak region (~ Jan - March) where there is a lag. " \
-           "This mismatch in values across these dates is what contributes to the high large value of the " \
+           "decently in forecasting the cases for a week from the current day as noted by the clsoe proximity of of the" \
+           "truth and predicted curves except for the peaky regions where there is a lag. " \
+           "This mismatch in values is what contributes to the high large value of the " \
            "MSE metric as opposed to MAE. " \
-           "This shows that Modelling techniques like Forecasting can be an ally to the government in making informed decisions. " \
            "However, forcasting for 7 days in the future will mainly be beneficial for procuring essentials in a short " \
            "term such as" \
-           "food and water but it is too short a duration for expanding essentials such as hospital beds etc"
+           "food and water but it is too short a duration for expanding essentials such as hospital beds, " \
+           "medical staff etc. "
     st.markdown(text, unsafe_allow_html=True)
 
 
 def intro_model_plot_30():
-    text = "We now try extending this by attempting to forecast the cases 30 days in the future using the same historical case data of 90 days"
+    text = "We now try forecasting the cases for 30 days in the future using the same historical cases data of 90 days" \
+           " to have sufficient time to expand critical resources during the spread of the infection. "
     st.markdown(text, unsafe_allow_html=True)
 
 
 def conclusion_model_plot_30():
-    text = "As seen form the forecast above, we see that the forcasted values are of much lesser quality (flat lines) and " \
-           "MAE and MSE increase significantly. This indicates that the predicting cases a month into the " \
+    text = "As seen form the forecast above, we see that the forcasted values are of poor quality and " \
+           "MAE and MSE increase significantly. This indicates that the predicting cases 1 month into the " \
            "future with a simple historical case-based model is difficult. " \
-           "This could be overcome by using a more sophisticated model and the government should  invest resources to explore " \
-           "this avenue further by " \
-           "using features such as mobility, regulations in place, deaths, hospitalizations etc. to develop a better performing Forecasting model. "
+           "This could be overcome by using a more sophisticated model and the government should explore " \
+           "this avennue further by investing bolstering the strength of forecasting models " \
+           "using features such as mobility, regulations in place, deaths, hospitalizations etc."
     st.markdown(text, unsafe_allow_html=True)
 
 
 def intro_model_feature_importance():
     st.header("Importance of Lag features in the 7-day forecasting model")
-    text = "The plot below shows us the relative importance of the lag features in making the forecast where " \
+    text = "The plot below shows us the relative importance of the lag features in making the forecast. " \
            "<br> <b>lag_7</b> is the feature representing the number of cases from 7 days ago."
     st.markdown(text, unsafe_allow_html=True)
 
 def conclusion_model_feature_importance():
-    text = "We see that on average across states, lag_1 and lag_7 appear to the most important features. This tells us that" \
-           " the day of the week infiuences the number of cases since it is usually the case that people go to public places " \
+    text = "We see that lag_1 and lag_7 appear to the most important features across the states. This tells us that" \
+           "the day of the week infiuences the number of cases since it is usually the case that people go to public places " \
            "during the weekends and home/office during the weekdays. This pattern can play a role in determining the number of" \
-           " cases. The values of the previous day will also influence the overall direction of the change in trend."
+           "cases. The values of the previous day will also influence the overall direction of the change in trend."
 
     st.markdown(text, unsafe_allow_html=True)
 
@@ -594,9 +597,9 @@ def model_plot_7(df_values):
     val_mae = f"{mae:,}"
     mse = int(sum(df['diff_sq'])/len(df))
     val_mse = f"{mse:,}"
-    col1, col2, col3 = st.columns(3)
+    col1, col2 = st.columns([4, 1])
 
-    with col3:
+    with col2:
 
         mae_text = f"""
         <span style='font-size: 30px;font-family:Monaco, monospace;'>MAE:</span><b style='font-size: 30px;font-family:Monaco, monospace; color:#41c0d1;'>{val_mae}</b>
@@ -643,9 +646,9 @@ def model_plot_30(df_values):
     mse = int(sum(df['diff_sq']) / len(df))
     val_mse = f"{mse:,}"
 
-    col1, col2, col3 = st.columns(3)
+    col1, col2= st.columns([4, 1])
 
-    with col3:
+    with col2:
         mae_text = f"""
                 <span style='font-size: 30px;font-family:Monaco, monospace;'>MAE:</span><b style='font-size: 30px;font-family:Monaco, monospace; color:#41c0d1;'>{val_mae}</b>
                 """
@@ -679,7 +682,7 @@ def features_plot(df_features):
 
     states = sorted(list(df_features.keys()))
     list_states = states
-    ny_ind = list_states.index("AK")
+    ny_ind = list_states.index("NY")
     selected_state = st.selectbox('Select a State to show the Feature weights: ', list_states, index=ny_ind)
     data = df_features[selected_state]
 
