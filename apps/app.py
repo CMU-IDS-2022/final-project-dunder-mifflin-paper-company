@@ -490,7 +490,19 @@ def conclusion_testing_results():
     text = "It is clear that the number of test results obtained is significantly lower than the number of samples taken. This is" \
            "another crucial dimension where the medical infrastructure should be sclaed up. It is equally important to have enough" \
            "labs that can process all the test samples and return their results within a finite amount of time. Timely results will" \
-           "help curb the spread of infection as infected individuals can be alerted to stay quarantined and prevent the spread further."
+           "help curb the spread of infection as infected individuals can be alerted to stay quarantined and prevent the spread further." \
+
+    text = "It is important to track the testing that states are doing to diagnose people with COVID-19 infection in order to gauge" \
+           " the spread of COVID-19 in the U.S. and to know whether enough testing is occurring. When states report the number of " \
+           "COVID-19 tests performed, this should include the number of viral tests performed and the number of patients for which" \
+           " these tests were performed. Currently, states may not be distinguishing overall tests administered from the number of" \
+           " individuals who have been tested. This is an important limitation to the data that is available to track testing in " \
+           "the U.S., and states should work to address it. When states report testing numbers for COVID-19 infection, they " \
+           "should not include serology or antibody tests. Antibody tests are not used to diagnose active COVID-19 infection and " \
+           "they do not provide insights into the number of cases of COVID-19 diagnosed or whether viral testing is sufficient to find infections " \
+           "that are occurring within each state. States that include serology tests within their overall COVID-19 testing numbers are misrepresenting " \
+           "their testing capacity and the extent to which they are working to identify COVID-19 infections within their communities. States that wish " \
+           "to track the number of serology tests being performed should report those numbers separately from viral tests performed to diagnose COVID-19."
     st.markdown(text)
 
 
