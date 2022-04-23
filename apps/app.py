@@ -158,54 +158,6 @@ def medical_state_vis(location_df, states, date_slider, column):
 
     return
 
-def four_state_map_vis(df_medical, df_medicine_vaccination, state):
-
-    if state == "NY":
-        ny_map_vis(df_medical, df_medicine_vaccination)
-    elif state == "CA":
-        ca_map_vis(df_medical, df_medicine_vaccination)
-    elif state == "OH":
-        oh_map_vis(df_medical, df_medicine_vaccination)
-    elif state == "UT":
-        ut_map_vis(df_medical, df_medicine_vaccination)
-    else:
-        us_map_vis(df_medical, df_medicine_vaccination)
-
-
-
-def ny_map_vis(df_medical, df_medical_and_vac):
-
-    st.pydeck_chart(pdk.Deck(
-        map_style='mapbox://styles/mapbox/light-v9',
-        initial_view_state=pdk.ViewState(
-            latitude=42.76,
-            longitude=-75.4,
-            zoom=5.5,
-            pitch=0,
-        ),
-        layers=[
-            pdk.Layer(
-                'ScatterplotLayer',
-                data=df_medical,
-                get_position='[lon, lat]',
-                auto_highlight=True,
-                get_radius=5000,
-                get_fill_color=[180, 0, 200, 90],
-                pickable=True,
-            ),
-            pdk.Layer(
-                'ScatterplotLayer',
-                data=df_medical_and_vac,
-                get_position='[lon, lat]',
-                auto_highlight=True,
-                get_radius=5000,
-                get_fill_color=[34, 200, 48, 2],
-                pickable=True,
-            )
-        ],
-    tooltip={"text": "Type: {type}\nState: {State Code}"}))
-
-    return
 
 def us_map_vis(df_medical, df_medical_and_vac):
 
@@ -238,108 +190,6 @@ def us_map_vis(df_medical, df_medical_and_vac):
             )
         ],
         tooltip={"text": "Type: {type}\nState: {State Code}"}))
-
-    return
-
-
-def ca_map_vis(df_medical, df_medical_and_vac):
-    st.pydeck_chart(pdk.Deck(
-        map_style='mapbox://styles/mapbox/light-v9',
-        initial_view_state=pdk.ViewState(
-            latitude=37.76,
-            longitude=-119.4,
-            zoom=4.8,
-            pitch=0,
-        ),
-        layers=[
-            pdk.Layer(
-                'ScatterplotLayer',
-                data=df_medical,
-                get_position='[lon, lat]',
-                auto_highlight=True,
-                get_radius=5000,
-                get_fill_color=[180, 0, 200, 90],
-                pickable=True,
-            ),
-            pdk.Layer(
-                'ScatterplotLayer',
-                data=df_medical_and_vac,
-                get_position='[lon, lat]',
-                auto_highlight=True,
-                get_radius=5000,
-                get_fill_color=[34, 200, 48, 2],
-                pickable=True,
-            )
-        ],
-    tooltip={"text": "Type: {type}\nState: {State Code}"}))
-
-    return
-
-
-def oh_map_vis(df_medical, df_medical_and_vac):
-
-    st.pydeck_chart(pdk.Deck(
-        map_style='mapbox://styles/mapbox/light-v9',
-        initial_view_state=pdk.ViewState(
-            latitude=40.76,
-            longitude=-82.4,
-            zoom=5.5,
-            pitch=0,
-        ),
-        layers=[
-            pdk.Layer(
-                'ScatterplotLayer',
-                data=df_medical,
-                get_position='[lon, lat]',
-                auto_highlight=True,
-                get_radius=5000,
-                get_fill_color=[180, 0, 200, 90],
-                pickable=True,
-            ),
-            pdk.Layer(
-                'ScatterplotLayer',
-                data=df_medical_and_vac,
-                get_position='[lon, lat]',
-                auto_highlight=True,
-                get_radius=5000,
-                get_fill_color=[34, 200, 48, 2],
-                pickable=True,
-            )
-        ],
-    tooltip={"text": "Type: {type}\nState: {State Code}"}))
-    return
-
-
-def ut_map_vis(df_medical, df_medical_and_vac):
-    st.pydeck_chart(pdk.Deck(
-        map_style='mapbox://styles/mapbox/light-v9',
-        initial_view_state=pdk.ViewState(
-            latitude=39.76,
-            longitude=-111.4,
-            zoom=5,
-            pitch=0,
-        ),
-        layers=[
-            pdk.Layer(
-                'ScatterplotLayer',
-                data=df_medical,
-                get_position='[lon, lat]',
-                auto_highlight=True,
-                get_radius=5000,
-                get_fill_color=[180, 0, 200, 90], # purple
-                pickable=True,
-            ),
-            pdk.Layer(
-                'ScatterplotLayer',
-                data=df_medical_and_vac,
-                get_position='[lon, lat]',
-                auto_highlight=True,
-                get_radius=5000,
-                get_fill_color=[34, 200, 48, 2], # green
-                pickable=True,
-            )
-        ],
-    tooltip={"text": "Type: {type}\nState: {State Code}"}))
 
     return
 
@@ -425,24 +275,6 @@ def build_metric(state, date_slider, baseline_daashboard_data, columnleft, colum
     return
 
 
-def bed_utilization_chart(df, state, column):
-
-    df_brush = alt.selection(type='interval', encodings=["x"])
-    df_bed_utilization_chart = alt.Chart(df,
-                                         title="Trend in Hospital bed utilization in " + state).mark_line().encode(
-        x='Date:T',
-        y='Value:Q',
-        color=alt.Color("Parameter", scale=alt.Scale(scheme='set1'),
-                        legend=alt.Legend(orient="top", titleFontSize=15, labelFontSize=15)),
-        strokeDash='Parameter:N',
-    ).properties(
-        width=600,
-        height=400
-    ).add_selection(
-        df_brush
-    ).configure_title(fontSize=16)
-    column.write(df_bed_utilization_chart)
-
 
 def daily_deaths_chart(state, column):
     col_utilization, deaths = st.columns(2)
@@ -483,22 +315,6 @@ def testing_and_results_chart(df_test, state):
     ).configure_title(fontSize=16)
 
     st.write(df_test_results_chart)
-
-
-def staff_shortage_and_deaths_chart(df_shortage_vs_deaths, state, column):
-
-    df_shortage_vs_deaths_chart = alt.Chart(df_shortage_vs_deaths,
-                                                  title="Graph of Daily deaths and hospitals with staff shortage in " + state).mark_point().encode(
-        x='Date:T',
-        y='Deaths:Q',
-        color=alt.Color("# Hospitals with shortage:Q",
-                        scale=alt.Scale(scheme='goldred'),
-                        legend=alt.Legend(orient="top", titleFontSize=15, labelFontSize=15))
-    ).interactive().properties(
-        width=600,
-        height=400
-    ).configure_title(fontSize=16)
-    column.write(df_shortage_vs_deaths_chart)
 
 
 def describe_hospital_utilization():
@@ -591,33 +407,6 @@ def medical_map_dashboard_vis(covid_data, df_hospital, states, baseline_dashboar
     return
 
 
-# def staff_shortage_and_bed_util_vis(covid_data):
-#
-#     st.title("How does hospital utilization and staff shortage vary with time?")
-#
-#     list_states_cov = sorted(list(set(covid_data['state'])))
-#     ny_ind = list_states_cov.index("NY")
-#     state = st.selectbox('Select a State!', list_states_cov, index=ny_ind)
-#
-#     # Utilization Vs Shortage & Deaths
-#     utilization_col, deaths_col = st.columns([0.85, 1])
-#
-#     df_shortage_vs_deaths = covid_data[covid_data["state"] == state]
-#     df_shortage_vs_deaths = df_shortage_vs_deaths[
-#         ["date", "new_deceased", "critical_staffing_shortage_today_yes"]]
-#     df_staff = df_shortage_vs_deaths.rename(columns={"date": "Date", "new_deceased": "Deaths",
-#                                           "critical_staffing_shortage_today_yes": "# Hospitals with shortage"},)
-#
-#     df_bed = get_df_bed_util(state, covid_data)
-#
-#     bed_utilization_chart(df_bed, state, utilization_col)
-#     staff_shortage_and_deaths_chart(df_staff, state, deaths_col)
-#
-#     conclusion_utilization_shortage()
-#
-#     return
-
-
 def staff_shortage_and_bed_util_vis(covid_data):
 
     st.title("How does hospital utilization and staff shortage vary with time?")
@@ -637,12 +426,11 @@ def staff_shortage_and_bed_util_vis(covid_data):
     selection = alt.selection_interval(encodings=["x"])
 
     df_bed_utilization_chart = alt.Chart(df_bed,
-                                         title="Trend in Hospital bed utilization in " + state).mark_point().encode(
+                                         title="Trend in Hospital bed utilization in " + state).mark_point(tooltip=True).encode(
         x='Date:T',
         y='Value:Q',
         color=alt.condition(selection, 'Parameter:N', alt.value('lightgray'),
-                            legend=alt.Legend(orient="top", titleFontSize=15, labelFontSize=15)),
-        strokeDash='Parameter:N',
+                            legend=alt.Legend(orient="top", titleFontSize=15, labelFontSize=15))
     ).properties(
         width=600,
         height=400
@@ -662,6 +450,7 @@ def staff_shortage_and_bed_util_vis(covid_data):
 
     final_chart = alt.hconcat(df_bed_utilization_chart.add_selection(selection),
                               df_shortage_vs_deaths_chart.transform_filter(selection))
+
     st.write(final_chart)
     conclusion_utilization_shortage()
 
@@ -690,7 +479,7 @@ def vac_and_med_loc_vis(df_medicine_vaccination_facility):
     st.markdown(text, unsafe_allow_html=True)
 
     df_med, df_vac = df_medicine_vaccination_facility
-    four_state_map_vis(df_med, df_vac, None)
+    us_map_vis(df_med, df_vac)
 
     return
 
