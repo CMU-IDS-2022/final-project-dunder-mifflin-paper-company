@@ -391,7 +391,7 @@ def conclusion_utilization_shortage():
             " But if we look closely, we can see that across a majority of the states, as soon as the ICU bed utilization crosses the <b>~75%</b> barrier, the number of deaths see a sharp incline. " \
            "Therefore it is of utmost importance to have pre-defined strategies in place that allow hospitilizations to quickly increase the ICU bed availability, before it crosses the 75% barrier, in the event of a  future pandemic. <br><br>" \
            "Another interesting observation is the relation between staff shortages and deaths. As we see more number of hospitals reporting" \
-           " shortage of staff (the points becoming more reddish), we shortly see a sharp incline in the deaths. This shows that is of equal importance to also have sufficient availability of medical staff" \
+           " shortage of staff (the points becoming more <span style='font-family:sans-serif; color:rgba(173, 18, 18, 0.8);'>reddish</span>), we shortly see a sharp incline in the deaths. This shows that is of equal importance to also have sufficient availability of medical staff" \
            " as well in the event of a future pandemic. This is something that needs to be planned out carefully as you cannot simply 'procure' more medical staff in a short time!  "
     st.markdown(text, unsafe_allow_html=True)
 
