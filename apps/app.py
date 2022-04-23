@@ -430,7 +430,8 @@ def staff_shortage_and_bed_util_vis(covid_data):
         x='Date:T',
         y='Value:Q',
         color=alt.condition(selection, 'Parameter:N', alt.value('lightgray'),
-                            legend=alt.Legend(orient="top", titleFontSize=15, labelFontSize=15))
+                            legend=alt.Legend(orient="top", titleFontSize=15, labelFontSize=15, direction="horizontal",
+                                          padding=15))
     ).properties(
         width=600,
         height=400
@@ -442,14 +443,18 @@ def staff_shortage_and_bed_util_vis(covid_data):
         y='Deaths:Q',
         color=alt.Color("# Hospitals with shortage:Q",
                         scale=alt.Scale(scheme='goldred'),
-                        legend=alt.Legend(orient="top", titleFontSize=15, labelFontSize=15))
+                        legend=alt.Legend(orient="top", titleFontSize=15, labelFontSize=15, direction="horizontal",
+                                          padding=15)),
+        tooltip=alt.Tooltip(["Deaths", "# Hospitals with shortage"])
     ).properties(
         width=600,
         height=400
     )
 
     final_chart = alt.hconcat(df_bed_utilization_chart.add_selection(selection),
-                              df_shortage_vs_deaths_chart.transform_filter(selection))
+                              df_shortage_vs_deaths_chart.transform_filter(selection),
+                              config=alt.Config(title=alt.TitleConfig(fontSize=16, subtitlePadding=40)))
+
 
     st.write(final_chart)
     conclusion_utilization_shortage()
