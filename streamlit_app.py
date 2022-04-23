@@ -3,6 +3,7 @@ from apps.medical_infrastructure_app import MedicalVis
 from apps.introduction import Introduction
 from apps.eda import EDA
 # Import here and call accordingly down below
+st.set_page_config(layout="wide")
 
 def display_graph(selection="Introduction"):
 

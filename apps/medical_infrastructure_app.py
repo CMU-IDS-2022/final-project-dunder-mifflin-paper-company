@@ -8,7 +8,7 @@ import pydeck as pdk
 import os
 
 
-st.set_page_config(layout="wide")
+# st.set_page_config(layout="wide")
 
 DATA_URL = 'data/dashboard_metrics.csv'
 BASELINE_URL = 'data/baseline_dashboard_metrics.csv'
