@@ -303,16 +303,49 @@ def plot_dashboard(government_response_df, cases_df, polygons):
         st.markdown("***")
 
         st.markdown(
-            "The Oxford Covid-19 [Government Response Tracker](https://www.bsg.ox.ac.uk/research/research-projects/covid-19-government-response-tracker) (OxCGRT) collects systematic information on policy measures that governments have taken to tackle COVID-19. These responses are coded into different indicators, such as school closures, facial coverings, etc. "
+            """
+        The Oxford Covid-19 [Government Response Tracker](https://www.bsg.ox.ac.uk/research/research-projects/covid-19-government-response-tracker) 
+        (OxCGRT) collects systematic information on policy measures that governments have taken to tackle COVID-19.
+        These responses are categorised into different indicators types, which include:
+        - Containment and closure policies (such as school closures and restrictions in movement)
+        - Economic policies (such as income support to citizens and debit relief)
+        - Health system policies (such as facial coverings)
+        - Vaccine policies
+        """
         )
         st.markdown(
-            "In this dashboard, we try to gauge whether different government policies have impacted the rise in COVID 19 cases across different states. **Intuitively, we expect a negative correlation between these two, since a stronger government response should entail lower morbidity.**"
+            """
+            With this dashboard, we try to gauge which government policies have been most effective in reducing the rise in COVID 19 
+            cases across different states. **Intuitively, we expect a negative correlation between these two, since a stronger government response should entail lower morbidity.**
+            """
+        )
+
+        st.markdown(
+            """
+        Each indictor is assigned an integer value, reflecting the extent of government action.
+        A higher value indicates a more extensive policy (such as more stringent health system policies, 
+        or higher economic relief to citizens). 
+        More information on how these values
+        are calculated can be found on the [OxCGRT page](https://www.bsg.ox.ac.uk/research/research-projects/covid-19-government-response-tracker).
+        """
+        )
+
+        st.markdown(
+            """
+        We normalize these indicators to a scale of 0 to 1 for ease of visualisations.
+        """
         )
 
     st.markdown("***")
 
     col1, col2 = st.columns([2, 1])
     with col2:
+        st.markdown(
+            """
+        When multiple indicators are selected, we aggregate the value by summing up each indicator's value.
+        Stringency Index is calculated by aggregating all the individual indicators.
+        """
+        )
         indicator_strings = st.multiselect(
             # "",
             "Government Response Indicators:",
@@ -323,19 +356,11 @@ def plot_dashboard(government_response_df, cases_df, polygons):
     with col2:
         st.markdown("***")
         st.markdown(
-            "Government policy decisions, even the most stringent ones, often take time in achieving their desired results. We introduce a variable `lag`, which enables a comparision between policy indicators and number of cases `lag` days in the future."
+            "Government policy decisions, even the most extensive ones, often take time in achieving their desired results. We introduce a variable `lag`, which enables a comparision between policy indicators and number of cases `lag` days in the future."
         )
-        st.markdown("<br />", unsafe_allow_html=True)
+        # st.markdown("<br />", unsafe_allow_html=True)
         shift = st.slider("Number of days in the future (Lag)", 0, 90)
-
-    # col1, col2, col3 = st.columns([4, 1, 1])
-
-    # with col2:
-    #     st.markdown("<br />", unsafe_allow_html=True)
-    #     st.metric(label="Selected region", value=st.session_state["selected_region"])
-    # with col3:
-    #     st.markdown("<br />", unsafe_allow_html=True)
-    #     st.metric(label="Correlation", value=corref)
+        # st.markdown("<br />", unsafe_allow_html=True)
 
     indicators = list(
         map(lambda indicator: INDICATORS_MAP[indicator], indicator_strings)
@@ -420,6 +445,7 @@ def plot_dashboard(government_response_df, cases_df, polygons):
     with col1:
         st.markdown(
             """
+            This map shows the correlation between COVID 19 cases and governenment response indicators for the selected lag across different states.
             <br />
         """,
             unsafe_allow_html=True,
@@ -432,7 +458,6 @@ def plot_dashboard(government_response_df, cases_df, polygons):
         <div style="width: 100%; text-align: left;">
             Click on a state to examine its data.
             Click outside the United States boundary to examine aggergated data across all states.
-            <br /><br />
         """,
             unsafe_allow_html=True,
         )
@@ -568,7 +593,7 @@ def plot_dashboard(government_response_df, cases_df, polygons):
             """
         <div style="width: 100%; text-align: left;">
             This graph shows the correlation between COVID 19 cases and governenment response indicators for previously explored parameters in this dashboard.
-            This can be used to track how changing certain parameters (for instance, lag) affects the correlation.
+            <b>This can be used to track how changing certain parameters (for instance, lag) affects the correlation.</b>
             <br />
             <br />
         """,

@@ -308,13 +308,65 @@ def plot_map(polygons):
 def plot_dashboard(search_trend_df, cases_df, polygons):
 
     col1, col2 = st.columns([2, 1])
+
     with col1:
-        searches = st.multiselect(
-            "Search terms: (default: all)", SEARCH_STRINGS, default=["fever"]
+        st.markdown(
+            "## Do internet search trends hint towards a rise in COVID 19 cases?"
         )
+        st.markdown("***")
+
+        st.markdown(
+            """
+            The internet often serves as the first point of information for many people today.
+            Building on this fact, we try to answer an important question: whether trends in search patterns can be 
+            helpful in detecting COVID 19 outbreaks.
+
+            The COVID-19 Search Trends symptoms dataset collates the volume of Google 
+            searches for a broad set of symptoms, signs and health conditions. More information
+            pertaining the curation of this dataset can be found on this 
+            [page](https://github.com/GoogleCloudPlatform/covid-19-open-data/blob/main/docs/table-search-trends.md).
+            The dataset provides trend values for each search string, which reflects volume of Google searches for that search string.
+        """
+        )
+        st.markdown(
+            """
+            With this dashboard, we try to gauge which search strings are most effective in hinting towards a rise of COVID 19 cases
+            in the future; we further break this analysis down on a state level. Since there can be a lag between people experiencing
+            symptoms and actually getting tested positive, we introduce a parameter `lag`. Using this parameter, we can calculate the correlation
+            between the search trend value and COVID 19 cases `lag` days in the future.
+
+            **Intuitively, we expect a positive correlation between these two, since a higher search trend value should indicate a rise in cases.**
+
+            As a preprocessing step, we filter out the search strings 
+            in the dataset and use only the set of symptoms that are associated with COVID 19 
+            [(as documented by CDC)](https://www.cdc.gov/coronavirus/2019-ncov/symptoms-testing/symptoms.html).
+            Some examples of these search strings include `fever`, `chest paing`, and `shallow breathing`. 
+            We normalize the search trend values to a scale of 0 to 1 for ease of visualisations.
+            """
+        )
+
+    st.markdown("***")
+
+    col1, col2 = st.columns([2, 1])
     with col2:
-        # st.markdown("<br /><br /><br />", unsafe_allow_html=True)
-        shift = st.slider("Shift", 0, 30)
+        st.markdown(
+            """
+            When multiple search strings are selected, we aggregate the value by summing up each search string's trend value.
+            If no search string is selected, we aggregate all search strings' trend values.
+        """
+        )
+        searches = st.multiselect("Search terms:", SEARCH_STRINGS, default=["fever"])
+
+    with col2:
+        st.markdown("***")
+        st.markdown(
+            """
+            Since there can be a lag between people experiencing
+            symptoms and actually getting tested positive, we introduce a parameter `lag`,
+            which enables a comparision between search trends and number of cases `lag` days in the future.
+        """
+        )
+        shift = st.slider("Number of days in the future (Lag)", 0, 30)
 
     search_strings = list(
         map(lambda search_string: "search_trends_" + search_string, searches)
@@ -362,7 +414,6 @@ def plot_dashboard(search_trend_df, cases_df, polygons):
         dates = dates[shift:]
 
     shifted_search_trend_values /= max(shifted_search_trend_values)
-    # shifted_case_values /= max(shifted_case_values)
 
     corref = round(
         np.corrcoef(
@@ -372,20 +423,49 @@ def plot_dashboard(search_trend_df, cases_df, polygons):
         3,
     )
 
-    col1, col2, col3 = st.columns([4, 1, 1])
-
     with col2:
-        st.metric(label="Region", value=st.session_state["selected_region"])
-    with col3:
-        st.metric(label="Correlation", value=corref)
-
-    col1, col2 = st.columns([2, 1])
+        st.markdown("***")
+        st.markdown(
+            """
+            <div style="width: 100%; text-align: center;">
+                <div style="width: 50%; float: left; "> 
+                    Selected Region
+                    <br />
+                    <span style = 'font-size: 40px;'>"""
+            + st.session_state["selected_region"]
+            + """</span>
+                </div>
+                <div style="margin-left: 50%;"> 
+                    Correlation
+                    <br />
+                    <span style = 'font-size: 40px;'>"""
+            + str(corref)
+            + """</span>
+                </div>
+            </div>        
+        """,
+            unsafe_allow_html=True,
+        )
 
     usa_map = plot_map(polygons)
     with col1:
-        st.markdown("<br />", unsafe_allow_html=True)
+        st.markdown(
+            """
+            This map shows the correlation between COVID 19 cases and search trend values for the selected lag across different states.
+            <br />
+        """,
+            unsafe_allow_html=True,
+        )
         usa_map_folium = usa_map.to_streamlit(
             height=500, width=900, add_layer_control=True, bidirectional=True
+        )
+        st.markdown(
+            """
+        <div style="width: 100%; text-align: left;">
+            Click on a state to examine its data.
+            Click outside the United States boundary to examine aggergated data across all states.
+        """,
+            unsafe_allow_html=True,
         )
 
     try:
@@ -404,6 +484,8 @@ def plot_dashboard(search_trend_df, cases_df, polygons):
         if region != st.session_state["selected_region"]:
             st.session_state["selected_region"] = region
             st.experimental_rerun()
+
+    col1, col2 = st.columns([2, 1])
 
     data = pd.DataFrame()
     data["shifted_case_values"] = shifted_case_values.tolist()
@@ -439,7 +521,9 @@ def plot_dashboard(search_trend_df, cases_df, polygons):
             alt.Y(
                 "shifted_search_trend_values",
                 title="trend",
-                axis=alt.Axis(title="Search trend", titleColor="#5276A7"),
+                axis=alt.Axis(
+                    title="Search trend value (normalised)", titleColor="#5276A7"
+                ),
             ),
         )
         .interactive()
@@ -447,6 +531,14 @@ def plot_dashboard(search_trend_df, cases_df, polygons):
 
     chart = alt.layer(cases_chart, trends_chart).resolve_scale(y="independent")
     with col2:
+        st.markdown(
+            "***",
+        )
+        text = (
+            "This graph compares the number daily of COVID 19 cases and the search trend value (normalised to a scale of 0 to 1) with the selected lag (%d days in the future) "
+            % (shift)
+        )
+        st.markdown("<p align=center> %s </p>" % (text), unsafe_allow_html=True)
         st.altair_chart(chart, use_container_width=True)
 
     ############### HISTORICAL CHART ###############
@@ -498,7 +590,20 @@ def plot_dashboard(search_trend_df, cases_df, polygons):
         .interactive()
     )
 
-    with col2:
+    with col1:
+        st.markdown("***")
+        st.markdown("")
+        st.markdown(
+            """
+        <div style="width: 100%; text-align: left;">
+            This graph shows the correlation between COVID 19 cases and search trend values for previously explored parameters in this dashboard.
+            <b>This can be used to track how changing certain parameters (for instance, lag) affects the correlation.</b>
+            <br />
+            <br />
+        """,
+            unsafe_allow_html=True,
+        )
+
         st.altair_chart(historical_chart, use_container_width=True)
 
 
