@@ -21,7 +21,7 @@ if "selected_region" not in st.session_state:
 if "history" not in st.session_state:
     st.session_state["history"] = {
         "region": [],
-        "factors": [],
+        "indicators": [],
         "shift": [],
         "correlation": [],
     }
@@ -149,7 +149,7 @@ LOCATION_ABBREVIATION_MAP = {
     "WYOMING": "US_WY",
 }
 
-FACTORS_MAP = {
+INDICATORS_MAP = {
     "School Closing": "school_closing",
     "Workplace Closing": "workplace_closing",
     "Cancel Public Events": "cancel_public_events",
@@ -194,7 +194,9 @@ def read_files():
     return government_response_df, cases_df, polygons
 
 
-def compute_correlation(government_response_df, cases_df, shift, location_key, factors):
+def compute_correlation(
+    government_response_df, cases_df, shift, location_key, indicators
+):
 
     location_cases = cases_df[cases_df["location_key"] == location_key][
         ["date", "new_confirmed"]
@@ -206,30 +208,30 @@ def compute_correlation(government_response_df, cases_df, shift, location_key, f
     )
     dates = location_cases["date"][ROLLING_WINDOW - 1 :]
 
-    location_factor_values = government_response_df[
+    location_indicator_values = government_response_df[
         government_response_df["location_key"] == location_key
     ]
 
-    if len(factors):
-        factor_values = location_factor_values[factors][ROLLING_WINDOW - 1 :].sum(
-            axis=1
-        )
+    if len(indicators):
+        indicator_values = location_indicator_values[indicators][
+            ROLLING_WINDOW - 1 :
+        ].sum(axis=1)
     else:
-        factor_values = location_factor_values[ROLLING_WINDOW - 1 :].sum(axis=1)
+        indicator_values = location_indicator_values[ROLLING_WINDOW - 1 :].sum(axis=1)
 
     if shift == 0:
-        shifted_factor_values = factor_values
+        shifted_indicator_values = indicator_values
         shifted_case_values = cases_values
     else:
-        shifted_factor_values = factor_values[:-shift]
+        shifted_indicator_values = indicator_values[:-shift]
         shifted_case_values = cases_values[shift:]
         dates = dates[shift:]
 
-    shifted_factor_values /= max(shifted_factor_values)
+    shifted_indicator_values /= max(shifted_indicator_values)
     # shifted_case_values /= max(shifted_case_values)
 
     corref = np.corrcoef(
-        x=shifted_factor_values / max(shifted_factor_values),
+        x=shifted_indicator_values / max(shifted_indicator_values),
         y=shifted_case_values / max(shifted_case_values),
     )
 
@@ -297,16 +299,47 @@ def plot_dashboard(government_response_df, cases_df, polygons):
 
     col1, col2 = st.columns([2, 1])
     with col1:
-        factor_strings = st.multiselect(
-            "Government Response Factors:",
-            FACTORS_MAP.keys(),
+        st.markdown("## Effect of government response on COVID 19 morbidity")
+        st.markdown("***")
+
+        st.markdown(
+            "The Oxford Covid-19 [Government Response Tracker](https://www.bsg.ox.ac.uk/research/research-projects/covid-19-government-response-tracker) (OxCGRT) collects systematic information on policy measures that governments have taken to tackle COVID-19. These responses are coded into different indicators, such as school closures, facial coverings, etc. "
+        )
+        st.markdown(
+            "In this dashboard, we try to gauge whether different government policies have impacted the rise in COVID 19 cases across different states. **Intuitively, we expect a negative correlation between these two, since a stronger government response should entail lower morbidity.**"
+        )
+
+    st.markdown("***")
+
+    col1, col2 = st.columns([2, 1])
+    with col2:
+        indicator_strings = st.multiselect(
+            # "",
+            "Government Response Indicators:",
+            INDICATORS_MAP.keys(),
             default=["Stringency Index"],
         )
 
     with col2:
-        shift = st.slider("Shift", 15, 90)
+        st.markdown("***")
+        st.markdown(
+            "Government policy decisions, even the most stringent ones, often take time in achieving their desired results. We introduce a variable `lag`, which enables a comparision between policy indicators and number of cases `lag` days in the future."
+        )
+        st.markdown("<br />", unsafe_allow_html=True)
+        shift = st.slider("Number of days in the future (Lag)", 0, 90)
 
-    factors = list(map(lambda factor: FACTORS_MAP[factor], factor_strings))
+    # col1, col2, col3 = st.columns([4, 1, 1])
+
+    # with col2:
+    #     st.markdown("<br />", unsafe_allow_html=True)
+    #     st.metric(label="Selected region", value=st.session_state["selected_region"])
+    # with col3:
+    #     st.markdown("<br />", unsafe_allow_html=True)
+    #     st.metric(label="Correlation", value=corref)
+
+    indicators = list(
+        map(lambda indicator: INDICATORS_MAP[indicator], indicator_strings)
+    )
 
     for ind, ele in enumerate(polygons["features"]):
         location_key = "US_" + ele["id"]
@@ -314,7 +347,7 @@ def plot_dashboard(government_response_df, cases_df, polygons):
         del ele["properties"]["name"]
 
         correlation = compute_correlation(
-            government_response_df, cases_df, shift, location_key, factors
+            government_response_df, cases_df, shift, location_key, indicators
         )
 
         ele["properties"]["Correlation"] = correlation
@@ -330,49 +363,78 @@ def plot_dashboard(government_response_df, cases_df, polygons):
     )
     dates = location_cases["date"][ROLLING_WINDOW - 1 :]
 
-    location_factor_values = government_response_df[
+    location_indicator_values = government_response_df[
         government_response_df["location_key"] == location
     ]
 
-    if len(factors):
-        factor_values = location_factor_values[factors][ROLLING_WINDOW - 1 :].sum(
-            axis=1
-        )
+    if len(indicators):
+        indicator_values = location_indicator_values[indicators][
+            ROLLING_WINDOW - 1 :
+        ].sum(axis=1)
     else:
-        factor_values = location_factor_values[ROLLING_WINDOW - 1 :].sum(axis=1)
+        indicator_values = location_indicator_values[ROLLING_WINDOW - 1 :].sum(axis=1)
 
     if shift == 0:
-        shifted_factor_values = factor_values
+        shifted_indicator_values = indicator_values
         shifted_case_values = cases_values
     else:
-        shifted_factor_values = factor_values[:-shift]
+        shifted_indicator_values = indicator_values[:-shift]
         shifted_case_values = cases_values[shift:]
         dates = dates[shift:]
 
-    shifted_factor_values /= max(shifted_factor_values)
+    shifted_indicator_values /= max(shifted_indicator_values)
 
     corref = round(
         np.corrcoef(
-            x=shifted_factor_values / max(shifted_factor_values),
+            x=shifted_indicator_values / max(shifted_indicator_values),
             y=shifted_case_values / max(shifted_case_values),
         )[0][1],
         3,
     )
 
-    col1, col2, col3 = st.columns([4, 1, 1])
-
     with col2:
-        st.metric(label="Region", value=st.session_state["selected_region"])
-    with col3:
-        st.metric(label="Correlation", value=corref)
-
-    col1, col2 = st.columns([2, 1])
+        st.markdown("***")
+        st.markdown(
+            """
+            <div style="width: 100%; text-align: center;">
+                <div style="width: 50%; float: left; "> 
+                    Selected Region
+                    <br />
+                    <span style = 'font-size: 40px;'>"""
+            + st.session_state["selected_region"]
+            + """</span>
+                </div>
+                <div style="margin-left: 50%;"> 
+                    Correlation
+                    <br />
+                    <span style = 'font-size: 40px;'>"""
+            + str(corref)
+            + """</span>
+                </div>
+            </div>        
+        """,
+            unsafe_allow_html=True,
+        )
 
     usa_map = plot_map(polygons)
     with col1:
-        st.markdown("<br />", unsafe_allow_html=True)
+        st.markdown(
+            """
+            <br />
+        """,
+            unsafe_allow_html=True,
+        )
         usa_map_folium = usa_map.to_streamlit(
             height=500, width=900, add_layer_control=True, bidirectional=True
+        )
+        st.markdown(
+            """
+        <div style="width: 100%; text-align: left;">
+            Click on a state to examine its data.
+            Click outside the United States boundary to examine aggergated data across all states.
+            <br /><br />
+        """,
+            unsafe_allow_html=True,
         )
 
     try:
@@ -392,9 +454,11 @@ def plot_dashboard(government_response_df, cases_df, polygons):
             st.session_state["selected_region"] = region
             st.experimental_rerun()
 
+    col1, col2 = st.columns([2, 1])
+
     data = pd.DataFrame()
     data["shifted_case_values"] = shifted_case_values.tolist()
-    data["shifted_factor_values"] = shifted_factor_values.tolist()
+    data["shifted_indicator_values"] = shifted_indicator_values.tolist()
     data["x"] = dates.values
 
     cases_chart = (
@@ -424,9 +488,11 @@ def plot_dashboard(government_response_df, cases_df, polygons):
                 # scale=alt.Scale(domain=['2021-01-01','2021-12-31'])
             ),
             alt.Y(
-                "shifted_factor_values",
+                "shifted_indicator_values",
                 title="trend",
-                axis=alt.Axis(title="Factor", titleColor="#5276A7"),
+                axis=alt.Axis(
+                    title="Government Response Indicator", titleColor="#5276A7"
+                ),
             ),
         )
         .interactive()
@@ -434,6 +500,17 @@ def plot_dashboard(government_response_df, cases_df, polygons):
 
     chart = alt.layer(cases_chart, trends_chart).resolve_scale(y="independent")
     with col2:
+        st.markdown(
+            "***",
+        )
+        text = (
+            "This graph compares the number daily of COVID 19 cases and government response indiactors (normalised to a scale of 0 to 1) with the selected lag (%d days in the future) "
+            % (shift)
+        )
+        st.markdown("<p align=center> %s </p>" % (text), unsafe_allow_html=True)
+        # st.markdown(")
+        # st.markdown("</p>", unsafe_allow_html = True)
+
         st.altair_chart(chart, use_container_width=True)
 
     ############### HISTORICAL CHART ###############
@@ -442,7 +519,7 @@ def plot_dashboard(government_response_df, cases_df, polygons):
         not len(st.session_state["history"]["region"])
         or st.session_state["history"]["region"][-1]
         != st.session_state["selected_region"]
-        or st.session_state["history"]["factors"][-1] != set(factor_strings)
+        or st.session_state["history"]["indicators"][-1] != set(indicator_strings)
         or st.session_state["history"]["shift"][-1] != shift
         or st.session_state["history"]["correlation"][-1] != corref
     ):
@@ -450,7 +527,7 @@ def plot_dashboard(government_response_df, cases_df, polygons):
         st.session_state["history"]["region"].append(
             st.session_state["selected_region"]
         )
-        st.session_state["history"]["factors"].append(set(factor_strings))
+        st.session_state["history"]["indicators"].append(set(indicator_strings))
         st.session_state["history"]["shift"].append(shift)
         st.session_state["history"]["correlation"].append(corref)
 
@@ -463,27 +540,41 @@ def plot_dashboard(government_response_df, cases_df, polygons):
                 "correlation",
                 title="Correlation",
                 scale=alt.Scale(domain=[-1, 1]),
-                axis=alt.Axis(tickSize=0),
+                # axis=alt.Axis(tickSize=0),
             ),
             alt.X(
                 "index",
                 title="History",
                 scale=alt.Scale(
-                    domain=[-1, len(st.session_state["history"]["correlation"])]
+                    domain=[-1, len(st.session_state["history"]["correlation"])],
+                    type="point",
                 ),
-                axis=None,
+                axis=alt.Axis(tickMinStep=1),
             ),
             tooltip=[
                 alt.Tooltip("region", title="Region"),
                 alt.Tooltip("shift", title="Shift"),
-                alt.Tooltip("factors", title="Response Factors"),
+                alt.Tooltip("indicators", title="Response Indicators"),
                 alt.Tooltip("correlation", title="Correlation"),
             ],
         )
         .interactive()
     )
 
-    with col2:
+    with col1:
+        st.markdown("***")
+        st.markdown("")
+        st.markdown(
+            """
+        <div style="width: 100%; text-align: left;">
+            This graph shows the correlation between COVID 19 cases and governenment response indicators for previously explored parameters in this dashboard.
+            This can be used to track how changing certain parameters (for instance, lag) affects the correlation.
+            <br />
+            <br />
+        """,
+            unsafe_allow_html=True,
+        )
+
         st.altair_chart(historical_chart, use_container_width=True)
 
 
