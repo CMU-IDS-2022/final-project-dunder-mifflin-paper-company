@@ -35,7 +35,6 @@ def get_four_state_map_files(df_medical):
     df_med = df_medical[df_medical["type"] == "Medicine Facility"]
     df_medicine_vaccination = df_medical[df_medical["type"] == "Med&Vac"]
 
-    # return df_ny, df_oh, df_ut, df_ca
     return df_med, df_medicine_vaccination
 
 
@@ -63,7 +62,6 @@ def read_medicine_facility_files():
 def read_testing_files():
 
     df_test = pd.read_csv("data/testing_results.csv")
-
     return df_test
 
 
@@ -526,6 +524,7 @@ def model_plot_7(df_values):
 
     with col1:
         df = df[['Date', 'Actual', 'Predicted']]
+
         data = df.melt("Date", var_name='Type', value_name='Cases')
         chart = alt.Chart(data, title="Actual vs Predicted cases for a 7 day step size for " + selected_state + " state") \
             .mark_line().encode(
@@ -589,16 +588,28 @@ def model_plot_30(df_values):
 def features_plot(df_features):
 
     states = sorted(list(df_features.keys()))
-    selected_state = st.selectbox('Select a State to show the Feature weights', states)
+    list_states = states
+    ny_ind = list_states.index("NY")
+    selected_state = st.selectbox('Select a State to show the Feature weights: ', list_states, index=ny_ind)
     data = df_features[selected_state]
-    wc = WordCloud(width=800, height=400, max_words=200).generate_from_frequencies(data)
 
-    fig, ax = plt.subplots()
-    ax.imshow(wc, interpolation='bilinear')
-    ax.axis('off')
-    plt.show()
-    st.pyplot(fig)
+    top10_lag = sorted(data, key=lambda k: data[k], reverse=True)[:10]
+    top10_val = [data[i] for i in top10_lag]
 
+    source = pd.DataFrame({
+        'Lag': top10_lag,
+        'Importance': top10_val
+    })
+
+    feat_imp_chart = alt.Chart(source).mark_bar().encode(
+        x=alt.X('Lag:N', sort='-y'),
+        y='Importance:Q'
+    ).interactive().properties(
+            width=800,
+            height=400
+    )
+
+    st.write(feat_imp_chart)
     # https://www.cienciadedatos.net/documentos/py27-time-series-forecasting-python-scikitlearn.html
     # Lag_7 means that last week same day. So day of the week matters?
     return
