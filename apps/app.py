@@ -142,7 +142,7 @@ def medical_state_vis(location_df, states, date_slider, column):
                                                                         range=['green', 'yellow', 'red', 'purple']),
                         legend=alt.Legend(orient="left", titleFontSize=15, labelFontSize=15)),
         size=alt.Size('Cases:Q', scale=alt.Scale(range=[10, 1000], domain=[0, 10000]),
-                      legend=alt.Legend(values=[0, 5000, 10000, 50000], symbolFillColor="white",
+                      legend=alt.Legend(values=[0, 5000, 10000, 50000], symbolFillColor="grey",
                                         labelColor="white", direction="vertical",
                                         labelFontSize=16, titleColor="white",
                                         titleFontSize=16, titleAlign="right")),
