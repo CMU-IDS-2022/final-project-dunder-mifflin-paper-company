@@ -591,6 +591,33 @@ def medical_map_dashboard_vis(covid_data, df_hospital, states, baseline_dashboar
     return
 
 
+# def staff_shortage_and_bed_util_vis(covid_data):
+#
+#     st.title("How does hospital utilization and staff shortage vary with time?")
+#
+#     list_states_cov = sorted(list(set(covid_data['state'])))
+#     ny_ind = list_states_cov.index("NY")
+#     state = st.selectbox('Select a State!', list_states_cov, index=ny_ind)
+#
+#     # Utilization Vs Shortage & Deaths
+#     utilization_col, deaths_col = st.columns([0.85, 1])
+#
+#     df_shortage_vs_deaths = covid_data[covid_data["state"] == state]
+#     df_shortage_vs_deaths = df_shortage_vs_deaths[
+#         ["date", "new_deceased", "critical_staffing_shortage_today_yes"]]
+#     df_staff = df_shortage_vs_deaths.rename(columns={"date": "Date", "new_deceased": "Deaths",
+#                                           "critical_staffing_shortage_today_yes": "# Hospitals with shortage"},)
+#
+#     df_bed = get_df_bed_util(state, covid_data)
+#
+#     bed_utilization_chart(df_bed, state, utilization_col)
+#     staff_shortage_and_deaths_chart(df_staff, state, deaths_col)
+#
+#     conclusion_utilization_shortage()
+#
+#     return
+
+
 def staff_shortage_and_bed_util_vis(covid_data):
 
     st.title("How does hospital utilization and staff shortage vary with time?")
@@ -598,9 +625,6 @@ def staff_shortage_and_bed_util_vis(covid_data):
     list_states_cov = sorted(list(set(covid_data['state'])))
     ny_ind = list_states_cov.index("NY")
     state = st.selectbox('Select a State!', list_states_cov, index=ny_ind)
-
-    # Utilization Vs Shortage & Deaths
-    utilization_col, deaths_col = st.columns([0.85, 1])
 
     df_shortage_vs_deaths = covid_data[covid_data["state"] == state]
     df_shortage_vs_deaths = df_shortage_vs_deaths[
@@ -610,9 +634,35 @@ def staff_shortage_and_bed_util_vis(covid_data):
 
     df_bed = get_df_bed_util(state, covid_data)
 
-    bed_utilization_chart(df_bed, state, utilization_col)
-    staff_shortage_and_deaths_chart(df_staff, state, deaths_col)
+    selection = alt.selection_interval(encodings=["x"])
 
+    df_bed_utilization_chart = alt.Chart(df_bed,
+                                         title="Trend in Hospital bed utilization in " + state).mark_point().encode(
+        x='Date:T',
+        y='Value:Q',
+        color=alt.condition(selection, 'Parameter:N', alt.value('lightgray'),
+                            legend=alt.Legend(orient="top", titleFontSize=15, labelFontSize=15)),
+        strokeDash='Parameter:N',
+    ).properties(
+        width=600,
+        height=400
+    )
+
+    df_shortage_vs_deaths_chart = alt.Chart(df_staff,
+                                            title="Graph of Daily deaths and hospitals with staff shortage in " + "NY").mark_point().encode(
+        x='Date:T',
+        y='Deaths:Q',
+        color=alt.Color("# Hospitals with shortage:Q",
+                        scale=alt.Scale(scheme='goldred'),
+                        legend=alt.Legend(orient="top", titleFontSize=15, labelFontSize=15))
+    ).properties(
+        width=600,
+        height=400
+    )
+
+    final_chart = alt.hconcat(df_bed_utilization_chart.add_selection(selection),
+                              df_shortage_vs_deaths_chart.transform_filter(selection))
+    st.write(final_chart)
     conclusion_utilization_shortage()
 
     return
