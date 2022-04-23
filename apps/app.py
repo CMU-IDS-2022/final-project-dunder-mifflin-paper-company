@@ -504,66 +504,66 @@ def vac_and_med_loc_vis(df_medicine_vaccination_facility):
     return
 
 def intro_model_plot():
+    st.markdown(" Now that we have explored the data, let us see if we can build a Machine Learning model that can help us to predict the COVID cases in the future! ")
     st.title("COVID-19 Forecasting")
     text = "Forecasts of COVID-19 cases will help inform public health decision making by projecting " \
            "the likely impact of the pandemic in the coming weeks. Employing forecasting models gives us" \
-           " intuition into how much uncertainty there is about what may happen in the near future" \
+           " an intuition on what to expect in the near future." \
            " We have explored forecasting the number of cases based on historical information using a back-testing forecasting" \
-           "model {REFER}. We make use of the following metrics to evaluate the forecasts made by the model: " \
+           " model [ADD REFERENCE]. We make use of the following metrics to evaluate the forecasts made by the model: " \
            "<ul>" \
            "<li>Mean Absolute Error (MAE):  Measures the average of all absolute errors. " \
            "The absolute average distance between the real data and the forecasted data, " \
            "but it fails to punish large errors in prediction.</li>" \
            "<li>Mean Square Error (MSE): Measures the average of the squares of the errors. " \
            "The average squared difference between the forecasted values and the actual value. " \
-           "Since the error is being squared, any prediction error is will be heavily penalized" \
+           "Since the error is being squared, even a single occurnec of a large prediction error will be heavily penalized." \
            "</li>" \
            "</ul>"
     st.write(text, unsafe_allow_html=True)
 
 
 def conclusion_model_plot_7():
-    text = "This model uses the covid cases of the past 90 days to forecast the number of cases for 7 days from now." \
-           " From the graph above we see that even a simple model that only considers historical cases data " \
+    text = "This model uses the covid cases of the past 90 days to forecast the number of cases 7 days from now." \
+           " From the graph above we see that even a simple model that only considers historical case data (and no other feature) " \
            "is able to perform " \
-           "decently in forecasting the cases for a week from the current day as noted by the clsoe proximity of of the" \
-           "truth and predicted curves except for the peaky regions where there is a lag. " \
-           "This mismatch in values is what contributes to the high large value of the " \
+           "decently in forecasting the cases for a week from the current day as noted by the close proximity of the" \
+           " actual and predicted curves except for the last peak region (~ Jan - March) where there is a lag. " \
+           "This mismatch in values across these dates is what contributes to the high large value of the " \
            "MSE metric as opposed to MAE. " \
+           "This shows that Modelling techniques like Forecasting can be an ally to the government in making informed decisions. " \
            "However, forcasting for 7 days in the future will mainly be beneficial for procuring essentials in a short " \
            "term such as" \
-           "food and water but it is too short a duration for expanding essentials such as hospital beds, " \
-           "medical staff etc. "
+           "food and water but it is too short a duration for expanding essentials such as hospital beds etc"
     st.markdown(text, unsafe_allow_html=True)
 
 
 def intro_model_plot_30():
-    text = "We now try forecasting the cases for 30 days in the future using the same historical cases data of 90 days" \
-           " to have sufficient time to expand critical resources during the spread of the infection. "
+    text = "We now try extending this by attempting to forecast the cases 30 days in the future using the same historical case data of 90 days"
     st.markdown(text, unsafe_allow_html=True)
 
 
 def conclusion_model_plot_30():
-    text = "As seen form the forecast above, we see that the forcasted values are of poor quality and " \
-           "MAE and MSE increase significantly. This indicates that the predicting cases 1 month into the " \
+    text = "As seen form the forecast above, we see that the forcasted values are of much lesser quality (flat lines) and " \
+           "MAE and MSE increase significantly. This indicates that the predicting cases a month into the " \
            "future with a simple historical case-based model is difficult. " \
-           "This could be overcome by using a more sophisticated model and the government should explore " \
-           "this avennue further by investing bolstering the strength of forecasting models " \
-           "using features such as mobility, regulations in place, deaths, hospitalizations etc."
+           "This could be overcome by using a more sophisticated model and the government should  invest resources to explore " \
+           "this avenue further by " \
+           "using features such as mobility, regulations in place, deaths, hospitalizations etc. to develop a better performing Forecasting model. "
     st.markdown(text, unsafe_allow_html=True)
 
 
 def intro_model_feature_importance():
     st.header("Importance of Lag features in the 7-day forecasting model")
-    text = "The plot below shows us the relative importance of the lag features in making the forecast. " \
+    text = "The plot below shows us the relative importance of the lag features in making the forecast where " \
            "<br> <b>lag_7</b> is the feature representing the number of cases from 7 days ago."
     st.markdown(text, unsafe_allow_html=True)
 
 def conclusion_model_feature_importance():
-    text = "We see that lag_1 and lag_7 appear to the most important features across the states. This tells us that" \
-           "the day of the week infiuences the number of cases since it is usually the case that people go to public places " \
+    text = "We see that on average across states, lag_1 and lag_7 appear to the most important features. This tells us that" \
+           " the day of the week infiuences the number of cases since it is usually the case that people go to public places " \
            "during the weekends and home/office during the weekdays. This pattern can play a role in determining the number of" \
-           "cases. The values of the previous day will also influence the overall direction of the change in trend."
+           " cases. The values of the previous day will also influence the overall direction of the change in trend."
 
     st.markdown(text, unsafe_allow_html=True)
 
@@ -679,7 +679,7 @@ def features_plot(df_features):
 
     states = sorted(list(df_features.keys()))
     list_states = states
-    ny_ind = list_states.index("NY")
+    ny_ind = list_states.index("AK")
     selected_state = st.selectbox('Select a State to show the Feature weights: ', list_states, index=ny_ind)
     data = df_features[selected_state]
 
