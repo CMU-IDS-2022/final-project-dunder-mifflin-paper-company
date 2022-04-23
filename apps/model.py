@@ -12,7 +12,7 @@ from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 
 @st.cache
-def read_files():
+def read_files_model():
     df_values = {}
     df_features = {}
     df_values_thirty = {}
@@ -43,15 +43,9 @@ def read_files():
 
     return df_values, df_features, df_values_thirty
 
-@st.cache
-def read_model():
-    # loading the trained model
-    pickle_in = open('classifier.pkl', 'rb')
-    classifier = pickle.load(pickle_in)
-
-    return classifier
 
 def model_plot_7(df_values):
+
     states = list(sorted(df_values.keys()))
 
     selected_state = st.selectbox('Select a State', states)
@@ -72,6 +66,7 @@ def model_plot_7(df_values):
 
 
 def model_plot_30(df_values):
+
     states = sorted(list(df_values.keys()))
     # Edit below to select dynamically
 
@@ -92,6 +87,7 @@ def model_plot_30(df_values):
     return
 
 def features_plot(df_features):
+
     states = sorted(list(df_features.keys()))
     selected_state = st.selectbox('Select a State to show the Feature weights', states)
     data = df_features[selected_state]
@@ -108,56 +104,9 @@ def features_plot(df_features):
     return
 
 
-def classifier_vis(classifier):
-
-    Gender = st.selectbox('Gender', ("Male", "Female"))
-    Married = st.selectbox('Marital Status', ("Unmarried", "Married"))
-    ApplicantIncome = st.number_input("Applicants monthlyincome")
-    LoanAmount = st.number_input("Total loan amount")
-    Credit_History = st.selectbox('Credit_History', ("Unclear Debts", "No Unclear Debts"))
-    result =""
-
-    if st.button("Predict"):
-        #result = prediction(classifier, Gender, Married, ApplicantIncome, LoanAmount, Credit_History)
-        result = 10
-
-    st.success('Your loan is {}'.format(result))
-    print(LoanAmount)
-    return
-
-
-def prediction(classifier, Gender, Married, ApplicantIncome, LoanAmount, Credit_History):
-
-    if Gender == "Male":
-        Gender = 0
-    else:
-        Gender = 1
-
-    if Married == "Unmarried":
-        Married = 0
-    else:
-        Married = 1
-    if Credit_History == "Unclear Debts":
-        Credit_History = 0
-    else:
-        Credit_History = 1
-
-    LoanAmount = LoanAmount / 1000
-
-    # Making predictions
-    prediction = classifier.predict([[Gender, Married, ApplicantIncome, LoanAmount, Credit_History]])
-
-    if prediction == 0:
-        pred = 'Rejected'
-    else:
-        pred = 'Approved'
-    return pred
-
 if __name__ =="__main__":
-    df_values, df_features, df_values_thirty = read_files()
+    df_values, df_features, df_values_thirty = read_files_model()
     model_plot_7(df_values)
     model_plot_30(df_values_thirty)
     features_plot(df_features)
 
-    # classifier = read_model()
-    # classifier_vis(classifier)
