@@ -342,6 +342,19 @@ def conclusion_hospital_utilization():
     st.markdown(text, unsafe_allow_html=True)
 
 
+def conclusion_access_to_vaccination_medication():
+    text = "The medicine facilities are locations of publicly available COVID-19 Therapeutics that require prescription" \
+           "From the map, we see that easter states contain more facilities than the western states. However, " \
+           "the population of the east is almost double that of the west. This explains the higher number of facilities." \
+           "We can also see that there are more Medicine/Therapeutic facilities than Vaccination centers. " \
+           "Though there is availability of vaccination facilities, the rate of vaccination in teh US was comparitively lower." \
+           "A few reasons that citizens state was inconvenience to reach the facility/ lack of transport etc. In order to overcome" \
+           "this, the state governments can roll out policies  to help encourage vaccination, including ridesharing services " \
+           "offering free transport to vaccine clinic sites, and promotional incentives and discounts being offered to those " \
+           "who present proof of a recent vaccination."
+
+    st.markdown(text, unsafe_allow_html=True)
+
 def describe_access_to_vaccination_sites():
     st.title("Average time to reach closest vaccination site in the US")
     colwalking, coldriving, coltransit = st.columns(3)
@@ -358,13 +371,25 @@ def describe_access_to_vaccination_sites():
         text = "<b style='font-size: 30px;font-family:Monaco, monospace; color:red;'>45 mins</b>"
         coltransit.markdown(text, unsafe_allow_html=True)
 
+    text = "Vaccination sites need to be acccessible to the public for a successful rollout. On analyzing the maximum average travel" \
+           "time to the nearest vacciation sites around the country, it is seen that driving to the vaccination site is the quickest way, " \
+           "followed by walking and public transit. These numbers reflect the average maximum time across the US that one would have to " \
+           "travel to reach a vaccination site. The numbers appear to be reasonable!"
+    st.markdown(text, unsafe_allow_html=True)
+
 
 def conclusion_utilization_shortage():
-    text = "From the graph on the left we see that during the pandemic there is more variation in the ICU beds, " \
-           "whereas the im-patient beds seem to relatively be at the same level. A majority of COVID-19 affected patients" \
-           "do not need to be admitted. Only cases where the individual is suffer from other co-morbidities required to be admitted" \
+    text = "From the graph on the left we see that during the pandemic there is more variation in the utilization of ICU beds, " \
+           "whereas the in-patient beds seem to be relatively around the same level. A majority of COVID-19 affected patients" \
+           "did not require to be admitted. Only cases where the individual suffers from other co-morbidities were more likely" \
+           "required to be admitted" \
            "and these patients usually required sofisticated care that can be provided only in the ICU. Thus, it is important" \
-           "to have adequate number of ICU beds. "
+           "to have adequate number of ICU beds.<br> " \
+           "Another interesting observation is the effect of staff shortages and deaths. As we see more number of hospitals reporting" \
+           "shortage of staff, we observe an increase in ICU bed utilization and deaths. This indicates that we should monitor" \
+           "the ICU utilization and as soon as it crosses a particular threshold (~75%), we should deploy strategies that can " \
+           "expand the resources (staff and equipment) in a short amount of time so as to prevent the peak in deaths which could happend due to staff and" \
+           "ICU bed shortage. "
     st.markdown(text)
 
 
@@ -459,6 +484,13 @@ def staff_shortage_and_bed_util_vis(covid_data):
 
     return
 
+def conclusion_testing_results():
+    text = "It is clear that the number of test results obtained is significantly lower than the number of samples taken. This is" \
+           "another crucial dimension where the medical infrastructure should be sclaed up. It is equally important to have enough" \
+           "labs that can process all the test samples and return their results within a finite amount of time. Timely results will" \
+           "help curb the spread of infection as infected individuals can be alerted to stay quarantined and prevent the spread further."
+    st.markdown(text)
+
 
 def covid_test_vis(df_test):
 
@@ -467,6 +499,7 @@ def covid_test_vis(df_test):
     ny_ind = list_states.index("NY")
     state = st.selectbox('Select a State', list_states , index=ny_ind)
     testing_and_results_chart(df_test, state)
+    conclusion_testing_results()
     return
 
 
@@ -630,6 +663,7 @@ if __name__ =="__main__":
     staff_shortage_and_bed_util_vis(covid_data)
     covid_test_vis(df_test)
     vac_and_med_loc_vis(df_medical_fac_loc)
+    conclusion_access_to_vaccination_medication()
     describe_access_to_vaccination_sites()
     model_vis(df_values, df_features, df_values_thirty)
 
