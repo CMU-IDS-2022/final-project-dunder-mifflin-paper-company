@@ -1,8 +1,8 @@
 import streamlit as st
-from apps.app import MedicalVis
+from apps.medical_infrastructure_app import MedicalVis
 # Import here and call accordingly down below
 
-def display_graph(selection="Take me Home!"):
+def display_graph(selection="Introduction"):
 
     if "menu" in st.session_state:
         selection = st.session_state.menu
@@ -16,16 +16,22 @@ def display_graph(selection="Take me Home!"):
         MedicalVis()
 
     elif selection == "Introduction" or selection == "Select One":
-        st.write("Introduction")
+        text = "<h1 style='text-align: center; color: #7f32a8;'>COVID-19 Dashboard<h1>"
+        st.write(text, unsafe_allow_html=True)
 
 
 if __name__=="__main__":
-    st.sidebar.image("images/panel_black.png", use_column_width=True, output_format="PNG")
 
+    with st.sidebar:
+        text = "<h1 align='center'>Navigation Panel</h1>"
+        st.write(text, unsafe_allow_html=True)
+    st.sidebar.image("images/panel_black.png", use_column_width=True, output_format="PNG")
     selector = st.sidebar.selectbox(
-            "What Would You Like to Look at?",
-            ("Introduction", "Exploratory Data Analysis", "Medical Infrastructure", "Government Response"),
+            "What would you like to look at?",
+            ("Introduction", "Exploratory Data Analysis", "Government Response", "Medical Infrastructure"),
             on_change=display_graph(),
             # Initially load a page
             key="menu",
         )
+
+
