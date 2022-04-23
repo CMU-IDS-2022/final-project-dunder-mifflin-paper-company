@@ -329,18 +329,20 @@ def describe_hospital_utilization():
 
 
 def conclusion_hospital_utilization():
-    text = "From the graph we see that over time the utlization of hospitals has increased as indicated by the change in " \
+    text = "From the graph we see that over time the bed utlization in hospitals has increased as indicated by the change in " \
            "color gradient from <span style='font-family:sans-serif; color:yellowgreen;'>yellowish-green</span> to " \
            "<span style='font-family:sans-serif; color:#953553;'>reddish-purple</span>"
     st.markdown(text, unsafe_allow_html=True)
     text = "We also see that as the number of cases (indicated by the size of the circles) increases, the utilization" \
-           "moves towards the upper end. This tells us that patients infected with Covid were seeking care at hospitals." \
+           " moves towards the upper end. This tells us that there were some degree of patients infected with Covid, " \
+           "that were seeking care at hospitals. We can also see this displayed in the dashboard above from the 'Hospital bed utilization COVID patients' metric. " \
            "<br> It is imperative that hospitals be able to provide care to infected individuals during a future pandemic. " \
-           "<br> Simply increasing bed capacity is not sustainable in terms of both economic and workforce requirement. It is " \
-           "necessary for us to identify strategies that enable quick expansion of space, staff and supplies in the event of a" \
-           "future pandemic. <br>" \
-           "We will now study this is more detail for the states of New York(NY), Utah(UT), Ohio(OH) and California(CA) for" \
-           " ease of interpretation and to contrast how these effects have spread across the country."
+           "<br> We also see that the number of available Hospital beds increased by significant numbers as the pandemic progressed and the number of cases increased." \
+           "This indicates a high degree of pressure on the medical sector to procure large number of beds quickly due to large increase in the number of COVID cases. " \
+           "But, were we able to procure beds quickly enough? Let us now take a deeper dive to find out more about this. <br> " \
+           "Simply 'trying' to increase bed capacity is not sustainable in terms of both economic and workforce requirement. It is " \
+            "necessary for us to set in place pre-defined strategies that enable quick expansion of space, staff and supplies in the event of a" \
+            "future pandemic. <br>"
     st.markdown(text, unsafe_allow_html=True)
 
 
@@ -381,18 +383,20 @@ def describe_access_to_vaccination_sites():
 
 
 def conclusion_utilization_shortage():
+    st.markdown("Feel free to select an interval on the graph on the left and slide across to get a more focused view of the graph on the right! <br><br>", unsafe_allow_html=True)
     text = "From the graph on the left we see that during the pandemic there is more variation in the utilization of ICU beds, " \
-           "whereas the in-patient beds seem to be relatively around the same level. A majority of COVID-19 affected patients" \
-           "did not require to be admitted. Only cases where the individual suffers from other co-morbidities were more likely" \
-           "required to be admitted" \
-           "and these patients usually required sofisticated care that can be provided only in the ICU. Thus, it is important" \
-           "to have adequate number of ICU beds.<br> " \
-           "Another interesting observation is the effect of staff shortages and deaths. As we see more number of hospitals reporting" \
-           "shortage of staff, we observe an increase in ICU bed utilization and deaths. This indicates that we should monitor" \
-           "the ICU utilization and as soon as it crosses a particular threshold (~75%), we should deploy strategies that can " \
-           "expand the resources (staff and equipment) in a short amount of time so as to prevent the peak in deaths which could happend due to staff and" \
-           "ICU bed shortage. "
-    st.markdown(text)
+           "whereas the in-patient beds seem to be relatively around the same level as it was  before. One can argue that it looks like a majority of COVID-19 affected patients" \
+           " did not require to be admitted. Only cases where the individual suffers from other co-morbidities were more likely" \
+           "required to be admitted, but they required ICU beds. This can lead us to the conclusion that for a similar future pandemic, one must place emphasis on procuring ICU beds and not general beds. " \
+           "However, if we take a look at the dashboard above again, we see that the number of available beds has increased significantly as the pandemic progressed! " \
+           "Therefore the relative stable level of In-patient bed utilization is due the fact that hospitals were  able to quickly procure a large number of 'in-patient' beds to meet their demand. " \
+           "The same however cannot be said for the ICU beds. ICU beds are very complex mechanisms that cannot be quickly procured with the current state of the medical infrastructure." \
+            " But if we look closely, we can see that across a majority of the states, as soon as the ICU bed utilization crosses the ~75% barrier, the number of deaths see a sharp incline. " \
+           "Therefore it is of utmost importance to have pre-defined strategies in place that allow hospitilizations to quickly increase the ICU bed availability, before it crosses the 75% barrier, in the event of a  future pandemic. <br><br>" \
+           "Another interesting observation is the relation between staff shortages and deaths. As we see more number of hospitals reporting" \
+           " shortage of staff (the points becoming more reddish), we shortly see a sharp incline in the deaths. This shows that is of equal importance to also have sufficient availability of medical staff" \
+           " as well in the event of a future pandemic. This is something that needs to be planned out carefully as you cannot simply 'procure' more medical staff in a short time!  "
+    st.markdown(text, unsafe_allow_html=True)
 
 
 def medical_infra_intro():
@@ -415,7 +419,7 @@ def medical_map_dashboard_vis(covid_data, df_hospital, states, baseline_dashboar
 
     describe_hospital_utilization()
 
-    date_slider = st.slider('Silde the Date to see how the Hospitilization and realated parameters vary with time',
+    date_slider = st.slider('Silde the Date to see how the Hospital bed utilization and realated parameters vary with time',
                             min(df_hospital['date']), max(df_hospital['date']), min(df_hospital['date']),
                             step=timedelta(days=1), help="Slide over to see different dates")
 
@@ -424,7 +428,7 @@ def medical_map_dashboard_vis(covid_data, df_hospital, states, baseline_dashboar
     with col2:
         list_states = sorted(list(set(covid_data['state'])))
         ny_ind = list_states.index("NY")
-        state = st.selectbox('Select a State', list_states, index=ny_ind)
+        state = st.selectbox('Select a State to see metrics for the chosen date', list_states, index=ny_ind)
     build_metric(state, date_slider, baseline_dashboard_data, col2, col3)
 
     conclusion_hospital_utilization()
@@ -434,7 +438,7 @@ def medical_map_dashboard_vis(covid_data, df_hospital, states, baseline_dashboar
 
 def staff_shortage_and_bed_util_vis(covid_data):
 
-    st.title("How does hospital utilization and staff shortage vary with time?")
+    st.title("How did Hospital bed utilization and staff shortage vary with time?")
 
     list_states_cov = sorted(list(set(covid_data['state']).difference(set(['AS']))))
     ny_ind = list_states_cov.index("NY")
@@ -444,7 +448,7 @@ def staff_shortage_and_bed_util_vis(covid_data):
     df_shortage_vs_deaths = df_shortage_vs_deaths[
         ["date", "new_deceased", "critical_staffing_shortage_today_yes"]]
     df_staff = df_shortage_vs_deaths.rename(columns={"date": "Date", "new_deceased": "Deaths",
-                                          "critical_staffing_shortage_today_yes": "# Hospitals with shortage"},)
+                                          "critical_staffing_shortage_today_yes": "# Hospitals - staff shortage"},)
 
     df_bed = get_df_bed_util(state, covid_data)
 
@@ -463,14 +467,14 @@ def staff_shortage_and_bed_util_vis(covid_data):
     )
 
     df_shortage_vs_deaths_chart = alt.Chart(df_staff,
-                                            title="Graph of Daily deaths and hospitals with staff shortage in " + "NY").mark_point().encode(
+                                            title="Graph of Daily deaths and hospitals with staff shortage in " + state).mark_point().encode(
         x=alt.X('Date:T', axis=alt.Axis(labelAngle=0, ticks=True, titleFontSize=16, titlePadding=15)),
         y=alt.Y('Deaths:Q', axis=alt.Axis(labelAngle=0, ticks=True, titleFontSize=16, titlePadding=15)),
-        color=alt.Color("# Hospitals with shortage:Q",
+        color=alt.Color("# Hospitals - staff shortage:Q",
                         scale=alt.Scale(scheme='goldred'),
                         legend=alt.Legend(orient="top", titleFontSize=15, labelFontSize=15, direction="horizontal",
                                           padding=15)),
-        tooltip=alt.Tooltip(["Deaths", "# Hospitals with shortage"])
+        tooltip=alt.Tooltip(["Deaths", "# Hospitals - staff shortage"])
     ).properties(
         width=600,
         height=400
