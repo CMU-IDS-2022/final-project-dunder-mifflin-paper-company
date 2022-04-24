@@ -125,8 +125,8 @@ def medical_state_vis(location_df, states, date_slider, column):
         fill='white ',
         stroke='black'
     ).project('albersUsa').properties(
-        width=500,
-        height=600
+        width=460,
+        height=700
     )
 
     # Points chart
