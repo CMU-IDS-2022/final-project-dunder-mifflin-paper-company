@@ -463,8 +463,7 @@ def staff_shortage_and_bed_util_vis(covid_data):
                               df_shortage_vs_deaths_chart.transform_filter(selection),
                               config=alt.Config(title=alt.TitleConfig(fontSize=16, subtitlePadding=40)))
 
-
-    st.write(final_chart)
+    st.altair_chart(final_chart, use_container_width=True)
     conclusion_utilization_shortage()
 
     return
@@ -627,7 +626,7 @@ def model_plot_7(df_values):
             width=800,
             height=400
         ).configure_title(fontSize=16)
-        st.write(chart)
+        st.altair_chart(chart, use_container_width=True)
     return
 
 
