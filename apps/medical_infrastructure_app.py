@@ -563,7 +563,7 @@ def intro_model_feature_importance():
     st.markdown(text, unsafe_allow_html=True)
 
 def conclusion_model_feature_importance():
-    text = "We see that lag_1 and lag_7 appear to the most important features across the states. This tells us that" \
+    text = "We see that lag_1 and lag_7 appear to the most important features across the states. This tells us that " \
            "the day of the week infiuences the number of cases since it is usually the case that people go to public places " \
            "during the weekends and home/office during the weekdays. This pattern can play a role in determining the number of" \
            "cases. The values of the previous day will also influence the overall direction of the change in trend."
@@ -682,7 +682,7 @@ def features_plot(df_features):
 
     states = sorted(list(df_features.keys()))
     list_states = states
-    ny_ind = list_states.index("NY")
+    ny_ind = list_states.index("ID")
     selected_state = st.selectbox('Select a State to show the Feature weights: ', list_states, index=ny_ind)
     data = df_features[selected_state]
 
