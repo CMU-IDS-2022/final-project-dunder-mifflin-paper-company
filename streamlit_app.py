@@ -21,8 +21,6 @@ def display_graph(selection):
         MedicalVis()
 
     elif selection == "Introduction" or selection == "Select One":
-        text = "<h1 style='text-align: center; color: #7f32a8;'>COVID-19 Dashboard<h1>"
-        st.write(text, unsafe_allow_html=True)
         Introduction()
 
     elif selection == "Search Trend Dashboard":

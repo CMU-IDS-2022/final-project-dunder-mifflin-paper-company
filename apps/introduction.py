@@ -1,7 +1,8 @@
 import streamlit as st
 
 def Introduction():
-    st.header("Introduction")
+    text = "<h1 style='text-align: center; color: #7f32a8;'>COVID-19 Dashboard<h1>"
+    st.write(text, unsafe_allow_html=True)
     text = "<p style='font-size:18px'>The COVID-19 pandemic has impacted society in various ways,\
          affecting almost every single aspect of our daily lives. Though COVID-19 is a crisis\
          worldwide, there have been stark differences in how various regions have approached\
