@@ -1,7 +1,8 @@
 import streamlit as st
 
 def Introduction():
-    text = "<h1 style='text-align: center; color: #7f32a8;'>COVID-19 Dashboard<h1>"
+
+    text = "<h1 style='text-align: center; color: #900C3F;'>COVID-19 Dashboard<h1>"
     st.write(text, unsafe_allow_html=True)
     text = "<p style='font-size:18px'>The COVID-19 pandemic has impacted society in various ways,\
          affecting almost every single aspect of our daily lives. Though COVID-19 is a crisis\
@@ -18,7 +19,7 @@ def Introduction():
     st.write(text, unsafe_allow_html=True)
 
     text = "<p style='font-size:18px'>In this project, we will first perform <span style='color:#900C3F'>exploratory data analysis</span> on the\
-         <a href='https://goo.gle/covid-19-open-data'>Google Health COVID-19 Open Data dataset</a>\
+         <a style='color:#900C3F' href='https://goo.gle/covid-19-open-data'>Google Health COVID-19 Open Data dataset</a>\
          to attempt to find initial insights on which states in the\
          United States do better jobs in handling COVID-19 and what are the related attributes that lead to such results. Next, we explore how human behaviors\
          such as <span style='color:#900C3F'>citizen mobility</span>, <span style='color:#900C3F'>search trend</span>, and <span style='color:#900C3F'>responses from state governments</span> affect\
