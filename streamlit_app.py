@@ -34,6 +34,9 @@ def display_graph(selection):
 
 if __name__=="__main__":
 
+    if "selected_region" not in st.session_state:
+        st.session_state["selected_region"] = "US"
+
     if "search_history" not in st.session_state:
         st.session_state["search_history"] = {
             "region": [],

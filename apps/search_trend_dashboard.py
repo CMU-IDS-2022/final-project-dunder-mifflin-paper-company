@@ -446,8 +446,7 @@ def plot_search_dashboard():
         """,
             unsafe_allow_html=True,
         )
-        usa_map_folium = usa_map.to_streamlit(
-            height=500, width=900, add_layer_control=True, bidirectional=True
+        usa_map_folium = usa_map.to_streamlit(add_layer_control=True, bidirectional=True
         )
         st.markdown(
             """
