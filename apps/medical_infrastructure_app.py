@@ -330,11 +330,11 @@ def conclusion_hospital_utilization():
 def conclusion_access_to_vaccination_medication():
     text = "The medicine facilities are locations of publicly available COVID-19 Therapeutics that require prescription. " \
            "From the map, we see that the Eastern states contain more number of medical facilities than the Western states, while the Central states have a much lesser density of these facilities. However, " \
-           "the population of the east is almost double that of the west [ADD REFERENCE], explaining the higher number of facilities, but it does not proportionally account for the lesser number of facilities in Central states. " \
+           "the population of the east is <a style='color:#900C3F' href='https://en.wikipedia.org/wiki/Eastern_United_States'>1.5</a> times that of the west, explaining the higher number of facilities, but it does not proportionally account for the lesser number of facilities in Central states. " \
            "Across all states, we can also see that there are more Medicine/Therapeutic facilities than Vaccination centers. The " \
            "vaccination centers seem to be concentrated in major cities. One can argue that this non-uniform spread of facilities, " \
            "leading to difficulties for some citizens to reach these facilities, can be a part of the reason that " \
-           "the rate of vaccination in the US was comparatively lower [ADD REFERENCE] than other countries. <br><br>"
+           "the rate of vaccination in the US was <a style='color:#900C3F' href='https://www.commonwealthfund.org/blog/2021/how-can-us-catch-other-countries-covid-19-vaccination'>comparatively lower</a> than other countries. <br><br>"
 
     st.markdown(text, unsafe_allow_html=True)
 
@@ -511,8 +511,8 @@ def intro_model_plot():
     text = "Forecasts of COVID-19 cases will help inform public health decision making by projecting " \
            "the likely impact of the pandemic in the coming weeks. Employing forecasting models gives us" \
            " intuition into how much uncertainty there is about what may happen in the near future" \
-           " We have explored forecasting the number of cases based on historical information using a back-testing forecasting" \
-           "model {REFER}. We make use of the following metrics to evaluate the forecasts made by the model: " \
+           " We have explored forecasting the number of cases based on historical information using a " \
+           "<a style='color:#900C3F' href='https://www.cienciadedatos.net/documentos/py27-time-series-forecasting-python-scikitlearn.html'>back-testing forecasting</a> model. We make use of the following metrics to evaluate the forecasts made by the model: " \
            "<ul>" \
            "<li>Mean Absolute Error (MAE):  Measures the average of all absolute errors. " \
            "The absolute average distance between the real data and the forecasted data, " \
