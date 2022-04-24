@@ -673,7 +673,7 @@ def model_plot_30(df_values):
             width=800,
             height=400
         ).configure_title(fontSize=16)
-        st.write(chart)
+        st.altair_chart(chart, use_container_width=True)
     return
 
 
