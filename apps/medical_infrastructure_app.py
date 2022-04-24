@@ -152,7 +152,8 @@ def medical_state_vis(location_df, states, date_slider, column):
     glob_plot = background + points
     with column:
         column.header("Hospital bed utilization over time in the US")
-        column.write(glob_plot, use_container_width=True)
+        # column.write(glob_plot, use_container_width=True)
+        st.altair_chart(glob_plot, use_container_width=True)
 
     return
 
