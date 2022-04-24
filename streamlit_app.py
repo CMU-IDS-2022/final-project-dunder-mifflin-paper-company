@@ -17,9 +17,6 @@ def display_graph(selection):
     elif selection == "Medical Infrastructure":
         MedicalVis()
 
-    elif selection == "Government Response":
-        MedicalVis()
-
     elif selection == "Introduction" or selection == "Select One":
         Introduction()
 
@@ -61,8 +58,7 @@ if __name__=="__main__":
 
     values = [
         "Introduction", 
-        "Exploratory Data Analysis", 
-        "Government Response", 
+        "Exploratory Data Analysis",
         "Medical Infrastructure",
         "Search Trend Dashboard",
         "Government Response Dashboard"
