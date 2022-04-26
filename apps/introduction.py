@@ -32,7 +32,7 @@ def Introduction():
     text = "<p style='font-size:18px'>Select <span style='color:#900C3F'>Exploratory Data Analysis</span> on the left panel. Let’s jump into the first part and observe the overall trends of various COVID statistics in the US!"
     st.write(text, unsafe_allow_html=True)
 
-    text = "This dashboard was created by [Bharani Ujjaini Kempaiah](buk@cs.cmu.edu), [Ruben John Mampilli](rmampill@cs.cmu.edu)\
+    text = "<br><br><br>This dashboard was created by [Bharani Ujjaini Kempaiah](buk@cs.cmu.edu), [Ruben John Mampilli](rmampill@cs.cmu.edu), \
          [He-Wei Lee](heweil@cs.cmu.edu) and [Kushagra Singh](kushagr2@cs.cmu.edu)for the [Interactive Data Science](https://dig.cmu.edu/ids2022) course at\
           [Carnegie Mellon University](https://www.cmu.edu)"
     st.write(text, unsafe_allow_html=True)
