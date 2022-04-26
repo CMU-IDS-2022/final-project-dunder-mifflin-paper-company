@@ -543,7 +543,7 @@ def plot_government_response_dashboard():
     historical_data = pd.DataFrame(st.session_state["indicator_history"])
     historical_chart = (
         alt.Chart(historical_data.reset_index(), title="Search history")
-        .mark_line(point=True, color="#FFFFFF")
+        .mark_line(point=True, color="#000000")
         .encode(
             alt.Y(
                 "correlation",
