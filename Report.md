@@ -174,7 +174,8 @@ Further, from our experiments with the forecasting model, we were able to see th
 ![Medical Infrastructure Dashboard – Forecasting Model Comparison](images/Medical%20Infrastructure%20Dashboard%20–%20Forecasting%20Model%20Comparison%201.png) ![Medical Infrastructure Dashboard – Forecasting Model Comparison](images/Medical%20Infrastructure%20Dashboard%20–%20Forecasting%20Model%20Comparison%202.png)
 
 The user can dive deep into other visualizations and have a look at our application for more insights!
-Search Trend Dashboard
+
+### Search Trend Dashboard
 
 As a case study, we try to check the correlation between the trend values for the search string “fever” and the rise of COVID 19 cases in the state of California. The first figure illustrates the correlation between the two with lag = 0 days, while the second illustrates the correlation between the trend value and cases 9 days in the future (lag = 9). We can clearly see that there is a stronger correlation (0.657) in the second cases, indicating that trend values for the search string “fever” can be an indicator of a rise in COVID 19 cases in the near future. This can be useful for authorities for preemptively making decisions (such as making provisions for dealing with cases).
 
