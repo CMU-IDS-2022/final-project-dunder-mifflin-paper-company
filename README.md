@@ -19,7 +19,7 @@ The COVID-19 pandemic has impacted society in various ways, affecting almost eve
 In this project, we focus on analyzing how different states in the US approached the COVID-19 pandemic. We plan to do this from two different directions. The first would be to analyze from the perspective of the government and the containment measures adopted to prevent the spread of COVID. The second will be to look at it from the perspective of the citizens and how their behavior in terms of their search trends, mobility levels change through time. This will enable the viewer to answer questions such as:
 
 * Has COVID-19 infected citizens throughout the country uniformly? Have certain states been more affected?
-* How has the rapid spread of the COVID-19 disease affected the existing medical infrastructure in the US? How did the Medical Infrastructure of the US * cope with the COVID-19 pandemic?
+* How has the rapid spread of the COVID-19 disease affected the existing medical infrastructure in the US? How did the Medical Infrastructure of the US cope with the COVID-19 pandemic?
 * Does a strict government policy response (closing schools and workplaces, canceling public events, etc.) entail lower morbidity?
 * Can we predict the spread of infection to help governments plan and scale up their resources ahead of time?
 * Is there a correlation between user searches on vaccination related information and spread of COVID cases?
