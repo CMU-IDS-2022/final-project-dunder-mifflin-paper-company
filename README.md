@@ -7,12 +7,35 @@
   * heweil@andrew.cmu.edu
   * kushagr2@andrew.cmu.edu
 
+## Title
+COVID-19 Dashboard
+
+## Summary Image
+
+## Abstract
+The COVID-19 pandemic has impacted society in various ways, affecting almost every single aspect of our daily lives. Though COVID-19 is a crisis worldwide, there have been stark differences in how various regions have approached curbing the spread of the infection. Every government has uniquely responded to this pandemic in terms of their masking policies, early vaccinations, shutting down schools and workplaces, restricting public transport, etc. Variations in these responses are dependent on the distinctive institutional arrangements, political and geographical factors, and cultural orientation of each state, and thus, there is no One-Size-Fits-All strategy. However, it can also be argued that such distinct policies are a result of the fact that we as a society were grossly under-prepared to handle a pandemic of this scale. It is vital that we now analyze the different policies taken to be better prepared in the event of a future pandemic.
+
+In this project, we focus on analyzing how different states in the US approached the COVID-19 pandemic. We plan to do this from two different directions. The first would be to analyze from the perspective of the government and the containment measures adopted to prevent the spread of COVID. The second will be to look at it from the perspective of the citizens and how their behavior in terms of their search trends, mobility levels change through time. This will enable the viewer to answer questions such as:
+
+* Has COVID-19 infected citizens throughout the country uniformly? Have certain states been more affected?
+* How has the rapid spread of the COVID-19 disease affected the existing medical infrastructure in the US? How did the Medical Infrastructure of the US * cope with the COVID-19 pandemic?
+* Does a strict government policy response (closing schools and workplaces, canceling public events, etc.) entail lower morbidity?
+* Can we predict the spread of infection to help governments plan and scale up their resources ahead of time?
+* Is there a correlation between user searches on vaccination related information and spread of COVID cases?
+
+
+## Links
+* Video: 
+* Report: https://github.com/CMU-IDS-2022/final-project-dunder-mifflin-paper-company/blob/main/Report.md
+
+## Running Instructions
+
 ## Work distribution
 
-Kushagra Singh: Search Trend Dashboard + Government Response Dashboard
-Ruben:
-Bharani:
-He-Wei Lee: Exploratory Data Analysis
+* Kushagra Singh: Search Trend Dashboard + Government Response Dashboard
+* Ruben:
+* Bharani:
+* He-Wei Lee: Exploratory Data Analysis
 
 
 ## Deliverables
