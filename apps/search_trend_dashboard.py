@@ -446,7 +446,8 @@ def plot_search_dashboard():
         """,
             unsafe_allow_html=True,
         )
-        usa_map_folium = usa_map.to_streamlit(add_layer_control=True, bidirectional=True
+        usa_map_folium = usa_map.to_streamlit(
+            height=500, width=900, add_layer_control=True, bidirectional=True
         )
         st.markdown(
             """
@@ -553,7 +554,7 @@ def plot_search_dashboard():
     historical_data = pd.DataFrame(st.session_state["search_history"])
     historical_chart = (
         alt.Chart(historical_data.reset_index(), title="Search history")
-        .mark_line(point=True, color="#FFFFFF")
+        .mark_line(point=True, color="#000000")
         .encode(
             alt.Y(
                 "correlation",

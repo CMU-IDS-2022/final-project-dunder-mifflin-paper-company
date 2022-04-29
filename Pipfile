@@ -1,0 +1,22 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+streamlit = "~=1.8.1"
+pandas = "*"
+altair = "~=4.2.0"
+vega-datasets = "*"
+pydeck = "~=0.7.1"
+wordcloud = "*"
+pyshp = "*"
+folium = "*"
+leafmap = "*"
+streamlit-folium = "*"
+branca = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.8"
