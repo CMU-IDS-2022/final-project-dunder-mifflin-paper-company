@@ -139,8 +139,10 @@ In this dashboard as well, each state in the map is selectable, and upon selecti
 
 The visualizations your system produces and any data to help evaluate your approach. For example, you might describe a case study that illustrates how your visualization(s) to address your chosen problem.
 
+
 ### Exploratory Data Analysis
-	With the interactive dashboard in the Exploratory Data Analysis page, we provide a storyline on what questions users can answer by playing around with the data visualizations. In the following paragraphs, we will go through each of the questions and discuss what the data has told us.
+
+With the interactive dashboard in the Exploratory Data Analysis page, we provide a storyline on what questions users can answer by playing around with the data visualizations. In the following paragraphs, we will go through each of the questions and discuss what the data has told us.
 
 1. How have COVID statistics varied in the different states in the US?
 	From what we can see on the dashboard, there are in general three major spikes of daily confirmed cases: October 2020 - February 2021, July 2021 - October 2021, and December 2021 - February 2022. These three periods can be mapped to the Alpha, Delta, and Omicron variants. Among the three spikes, the Omicron period has the largest number of confirmed cases, however, the death cases didn’t go up proportionally. This can be attributed to the fact that most of the people already got fully vaccinated by April 2021, as the plot shows.
