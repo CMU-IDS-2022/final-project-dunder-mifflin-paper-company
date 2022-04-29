@@ -26,7 +26,7 @@ In this project, we focus on analyzing how different states in the US approached
 
 
 ## Links
-* Video: 
+* Video: https://www.youtube.com/watch?v=NzRktLDfCC8
 * Report: https://github.com/CMU-IDS-2022/final-project-dunder-mifflin-paper-company/blob/main/Report.md
 
 ## Running Instructions
