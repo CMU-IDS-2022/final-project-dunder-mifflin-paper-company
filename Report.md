@@ -8,8 +8,6 @@ Short (~250 words) abstract of the concrete data science problem and how the sol
 
 ## Introduction
 
-An explanation of the problem and the motivation for solving it.
-
 The COVID-19 pandemic has impacted society in various ways, affecting almost every single aspect of our daily lives. Though COVID-19 is a crisis worldwide, there have been stark differences in how various regions have approached curbing the spread of the infection. Every government has uniquely responded to this pandemic in terms of their masking policies, early vaccinations, shutting down schools and workplaces, restricting public transport, etc. Variations in these responses are dependent on the distinctive institutional arrangements, political and geographical factors, and cultural orientation of each state, and thus, there is no One-Size-Fits-All strategy. However, it can also be argued that such distinct policies are a result of the fact that we as a society were grossly under-prepared to handle a pandemic of this scale. It is vital that we now analyze the different policies taken to be better prepared in the event of a future pandemic.
 
 In this project, we focus on analyzing how different states in the US approached the COVID-19 pandemic. We plan to do this from two different directions. The first would be to analyze from the perspective of the government and the containment measures adopted to prevent the spread of COVID. The second will be to look at it from the perspective of the citizens and how their behavior in terms of their search trends, mobility levels change through time. This will enable the viewer to answer questions such as:
@@ -30,13 +28,8 @@ In [this](https://www.sciencedirect.com/science/article/pii/S002248042030812X?ca
 
 
 
-
-
-
 ## Methods
 
-
-In this section we go over the different techniques we use to build each component of our application.
 
 ### Exploratory Data Analysis
 
@@ -138,9 +131,6 @@ In this dashboard as well, each state in the map is selectable, and upon selecti
 
 ## Results
 
-The visualizations your system produces and any data to help evaluate your approach. For example, you might describe a case study that illustrates how your visualization(s) to address your chosen problem.
-
-
 ### Exploratory Data Analysis
 
 With the interactive dashboard in the Exploratory Data Analysis page, we provide a storyline on what questions users can answer by playing around with the data visualizations. In the following paragraphs, we will go through each of the questions and discuss what the data has told us.
@@ -199,8 +189,6 @@ As a case study, we try to check the correlation between government response for
 
 ## Discussion
 
-What has the audience learned from your work? What new insights or practices has your system enabled? Informal observations of use that help evaluate your system are encouraged.
-
 During exploratory data analysis, there are several findings of our dashboard that provide interesting insights regarding the trend of COVID across different states and thus are worth discussing. For example, as we point out in the Results section, hotter regions tend to control COVID better. Although this result does not sound straightforward, it is actually consistent with some other [research papers](https://www.nature.com/articles/s41598-021-87803-w) that mention Coronavirus transmits slower in regions with higher average temperatures. Another interesting yet peculiar result is that Workplace mobility didn’t go down whenever there was a spike in COVID cases like other mobility categories did. This can be explained by the fact that more and more companies are asking their employees to be back to office. Such company policies are not easy to change frequently once a decision is made because the cost to relocate employees is high.
 
 Through the Medical Infrastructure dashboard the audience can see that there is high pressure on the medical sector to procure a large number of beds quickly due to the large increase in the number of COVID cases. We can also see that in a majority of the states, as soon as the ICU bed utilization crosses the ~75% barrier, the number of deaths see a sharp incline. This tells the audience about the importance of having pre-defined strategies in place that allow hospitals to quickly increase the ICU bed availability, before it crosses the 75% barrier, in the event of a future pandemic. The audience is also able to see that the testing infrastructure is another important factor during a pandemic and there should be an adequate number of labs that can process all the test samples and return their results within a finite amount of time to curb the spread of infection. Additionally, the forecasting model with a 7-day step size looks to be a promising direction to invest more resources in to strengthen its performance to accurately predict cases. This also strengthens the fact that using intelligent algorithms to forecast factors such as cases, deaths etc. can help in procuring required resources beforehand to prevent any shortage. 
@@ -210,8 +198,6 @@ From the search trend dashboard, we can see that there are strong positive corre
 The government response dashboard shows a strong negative correlation between the extent of many government policy decisions (such as more stringent facial covering policies and restrictions on gatherings) and COVID 19 cases 40-50 days in the future. Such a delay (in the number of days) is expected, since policies often take time in achieving their desired results. However, we do notice that this correlation is not the same across different regions in the United States, which hints towards other factors playing a role. 
 
 ## Future Work
-
-A description of how your application could be extended or refined. 
 
 In this project, we only use the COVID-19 dataset in the US as we aimed to cut down the scope to cover more in-depth analysis with interactive visualization components. With our preliminary results, our techniques are easily transferable to cover a global dataset.  Besides, in the exploratory data analysis phase we are comparing data only in a per-state granularity. An interesting future work will be to re-perform our works on a finer regional granularity such as per-city or per-neighborhood. This will surely give us a more abundant dataset to compare with and thus lead to a higher quality result when finding attributes that are correlated with the COVID confirmed rate.
 
