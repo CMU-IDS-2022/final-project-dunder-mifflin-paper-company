@@ -57,7 +57,7 @@ It is important to pay attention to the overall capacity of the nation’s publi
 The first portion of this dashboard deals with the variation in hospital bed utilization in terms of the proportion of in-patient beds and ICU beds used. We get this data from the hospital capacity dataset from [U.S. Department of Health and Human Services](https://healthdata.gov/Hospital/COVID-19-Reported-Patient-Impact-and-Hospital-Capa/g62h-syeh). From this dataset, we calculated In-patient bed utilization = inpatient_beds_used/total_inpatient_beds and ICU-bed utilization = staffed_adult_icu_bed_occupancy/total_staffed_adult_icu_beds. Using available data, we also calculated additional metrics such as Hospital bed utilization by COVID patients, ICU bed utilization by COVID patients. Using all this data, we plot a mini dashboard which displays the change in bed utilization across states through time on a map and also displays detailed metrics numerically per state. 
 
 
-#### Medical Infrastructure Dashboard – Bed utilization
+![Medical Infrastructure Dashboard – Bed utilization](images/Medical%20Infrastructure%20Dashboard%20–%20Bed%20utilization.png)
 
 
 As seen from the image, we make use of color and point size to indicate utilization and the number of cases simultaneously. This allows us to display more than one feature simultaneously and gives the user an idea of how many hospital beds were as the number of cases increased. This enables the user to identify certain states that they might want to look into deeper and can focus on in the coming visualizations.
@@ -65,19 +65,17 @@ As seen from the image, we make use of color and point size to indicate utilizat
 Next, we dive deeper into Hospital bed utilization by splitting it into ICU bed utilization and in-patient bed utilization. We explore how these two parameters affect the COVID-Deaths on a per state basis. We also link how staff shortages in hospitals affect COVID deaths by creating connected charts where the user can select an interval from the chart on the left to see the corresponding region for the chart on the right for a more fine-grained look. 
 
 
-#### Medical Infrastructure Dashboard – Bed Shortage
+![Medical Infrastructure Dashboard – Bed Shortage](images/Medical%20Infrastructure%20Dashboard%20–%20Bed%20Shortage%201.png) ![Medical Infrastructure Dashboard – Bed Shortage](images/Medical%20Infrastructure%20Dashboard%20–%20Bed%20Shortage%202.png)
 
 During a pandemic, Testing plays a key role in the efforts to contain and mitigate the pandemic by identifying infected individuals to help prevent further person-to-person transmission of the infection. In the next part of our dashboard, we try to gain insight into whether all covid test sample results were returned in a reasonable amount of time. This is done by a simple line chart across time that showcases the number of samples taken and the number of test results returned. The user can also interact with the chart via zoom and pan. This enables the user to see how much pressure was on the testing facilities and whether adequate testing infrastructure is present in every state. 
 
 
-#### Medical Infrastructure Dashboard – Testing Infrastructure
-
+![Medical Infrastructure Dashboard – Testing Infrastructure](images/Medical%20Infrastructure%20Dashboard%20–%20Testing%20Infrastructure%201.png) ![Medical Infrastructure Dashboard – Testing Infrastructure](images/Medical%20Infrastructure%20Dashboard%20–%20Testing%20Infrastructure%202.png)
 We next focus on the spread of vaccination and COVID-19 therapeutic facilities across the country. Vaccines reduce a person's risk of contracting the virus that causes COVID-19. Hence, we wanted to visualize how these facilities are present across the country and what is the average time taken to reach the nearest one. This allows the user to see how different states approached vaccination and medicine distribution across the state and will allow insights to be gained regarding good distribution strategies in the event of a future pandemic. We make use of a map chart for this section since it makes it easy to perceive the spread geographically.
 
 
-#### Medical Infrastructure Dashboard – Vaccination Map
-
-#### Medical Infrastructure Dashboard – Vaccination travel
+![Medical Infrastructure Dashboard – Vaccination Map](images/Medical%20Infrastructure%20Dashboard%20–%20Vaccination%20Map.png)
+![Medical Infrastructure Dashboard – Vaccination travel](images/Medical%20Infrastructure%20Dashboard%20–%20Vaccination%20travel.png)
 
 The final portion of the Medical Infrastructure dashboard involves a COVID-19 daily cases forecasting model. We try to explore how effective forecasting methods can be and whether the predicted values are accurate enough to be able to be used in case of a future pandemic. We try to predict the cases 7 days in the future as well as 30 days in the future. This is done to check how effectively the forecasting models can be used ,i.e whether it can be used for procuring immediate requirements like food (if it can predict cases 7 days ahead) and if it can also be used for procuring long term requirements like ICU beds (if it can predict cases 30 days ahead). We also display the most important features in forecasting to allow the user to gain some interesting insights about which previous days are most important in predicting the future cases! 
 
@@ -152,14 +150,14 @@ One interesting observation is the relation between staff shortages and deaths. 
 Another observation was that when the ICU bed utilization crosses the 0.7 ~ 0.75 mark, there is a significant increase in the number of deaths shortly thereafter. This is seen in almost every state and hence can be used as a threshold in the event of a future pandemic. We should not allow the utilization of ICU beds to cross the 0.75 mark and procure enough ICU beds or plan out effective upscaling strategies to prevent this from happening in the event of a future pandemic.
  
 
-#### Medical Infrastructure Dashboard – Effect of shortage
+![Medical Infrastructure Dashboard – Effect of shortage](images/Medical%20Infrastructure%20Dashboard%20–%20Effect%20of%20shortage.png)
 
 It was also interesting to see that during the peaks of COVID, the number of test results returned was significantly lower than the number of samples taken, indicating that the testing facilities were put under immense pressure by the pandemic. While most of the states were initially able to keep up with the testing demands, almost all the states could not handle the testing demands during the last peak (Jan - Apr 2022). This is another crucial dimension where the medical infrastructure should be scaled up. It is equally important to have enough labs that can process all the test samples and return their results within a finite amount of time. Timely results will help curb the spread of infection as infected individuals can be alerted to stay quarantined and prevent the spread further. 
 
-Medical Infrastructure Dashboard – Testing Infrastructure results
+![Medical Infrastructure Dashboard – Testing Infrastructure results](/images/Medical%20Infrastructure%20Dashboard%20–%20Testing%20Infrastructure%20results.png)
 Further, from our experiments with the forecasting model, we were able to see that a simple model that only considers historical cases data is able to perform decently well in forecasting the cases for 7-days from the current day except for the peaky regions where there is a lag. But predicting cases 1 month into the future with a simple historical case-based model is difficult. This tells us that using a model to predict 7 days into the future can help us procure essentials in a short term such as food and water but it is too short a duration for expanding essentials such as hospital beds, medical staff etc. This can possibly be overcomed by using a more sophisticated model and the government could explore this avenue further by bolstering the strength of forecasting models using features such as mobility, regulations in place, deaths, hospitalizations etc.
 
-#### Medical Infrastructure Dashboard – Forecasting Model Comparison 1 & 2
+![Medical Infrastructure Dashboard – Forecasting Model Comparison](images/Medical%20Infrastructure%20Dashboard%20–%20Forecasting%20Model%20Comparison%201.png) ![Medical Infrastructure Dashboard – Forecasting Model Comparison](images/Medical%20Infrastructure%20Dashboard%20–%20Forecasting%20Model%20Comparison%202.png)
 
 The user can dive deep into other visualizations and have a look at our application for more insights!
 Search Trend Dashboard
