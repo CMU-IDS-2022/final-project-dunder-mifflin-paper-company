@@ -1,5 +1,7 @@
 # Final Project Report
 
+**Title**: Covid-19 Dashboard
+
 **Project URL**: https://share.streamlit.io/cmu-ids-2022/final-project-dunder-mifflin-paper-company/main
 
 **Video URL**: https://youtu.be/NzRktLDfCC8
