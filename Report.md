@@ -44,11 +44,11 @@ With a basic understanding of the overall COVID trend in the US over the last tw
 
 After knowing which states are affected the most or are controlling the pandemic the best, we need to know what attributes of those states contribute to such results. Here we select COVID confirmed rate (cumulative confirmed cases divided by population) and death rate (cumulative death cases divided by population) as target parameters and try to find which columns in the datasets correlate to them. In this step, we use tables include [Vaccinations](https://github.com/GoogleCloudPlatform/covid-19-open-data/blob/main/docs/table-vaccinations.md), [Geography](https://github.com/GoogleCloudPlatform/covid-19-open-data/blob/main/docs/table-geography.md), [Health](https://github.com/GoogleCloudPlatform/covid-19-open-data/blob/main/docs/table-health.md), and [Weather](https://github.com/GoogleCloudPlatform/covid-19-open-data/blob/main/docs/table-weather.md). We present three plots: (1) a pie chart that shows the distribution of different vaccine brands in different regions, (2) a heat map that shows the correlation between confirmed / death rate, and how many percent a state distributes each vaccine brand, (3) a heat map that shows the correlation between confirmed / death rate and weather / population / geography / health attributes.
 
-![alt text](https://github.com/CMU-IDS-2022/final-project-dunder-mifflin-paper-company/blob/main/images/Exploratory%20Data%20Analysis%20%E2%80%93%20Correlation%20Analysis.png)
+![alt text](images/Exploratory%20Data%20Analysis%20%E2%80%93%20Correlation%20Analysis.png)
 
 In the last step of our exploratory data analysis, we show how the historical trend of citizens mobilities including “Retail and Recreation”, “Grocery and Pharmacy”, “Parks”, “Transit stations”, and “Workplaces”, affect or were affected by the trend of confirmed COVID cases. Line chart is chosen as the visualization technique again and we allow users to switch on / off the types of mobility data they want to see.
 
-![alt text](https://github.com/CMU-IDS-2022/final-project-dunder-mifflin-paper-company/blob/main/images/Exploratory%20Data%20Analysis%20%E2%80%93%20Mobility%20Trend.png)
+![alt text](images/Exploratory%20Data%20Analysis%20%E2%80%93%20Mobility%20Trend.png)
 
 
 ### Medical Infrastructure Dashboard
@@ -94,10 +94,16 @@ As a preprocessing step, we filter out the search strings in the dataset and use
 Our primary visualization is a choropleth map, where the color intensity indicates the correlation between search trend and cases for the selected parameters. The dashboard allows two configurable parameters: (i) the set of search strings to run the analysis on, and (ii) the number of days in the future to make the comparison with. When multiple search strings are selected, we aggregate the data across all the selected search strings. This can allow users to explore whether a combination of search strings is a better indicator instead of just an individual one.
 
 
-#### Search Trend Dashboard – Choropleth map
+![alt text](images/search_1.png)
+<div style = "text-align: center">Search Trend Dashboard – Choropleth map </div>
+<br />
+<br />
 
+![alt text](images/search_history.png)
+<div style = "text-align: center">Search Trend Dashboard – Search history </div>
+<br />
+<br />
 
-#### Search Trend Dashboard – Search history
 
 Each state in the map is selectable, and upon selection the analysis is recomputed for that particular state. Additionally, we also visualize the raw data used for the analysis (number of cases over time, and normalized search trend values over time) using a twin y axis line plot. To help users keep track of the parameters they have explored in a session, we maintain a search history line plot. This presents the parameters that the users have selected (region, lag, and search strings), and the resulting correlation.
 Government Response Dashboard
@@ -119,10 +125,18 @@ As a preprocessing step, we normalize the indicator values for each policy  to a
 Similar to the Search Trend Dashboard, our primary visualization is a choropleth map, where the color intensity indicates the correlation between search trend and cases for the selected parameters. The dashboard allows two configurable parameters: (i) the set of policy indicator values to run the analysis on, and (ii) the number of days in the future to make the comparison with. When multiple indicators are selected, we aggregate the data across all the selected indicators. This can allow users to explore whether a combination of policy decisions is better than just an individual one.
 
 
-#### Government Response Dashboard – Choropleth Map
+
+![alt text](images/gov_1.png)
+<div style = "text-align: center">Government Response Dashboard – Choropleth Map </div>
+<br />
+<br />
+
+![alt text](images/gov_history.png)
+<div style = "text-align: center">Government Response Dashboard – Search history </div>
+<br />
+<br />
 
 
-#### Search Trend Dashboard – Search history
 
 In this dashboard as well, each state in the map is selectable, and upon selection the analysis is recomputed for that particular state. Additionally, we also visualize the raw data used for the analysis (number of cases over time, and normalized policy indicator values over time) using a twin y axis line plot. To help users keep track of the parameters they have explored in a session, we maintain a search history line plot. This presents the parameters that the users have selected (region, lag, and policies), and the resulting correlation.
 
@@ -166,10 +180,15 @@ As a case study, we try to check the correlation between the trend values for th
 
 
 
-#### Correlation between fever and cases with lag = 0 days for California
+![alt text](images/search_1.png)
+<div style = "text-align: center">Correlation between fever and cases with lag = 0 days for California </div>
+<br />
+<br />
 
-
-#### Correlation between fever and cases with lag = 9 days for California
+![alt text](images/search_2.png)
+<div style = "text-align: center">Correlation between fever and cases with lag = 9 days for California </div>
+<br />
+<br />
 
 
 
@@ -177,12 +196,16 @@ As a case study, we try to check the correlation between the trend values for th
 
 As a case study, we try to check the correlation between government response for the policy decisions on “facial coverings” and the rise of COVID 19 cases. The first figure illustrates the correlation between the two with lag = 0 days, while the second illustrates the correlation between the two 45 days in the future (lag = 45). We can clearly see that there is a highly negative correlation in the second cases, indicating that having extensive policies pertinent to facial coverings can be effective in reducing the number of COVID 19 cases.
 
-#### Correlation between facial coverings and cases with lag = 0 days
 
+![alt text](images/gov_1.png)
+<div style = "text-align: center">Correlation between facial coverings and cases with lag = 0 days </div>
+<br />
+<br />
 
-#### Correlation between facial coverings and cases with lag = 45 days
-
-
+![alt text](images/gov_2.png)
+<div style = "text-align: center">Correlation between facial coverings and cases with lag = 45 days </div>
+<br />
+<br />
 
 ## Discussion
 
