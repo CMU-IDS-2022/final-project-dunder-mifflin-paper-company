@@ -4,19 +4,17 @@
 
 **Video URL**: https://youtu.be/NzRktLDfCC8
 
-Short (~250 words) abstract of the concrete data science problem and how the solutions addresses the problem.
-
 ## Introduction
 
 The COVID-19 pandemic has impacted society in various ways, affecting almost every single aspect of our daily lives. Though COVID-19 is a crisis worldwide, there have been stark differences in how various regions have approached curbing the spread of the infection. Every government has uniquely responded to this pandemic in terms of their masking policies, early vaccinations, shutting down schools and workplaces, restricting public transport, etc. Variations in these responses are dependent on the distinctive institutional arrangements, political and geographical factors, and cultural orientation of each state, and thus, there is no One-Size-Fits-All strategy. However, it can also be argued that such distinct policies are a result of the fact that we as a society were grossly under-prepared to handle a pandemic of this scale. It is vital that we now analyze the different policies taken to be better prepared in the event of a future pandemic.
 
 In this project, we focus on analyzing how different states in the US approached the COVID-19 pandemic. We plan to do this from two different directions. The first would be to analyze from the perspective of the government and the containment measures adopted to prevent the spread of COVID. The second will be to look at it from the perspective of the citizens and how their behavior in terms of their search trends, mobility levels change through time. This will enable the viewer to answer questions such as:
 
-Has COVID-19 infected citizens throughout the country uniformly? Have certain states been more affected?
-How has the rapid spread of the COVID-19 disease affected the existing medical infrastructure in the US? How did the Medical Infrastructure of the US cope with the COVID-19 pandemic?
-Does a strict government policy response (closing schools and workplaces, canceling public events, etc.) entail lower morbidity?
-Can we predict the spread of infection to help governments plan and scale up their resources ahead of time?
-Is there a correlation between user searches on vaccination related information and spread of COVID cases?
+* Has COVID-19 infected citizens throughout the country uniformly? Have certain states been more affected?
+* How has the rapid spread of the COVID-19 disease affected the existing medical infrastructure in the US? How did the Medical Infrastructure of the US cope with the COVID-19 pandemic?
+* Does a strict government policy response (closing schools and workplaces, canceling public events, etc.) entail lower morbidity?
+* Can we predict the spread of infection to help governments plan and scale up their resources ahead of time?
+* Is there a correlation between user searches on vaccination related information and spread of COVID cases?
 
 
 ## Related Work
@@ -35,21 +33,20 @@ In [this](https://www.sciencedirect.com/science/article/pii/S002248042030812X?ca
 
 In the exploratory data analysis phase, we first aim to visualize the trend of various statistics about COVID-19 so that we get an initial understanding about how the United States as a whole has been impacted by the pandemic throughout the last two years. To achieve this, we use the [Epidemiology table](https://github.com/GoogleCloudPlatform/covid-19-open-data/blob/main/docs/table-epidemiology.md) under the [COVID-19 Open Data dataset](https://github.com/GoogleCloudPlatform/covid-19-open-data) archived by Google and extract columns including daily confirmed cases, daily deceased cases, and daily tested cases. We drop the daily recovered column here due to insufficient per-state samples. In addition, we join the [Epidemiology table](https://github.com/GoogleCloudPlatform/covid-19-open-data/blob/main/docs/table-epidemiology.md) with the [Hospitalization table](https://github.com/GoogleCloudPlatform/covid-19-open-data/blob/main/docs/table-hospitalizations.md) and [Vaccination table](https://github.com/GoogleCloudPlatform/covid-19-open-data/blob/main/docs/table-vaccinations.md) on the region key in order to get the daily hospitalized and vaccinated data. With these time series data aggregated by different states, we provide an interactive line chart that allows users to select the region and the types of statistics they want to visualize.
 
-#### Exploratory Data Analysis – COVID-19 Trend
+![alt text](https://github.com/CMU-IDS-2022/final-project-dunder-mifflin-paper-company/blob/main/images/Exploratory%20Data%20Analysis%20%E2%80%93%20COVID-19%20Trend.png)
 
 
 With a basic understanding of the overall COVID trend in the US over the last two years, we next want to answer the questions: “Has COVID-19 infected citizens throughout the country uniformly? Have certain states been more affected?” In the second section, we present two main components: (1) a map plot that visualizes the number of COVID statistics (e.g. daily confirmed) across different states, and (2) a bar plot that sorts and compares cumulative COVID statistics in different states. Both plots represent comparisons between different states on the selected month. The map plot uses circle marks to indicate the magnitude of the selected parameter, with darker-colored and larger circles representing a higher number of cases. This gives us a geographical sense of which parts of the US are affected more by COVID. The bar plot then directly displays which states control the pandemic the best or worst in the US. Note that we choose to use cumulative and percentage data for the bar plot instead of the monthly average and absolute number that we use for map plot. This is because cumulative data provides a more holistic view on which states are affected the most, while percentage data such as confirmed rate instead of confirmed cases gives us an unbiased result as it accounts for the fact that states with larger populations naturally would have more cases.
 
-#### Exploratory Data Analysis – Comparison across States
-
+![alt text](https://github.com/CMU-IDS-2022/final-project-dunder-mifflin-paper-company/blob/main/images/Exploratory%20Data%20Analysis%20%E2%80%93%20Comparison%20across%20States.png)
 
 After knowing which states are affected the most or are controlling the pandemic the best, we need to know what attributes of those states contribute to such results. Here we select COVID confirmed rate (cumulative confirmed cases divided by population) and death rate (cumulative death cases divided by population) as target parameters and try to find which columns in the datasets correlate to them. In this step, we use tables include [Vaccinations](https://github.com/GoogleCloudPlatform/covid-19-open-data/blob/main/docs/table-vaccinations.md), [Geography](https://github.com/GoogleCloudPlatform/covid-19-open-data/blob/main/docs/table-geography.md), [Health](https://github.com/GoogleCloudPlatform/covid-19-open-data/blob/main/docs/table-health.md), and [Weather](https://github.com/GoogleCloudPlatform/covid-19-open-data/blob/main/docs/table-weather.md). We present three plots: (1) a pie chart that shows the distribution of different vaccine brands in different regions, (2) a heat map that shows the correlation between confirmed / death rate, and how many percent a state distributes each vaccine brand, (3) a heat map that shows the correlation between confirmed / death rate and weather / population / geography / health attributes.
 
-#### Exploratory Data Analysis – Correlation Analysis
+![alt text](https://github.com/CMU-IDS-2022/final-project-dunder-mifflin-paper-company/blob/main/images/Exploratory%20Data%20Analysis%20%E2%80%93%20Correlation%20Analysis.png)
 
 In the last step of our exploratory data analysis, we show how the historical trend of citizens mobilities including “Retail and Recreation”, “Grocery and Pharmacy”, “Parks”, “Transit stations”, and “Workplaces”, affect or were affected by the trend of confirmed COVID cases. Line chart is chosen as the visualization technique again and we allow users to switch on / off the types of mobility data they want to see.
 
-#### Exploratory Data Analysis – Mobility Trend
+![alt text](https://github.com/CMU-IDS-2022/final-project-dunder-mifflin-paper-company/blob/main/images/Exploratory%20Data%20Analysis%20%E2%80%93%20Mobility%20Trend.png)
 
 
 ### Medical Infrastructure Dashboard
