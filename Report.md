@@ -1,7 +1,8 @@
 # Final Project Report
 
 **Project URL**: TODO
-**Video URL**: TODO
+
+**Video URL**: https://youtu.be/NzRktLDfCC8
 
 Short (~250 words) abstract of the concrete data science problem and how the solutions addresses the problem.
 
