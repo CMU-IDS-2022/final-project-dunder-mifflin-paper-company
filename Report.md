@@ -6,6 +6,11 @@
 
 **Video URL**: https://youtu.be/NzRktLDfCC8
 
+The COVID-19 pandemic has impacted society in various ways, affecting almost every single aspect of our daily lives. Though COVID-19 is a worldwide crisis, different governments have responded in different ways to this pandemic in regard to their policies. It is important to analyze these policy decisions and their effects to learn how to deal with global pandemics successfully. 
+
+In our project we explore how COVID 19 impacted citizens across the United States, how it's rapid increase affected the medical infrastructure of the country, how effective policies taken by governments of different regions were, and whether user actions (such as internet search volumes) can help preemptively detect COVID 19 outbreaks.
+
+
 ## Introduction
 
 The COVID-19 pandemic has impacted society in various ways, affecting almost every single aspect of our daily lives. Though COVID-19 is a crisis worldwide, there have been stark differences in how various regions have approached curbing the spread of the infection. Every government has uniquely responded to this pandemic in terms of their masking policies, early vaccinations, shutting down schools and workplaces, restricting public transport, etc. Variations in these responses are dependent on the distinctive institutional arrangements, political and geographical factors, and cultural orientation of each state, and thus, there is no One-Size-Fits-All strategy. However, it can also be argued that such distinct policies are a result of the fact that we as a society were grossly under-prepared to handle a pandemic of this scale. It is vital that we now analyze the different policies taken to be better prepared in the event of a future pandemic.
