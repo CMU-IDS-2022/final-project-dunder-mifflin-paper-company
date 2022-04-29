@@ -9,7 +9,11 @@
 
 ## Work distribution
 
-Update towards the end of the project.
+Kushagra Singh: Search Trend Dashboard + Government Response Dashboard
+Ruben:
+Bharani:
+He-Wei Lee: Exploratory Data Analysis
+
 
 ## Deliverables
 
