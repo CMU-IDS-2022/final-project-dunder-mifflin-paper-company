@@ -38,8 +38,8 @@ streamlit run streamlit_app.py
 ## Work distribution
 
 * Kushagra Singh: Search Trend Dashboard + Government Response Dashboard
-* Ruben: Medical Infrastruture Dashboard -> Data Wrangling, Vaccination Facilities, Forecasting Model
-* Bharani: Medical Infrastructure Dashboard -> Data processing, Hospital Utilization, Testing Infrastructure
+* Ruben Mampilli: Medical Infrastruture Dashboard -> Data Wrangling, Vaccination Facilities, Forecasting Model
+* Bharani Ujjaini Kempaiah: Medical Infrastructure Dashboard -> Data processing, Hospital Utilization, Testing Infrastructure
 * He-Wei Lee: Exploratory Data Analysis
 
 
