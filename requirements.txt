@@ -9,3 +9,4 @@ folium
 leafmap
 streamlit_folium
 branca
+protobuf==3.20.*
